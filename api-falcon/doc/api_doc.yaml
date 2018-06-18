@@ -1,0 +1,208 @@
+swagger: "2.0"
+info:
+  description: "This is a sample server Petstore server.  You can find out more about     Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).      For this sample, you can use the api key `special-key` to test the authorization     filters."
+  version: "1.0.0"
+  title: "Swagger Loans API"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "apiteam@swagger.io"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost:8000"
+basePath: "/v1"
+tags:
+- name: "loan"
+  description: "Everything about loans"
+schemes:
+- "http"
+paths:
+  /loans:
+    get:
+      tags:
+      - "loan"
+      summary: "Get all loans"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "get_all_loans"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Loan"
+
+   
+    post:
+      tags:
+      - "loan"
+      summary: "Add a new loan"
+      description: ""
+      operationId: "create_loan"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Loan"
+      responses:
+        201:
+          description: "201 Created"
+          schema:
+              $ref: "#/definitions/Loan"
+
+      
+  /loans/{index}:
+    put:
+      tags:
+      - "loan"
+      summary: "Update an existing loan"
+      description: ""
+      operationId: "update_loan"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "index"
+        in: "path"
+        description: "ID of pet to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Loan"
+      responses:
+        202:
+          description: "202 Accepted"
+          schema:
+              $ref: "#/definitions/Loan"
+
+        
+    get:
+      tags:
+      - "loan"
+      summary: "Get loan"
+      description: "Multiple status values can be provided with comma separated strings"
+      operationId: "get_loan"
+      parameters:
+        - name: "index"
+          in: "path"
+          description: "ID of pet to return"
+          required: true
+          type: "integer"
+          format: "int64"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            items:
+              $ref: "#/definitions/Loan"
+
+
+definitions:
+  Loan:
+    type: "object"
+    required:
+    - "index"
+    - "created"
+    - "status"
+    - "oracle"
+    - "borrower"
+    - "lender"
+    - "creator"
+    - "cosigner"
+    - "amount"
+    - "interest"
+    - "punitory_interest"
+    - "interest_timestamp"
+    - "paid"
+    - "interest_rate"
+    - "interest_rate_punitory"
+    - "due_time"
+    - "dues_in"
+    - "currency"
+    - "cancelable_at"
+    - "lender_balance"
+    - "expiration_requests"
+    properties:
+      index:
+        type: "string"
+        example: "1"
+      created:
+        type: "string"
+        example: "2016-11-20 11:48:50"
+      status:
+        type: "string"
+        example: "1"
+      oracle:
+        type: "string"
+        example: "0x0000000000000000000000000000000000000000"
+      borrower:
+        type: "string"
+        example: "0x35d803F11E900fb6300946b525f0d08D1Ffd4bed"
+      lender:
+        type: "string"
+        example: "0x35d803F11E900fb6300946b525f0d08D1Ffd4bed"
+      creator:
+        type: "string"
+        example: "0x35d803F11E900fb6300946b525f0d08D1Ffd4bed"
+      cosigner:
+        type: "string"
+        example: "0x0000000000000000000000000000000000000000"
+      amount:
+        type: "string"
+        example: "200000000000000000000"
+      interest:
+        type: "string"
+        example: "1533334812242862439"
+      punitory_interest:
+        type: "string"
+        example: "1423141359661568706"
+      interest_timestamp:
+        type: "string"
+        example: "2018-06-04 20:57:31"
+      paid:
+        type: "string"
+        example: "122000000000000000000"
+      interest_rate:
+        type: "string"
+        example: "13523478260869"
+      interest_rate_punitory:
+        type: "string"
+        example: "12441600000000"
+      due_time:
+        type: "string"
+        example: "2018-05-21 20:42:59"
+      dues_in:
+        type: "string"
+        example: "1970-01-13 00:00:00"
+      currency:
+        type: "string"
+        example: "\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00"
+      cancelable_at:
+        type: "string"
+        example: "1970-01-03 00:00:00"
+      lender_balance:
+        type: "string"
+        example: "0"
+      expiration_requests:
+        type: "string"
+        example: "2018-06-05 19:40:58"
+
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
