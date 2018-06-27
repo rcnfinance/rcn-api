@@ -6,9 +6,10 @@ from event_listener import EventListener
 
 def main():
     CONFIG_PATH = "config_created_loan.json"
+    CONFIG_API = "config_api_preserver.json"
     created_loan_filter = FakeCreatedLoanFilter()
     # created_loan_filter = CreatedLoanFilter.create(CONFIG_PATH)
-    api_preserver = APIPreserver()
+    api_preserver = APIPreserver(CONFIG_API)
     echo_preserver = EchoPreserver()
     created_loan_handler = FakeCreatedLoanHandler(CONFIG_PATH, [api_preserver, echo_preserver])
     listener = EventListener(

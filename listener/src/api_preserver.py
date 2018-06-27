@@ -1,9 +1,13 @@
-from preserver import Preserver
+import json
 import requests
+from preserver import Preserver
 
 class APIPreserver(Preserver):
-    def __init__(self):
-        self._url = "http://10.0.4.120:8000/v1/loans/"
+    def __init__(self, settings_path):
+        self._settings_path = settings_path
+        self._config = json.load(open(self._settings_path))
+
+        self._url = self._config['URL']
         self._headers = {
             'Content-Type': "application/json"
         }
