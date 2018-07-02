@@ -1,5 +1,5 @@
 from graceful.serializers import BaseSerializer
-from graceful.fields import IntField, RawField
+from graceful.fields import RawField
 
 
 class LoanSerializer(BaseSerializer):

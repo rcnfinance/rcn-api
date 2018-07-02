@@ -31,5 +31,7 @@ services:
      - PYTHONUNBUFFERED=1
     depends_on:
       - api-falcon
+      - mongo
     links:
       - api-falcon:api
+      - mongo:mongo
