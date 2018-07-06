@@ -24,14 +24,12 @@ services:
       - 8081:8081
   listener:
     build: listener
-    command: python3 created_loan_listener.py
+    command: python3 listener.py
     volumes:
       - ./listener/src/:/project
     environment:
      - PYTHONUNBUFFERED=1
     depends_on:
-      - api-falcon
       - mongo
     links:
-      - api-falcon:api
       - mongo:mongo

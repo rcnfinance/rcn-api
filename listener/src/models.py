@@ -1,5 +1,7 @@
 from mongoengine import StringField
 from mongoengine import Document
+from mongoengine import ListField
+from mongoengine import IntField
 
 
 class Loan(Document):
@@ -29,10 +31,9 @@ class Loan(Document):
 class Event(Document):
     address = StringField(required=True, max_length=150)
     block_hash = StringField(required=True, max_length=150)
-    bloc_number = StringField(required=True, max_length=150)
+    block_number = IntField(required=True)
     data = StringField(required=True, max_length=300)
-    log_index = StringField(required=True, max_length=150)
-    removed = StringField(required=True, max_length=150)
-    topics = StringField(required=True, max_length=150)
+    log_index = IntField(required=True, max_length=150)
+    topics = ListField(StringField(), required=True)
     transaction_hash = StringField(required=True, max_length=150)
-    transaction_index = StringField(required=True, max_length=150)
+    transaction_index = IntField(required=True, max_length=150)
