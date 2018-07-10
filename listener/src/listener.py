@@ -4,7 +4,6 @@ import logging
 import logging.handlers
 import web3
 from web3 import Web3
-import db
 from models import Event
 from handlers import get_class_by_event
 
@@ -82,6 +81,9 @@ def setup_logging(level=logging.INFO):
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
 
 if __name__ == '__main__':
+    from mongoengine import connect
+
+    connection = connect(db='rcn', host='mongo')
     setup_logging(logging.INFO)
     logger = logging.getLogger(__name__)
 

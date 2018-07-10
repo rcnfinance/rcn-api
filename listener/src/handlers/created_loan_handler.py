@@ -3,7 +3,6 @@ from multiprocessing import Manager
 from multiprocessing import Process
 import web3
 from .event_handler import EventHandler
-import db
 from models import Loan
 from handlers import utils
 
