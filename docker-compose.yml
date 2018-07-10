@@ -22,8 +22,11 @@ services:
     restart: always
     ports:
       - 8081:8081
+    depends_on:
+      - mongo
   listener:
     build: listener
+    restart: always
     command: python3 listener.py
     volumes:
       - ./listener/src/:/project

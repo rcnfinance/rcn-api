@@ -77,7 +77,7 @@ def fill_punitory_interest(contract, index, d):
 def fill_interest_timestamp(contract, index, d):
     d['interest_timestamp'] = str(contract.functions.getInterestTimestamp(index).call())
 def fill_paid(contract, index, d):
-    d['paid'] = str(contract.functions.getPaid(index).call())
+        d['paid'] = str(contract.functions.getPaid(index).call())
 def fill_interest_rate(contract, index, d):
     d['interest_rate'] = str(contract.functions.getInterestRate(index).call())
 def fill_interest_rate_punitory(contract, index, d):
@@ -94,54 +94,36 @@ def fill_lender_balance(contract, index, d):
     d['lender_balance'] = str(contract.functions.getLenderBalance(index).call())
 def fill_expiration_requests(contract, index, d):
     d['expiration_requests'] = str(contract.functions.getExpirationRequest(index).call())
+def fill_approved_transfer(contract, index, d):
+    d['approved_transfer'] = str(contract.functions.getApproved(index).call())
 
 def async_fill_loan(contract, w3, index, block_number):
     manager = Manager()
     loan = manager.dict()
 
     process = []
-    p1 = Process(target=fill_index, args=(index, loan))
-    process.append(p1)
-    p2 = Process(target=fill_created, args=(w3, block_number, loan))
-    process.append(p2)
-    p3 = Process(target=fill_status, args=(contract, index, loan))
-    process.append(p3)
-    p4 = Process(target=fill_oracle, args=(contract, index, loan))
-    process.append(p4)
-    p5 = Process(target=fill_borrower, args=(contract, index, loan))
-    process.append(p5)
-    p6 = Process(target=fill_lender, args=(contract, index, loan))
-    process.append(p6)
-    p7 = Process(target=fill_creator, args=(contract, index, loan))
-    process.append(p7)
-    p8 = Process(target=fill_cosigner, args=(contract, index, loan))
-    process.append(p8)
-    p9 = Process(target=fill_amount, args=(contract, index, loan))
-    process.append(p9)
-    p10 = Process(target=fill_interest, args=(contract, index, loan))
-    process.append(p10)
-    p11 = Process(target=fill_punitory_interest, args=(contract, index, loan))
-    process.append(p11)
-    p12 = Process(target=fill_interest_timestamp, args=(contract, index, loan))
-    process.append(p12)
-    p13 = Process(target=fill_paid, args=(contract, index, loan))
-    process.append(p13)
-    p14 = Process(target=fill_interest_rate, args=(contract, index, loan))
-    process.append(p14)
-    p15 = Process(target=fill_interest_rate_punitory, args=(contract, index, loan))
-    process.append(p15)
-    p16 = Process(target=fill_due_time, args=(contract, index, loan))
-    process.append(p16)
-    p17 = Process(target=fill_dues_in, args=(contract, index, loan))
-    process.append(p17)
-    p18 = Process(target=fill_currency, args=(contract, index, loan))
-    process.append(p18)
-    p19 = Process(target=fill_cancelable_at, args=(contract, index, loan))
-    process.append(p19)
-    p20 = Process(target=fill_lender_balance, args=(contract, index, loan))
-    process.append(p20)
-    p21 = Process(target=fill_expiration_requests, args=(contract, index, loan))
-    process.append(p21)
+    process.append(Process(target=fill_index, args=(index, loan)))
+    process.append(Process(target=fill_created, args=(w3, block_number, loan)))
+    # process.append(Process(target=fill_status, args=(contract, index, loan)))  # default 0
+    process.append(Process(target=fill_oracle, args=(contract, index, loan)))
+    process.append(Process(target=fill_borrower, args=(contract, index, loan)))
+    # process.append(Process(target=fill_lender, args=(contract, index, loan)))  # default 0x0
+    process.append(Process(target=fill_creator, args=(contract, index, loan)))
+    # process.append(Process(target=fill_cosigner, args=(contract, index, loan)))  # default 0x0
+    process.append(Process(target=fill_amount, args=(contract, index, loan)))
+    # process.append(Process(target=fill_interest, args=(contract, index, loan)))  # default 0
+    # process.append(Process(target=fill_punitory_interest, args=(contract, index, loan)))  # default 0
+    # process.append(Process(target=fill_interest_timestamp, args=(contract, index, loan)))  # default 0
+    # process.append(Process(target=fill_paid, args=(contract, index, loan)))  # default 0
+    process.append(Process(target=fill_interest_rate, args=(contract, index, loan)))
+    process.append(Process(target=fill_interest_rate_punitory, args=(contract, index, loan)))
+    # process.append(Process(target=fill_due_time, args=(contract, index, loan)))  # default 0
+    process.append(Process(target=fill_dues_in, args=(contract, index, loan)))
+    process.append(Process(target=fill_currency, args=(contract, index, loan)))
+    process.append(Process(target=fill_cancelable_at, args=(contract, index, loan)))
+    # process.append(Process(target=fill_lender_balance, args=(contract, index, loan)))  # default 0
+    process.append(Process(target=fill_expiration_requests, args=(contract, index, loan)))
+    # process.append(Process(target=fill_approved_transfer, args=(contract, index, loan)))  # default 0x0
 
     for proc in process:
         proc.start()

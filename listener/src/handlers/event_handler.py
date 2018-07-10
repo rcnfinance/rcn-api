@@ -9,7 +9,7 @@ class EventHandler():
     def __init__(self, event):
         self._event = event
         self._parse()
-        self._logger = logging.getLogger(__name__)
+        self._logger = logging.getLogger(self.__class__.__name__)
 
         config = json.load(open(CONFIG_PATH, 'r'))
 
