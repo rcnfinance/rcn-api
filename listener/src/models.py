@@ -29,13 +29,5 @@ class Loan(Document):
     approved_transfer = StringField(default='0x0', max_length=150)
 
 
-
 class Event(Document):
-    address = StringField(required=True, max_length=150)
-    block_hash = StringField(required=True, max_length=150)
-    block_number = IntField(required=True)
-    data = StringField(required=True, max_length=300)
-    log_index = IntField(required=True, max_length=150)
-    topics = ListField(StringField(), required=True)
-    transaction_hash = StringField(required=True, max_length=150)
-    transaction_index = IntField(required=True, max_length=150)
+    uuid = StringField(required=True, max_length=150)
