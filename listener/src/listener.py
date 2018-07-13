@@ -3,6 +3,8 @@ import time
 import logging
 import logging.handlers
 import web3
+
+from clock import Clock
 from web3 import Web3
 from models import Event
 from handlers import get_class_by_event
@@ -37,8 +39,9 @@ class Listener:
             logger.debug('Process event {}'.format(event))
             self.process_event(event)
 
-
     def process_event(self, event):
+        self.clock.time = self.event_time(event)
+        logger.info('Sync time {}'.format(self.clock.time))
         if not self.event_exist(event):
             eventClass = get_class_by_event(event)
             logger.info('Apply event {}'.format(type(eventClass).__name__))
@@ -47,7 +50,7 @@ class Listener:
         else:
             logger.info('Event already applied')
 
-    def listen(self, sec=5):
+    def listen(self, sec=1):
         while True:
             new_entries = self.get_new_entries()
             logger.info('There are {} new entries'.format(len(new_entries)))
@@ -58,6 +61,9 @@ class Listener:
 
             time.sleep(sec)
 
+    def event_time(self, event):
+        return self.w3.eth.getBlock(event.get('blockNumber')).get("timestamp")
+
     def main(self):
         self.sync_db()
         self.listen()
@@ -66,6 +72,8 @@ class Listener:
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
 
     def run(self):
+        self.clock = Clock()
+
         self.connection = connect(db='rcn', host='mongo')
         self.setup_logging(logging.INFO)
 
@@ -82,6 +90,8 @@ class Listener:
             abi=abi
         )
 
+        self.w3 = w3
+
         logger.info('Creating filter from block {}'.format(0))
 
         filter_data = {
@@ -90,7 +100,7 @@ class Listener:
             "address": contract.address
         }
 
-        self.log = w3.eth.filter(filter_params=filter_data)
+        self.log = self.w3.eth.filter(filter_params=filter_data)
         self.main()
 
 if __name__ == '__main__':
