@@ -5,6 +5,7 @@ from mongoengine import IntField
 from mongoengine import LongField
 from mongoengine import BooleanField
 from mongoengine import DictField
+from mongoengine import EmbeddedDocumentField
 
 class Loan(Document):
     index = IntField(required=True, max_length=150, primary_key=True)
@@ -40,3 +41,8 @@ class Commit(Document):
     proof = StringField(required=True, max_length=150)
     data = DictField(required=True)
     executed = BooleanField(default=False)
+
+class Future(Document):
+    timestamp = LongField(required=True)
+    commit = EmbeddedDocumentField(Commit, required=True)
+    

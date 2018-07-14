@@ -2,5 +2,5 @@
 class Clock:
     time = 0
 
-    def advance(self, delta):
+    def tick(self, delta):
         self.time += delta

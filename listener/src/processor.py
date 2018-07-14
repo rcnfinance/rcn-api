@@ -8,6 +8,9 @@ logger = logging.getLogger(__name__)
 class Processor:
     clock = Clock()
     
+    def advance_time(self, target):
+        
+
     def execute(self, commit):
         self.clock.time = commit.timestamp
 
