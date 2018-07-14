@@ -2,12 +2,14 @@ from mongoengine import StringField
 from mongoengine import Document
 from mongoengine import ListField
 from mongoengine import IntField
-
+from mongoengine import LongField
+from mongoengine import BooleanField
+from mongoengine import DictField
 
 class Loan(Document):
-    index = StringField(required=True, max_length=150, primary_key=True)
-    created = StringField(required=True, max_length=150)
-    status = StringField(default='0', max_length=150)
+    index = IntField(required=True, max_length=150, primary_key=True)
+    created = LongField(required=True)
+    status = IntField(default='0', max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
     lender = StringField(default='0x0', max_length=150)
@@ -28,6 +30,13 @@ class Loan(Document):
     expiration_requests = StringField(required=True, max_length=150)
     approved_transfer = StringField(default='0x0', max_length=150)
 
-
 class Event(Document):
     uuid = StringField(required=True, max_length=150)
+
+class Commit(Document):
+    opcode = StringField(required=True, max_length=15)
+    timestamp = LongField(required=True)
+    order = IntField(required=True)
+    proof = StringField(required=True, max_length=150)
+    data = DictField(required=True)
+    executed = BooleanField(default=False)

@@ -4,12 +4,12 @@ import logging
 import logging.handlers
 import web3
 
-from clock import Clock
 from web3 import Web3
-from models import Event
+from models import Event, Commit
 from handlers import get_class_by_event
 from mongoengine import connect
 from utils import event_id
+from processor import Processor
 
 CONFIG_PATH = "config.json"
 logger = logging.getLogger(__name__)
@@ -40,13 +40,12 @@ class Listener:
             self.process_event(event)
 
     def process_event(self, event):
-        self.clock.time = self.event_time(event)
-        logger.info('Sync time {}'.format(self.clock.time))
         if not self.event_exist(event):
             eventClass = get_class_by_event(event)
             logger.info('Apply event {}'.format(type(eventClass).__name__))
             eventClass.do()
             self.save_event(event)
+            self.apply_commits()
         else:
             logger.info('Event already applied')
 
@@ -58,11 +57,20 @@ class Listener:
             for event in new_entries:
                 logger.debug('Process event {}'.format(event))
                 self.process_event(event)
+                self.apply_commits()
 
             time.sleep(sec)
 
     def event_time(self, event):
         return self.w3.eth.getBlock(event.get('blockNumber')).get("timestamp")
+
+    def apply_commits(self):
+        pending = Commit.objects(executed=False)
+
+        for commit in pending:
+            self.processor.execute(commit)
+            commit.executed = True
+            commit.save()
 
     def main(self):
         self.sync_db()
@@ -72,7 +80,7 @@ class Listener:
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
 
     def run(self):
-        self.clock = Clock()
+        self.processor = Processor()
 
         self.connection = connect(db='rcn', host='mongo')
         self.setup_logging(logging.INFO)

@@ -1,9 +1,10 @@
+import web3
+
 from datetime import datetime as dt
 from multiprocessing import Manager
 from multiprocessing import Process
-import web3
 from .event_handler import EventHandler
-from models import Loan
+from models import Commit
 from handlers import utils
 
 
@@ -18,6 +19,7 @@ class CreatedLoanHandler(EventHandler):
         self._borrower = utils.to_address(splited_args[1])
         self._creator = utils.to_address(splited_args[2])
         self._block_number = self._event.get('blockNumber')
+        self._transaction = str(self._event.get('transactionHash'))
 
     def do(self):
         self._logger.info("Calling Loan public functions for loan {}".format(self._index))
@@ -25,39 +27,23 @@ class CreatedLoanHandler(EventHandler):
         d = async_fill_loan(self._contract, self._w3, self._index, self._block_number)
         d_fin = dt.now()
         self._logger.info("elapsed: {}".format(d_fin - d_init))
-        loan = Loan(**d)
-        # loan = Loan()
-        # loan.index = str(self._index)
-        # loan.created = str(dt.utcfromtimestamp(w3.eth.getBlock(self._block_number).timestamp))
-        # loan.status = str(contract.functions.getStatus(self._index).call())
-        # loan.oracle = str(contract.functions.getOracle(self._index).call())
-        # loan.borrower = str(contract.functions.getBorrower(self._index).call())
-        # loan.lender = str(contract.functions.ownerOf(self._index).call())
-        # loan.creator = str(contract.functions.getCreator(self._index).call())
-        # loan.cosigner = str(contract.functions.getCosigner(self._index).call())
-        # loan.amount = str(contract.functions.getAmount(self._index).call())
-        # loan.interest = str(contract.functions.getInterest(self._index).call())
-        # loan.punitory_interest = str(contract.functions.getPunitoryInterest(self._index).call())
-        # loan.interest_timestamp = str(contract.functions.getInterestTimestamp(self._index).call())
-        # loan.paid = str(contract.functions.getPaid(self._index).call())
-        # loan.interest_rate = str(contract.functions.getInterestRate(self._index).call())
-        # loan.interest_rate_punitory = str(contract.functions.getInterestRatePunitory(self._index).call())
-        # loan.due_time = str(dt.utcfromtimestamp(contract.functions.getDueTime(self._index).call()))
-        # loan.dues_in = str(contract.functions.getDuesIn(self._index).call())
-        # loan.currency = str(contract.functions.getCurrency(self._index).call())
-        # loan.cancelable_at = str(contract.functions.getCancelableAt(self._index).call())
-        # loan.lender_balance = str(contract.functions.getLenderBalance(self._index).call())
-        # loan.expiration_requests = str(contract.functions.getExpirationRequest(self._index).call())
 
-        loan.save()
+        commit = Commit()
+        commit.opcode = "loan_request"
+        commit.timestamp = int(d['created'])
+        commit.order = Commit.objects.count()
+        commit.proof = self._transaction
+        assert len(d) == 12, "Loan data not fully loaded"
 
+        commit.data = dict(d)
+        commit.save()
 
 def fill_index(index, d):
-    d['index'] = str(index)
+    d['index'] = index
 def fill_created(w3, block_number, d):
-    d['created'] = str(dt.utcfromtimestamp(w3.eth.getBlock(block_number).timestamp))
+    d['created'] = str(w3.eth.getBlock(block_number).timestamp)
 def fill_status(contract, index, d):
-    d['status'] = str(contract.functions.getStatus(index).call())
+    d['status'] = contract.functions.getStatus(index).call()
 def fill_oracle(contract, index, d):
     d['oracle'] = str(contract.functions.getOracle(index).call())
 def fill_borrower(contract, index, d):
@@ -77,7 +63,7 @@ def fill_punitory_interest(contract, index, d):
 def fill_interest_timestamp(contract, index, d):
     d['interest_timestamp'] = str(contract.functions.getInterestTimestamp(index).call())
 def fill_paid(contract, index, d):
-        d['paid'] = str(contract.functions.getPaid(index).call())
+    d['paid'] = str(contract.functions.getPaid(index).call())
 def fill_interest_rate(contract, index, d):
     d['interest_rate'] = str(contract.functions.getInterestRate(index).call())
 def fill_interest_rate_punitory(contract, index, d):
