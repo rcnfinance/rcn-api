@@ -31,12 +31,11 @@ class CreatedLoanHandler(EventHandler):
         commit = Commit()
         commit.opcode = "loan_request"
         commit.timestamp = int(d['created'])
-        commit.order = Commit.objects.count()
         commit.proof = self._transaction
         assert len(d) == 12, "Loan data not fully loaded"
 
         commit.data = dict(d)
-        commit.save()
+        return [commit]
 
 def fill_index(index, d):
     d['index'] = index

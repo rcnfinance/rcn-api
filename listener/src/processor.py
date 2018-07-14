@@ -6,13 +6,20 @@ from clock import Clock
 logger = logging.getLogger(__name__)
 
 class Processor:
+    nonce = 0
     clock = Clock()
+
+    def pull_nonce(self):
+        t = self.nonce
+        self.nonce += 1
+        return t
     
     def execute(self, commit):
         self.clock.time = commit.timestamp
 
         data = commit.data
         opcode = commit.opcode
+        commit.order = self.pull_nonce()
 
         logger.info("Processing {}".format(commit.order))
 
@@ -30,6 +37,7 @@ class Processor:
             loan.currency = data['currency']
             loan.cancelable_at = data['cancelable_at']
             loan.expiration_requests = data['expiration_requests']
+            loan.commits.append(commit)
             loan.save()
             return
 
@@ -39,12 +47,15 @@ class Processor:
             assert loan.status == 0, "Try to apply lend on already lent loan"
             loan.status = 1
             loan.lender = data['lender']
+            loan.commits.append(commit)
             loan.save()
             return
 
         if opcode == "transfer":
             loan = Loan.objects(index=data['loan']).first()
+            commit['from'] = loan.lender
             loan.lender = data['to']
+            loan.commits.append(commit)
             loan.save()
             return
 
