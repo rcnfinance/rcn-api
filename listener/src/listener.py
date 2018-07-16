@@ -36,41 +36,40 @@ class Listener:
         logger.info('There are {} new entries to sync'.format(len(all_events)))
 
         for event in all_events:
-            logger.debug('Process event {}'.format(event))
             self.process_event(event)
 
     def process_event(self, event):
+        logger.debug('Process event {}'.format(event))
         if not self.event_exist(event):
             eventClass = get_class_by_event(event)
             logger.info('Apply event {}'.format(type(eventClass).__name__))
-            eventClass.do()
+            commits = eventClass.do()
+            
+            if commits:
+                for commit in commits:
+                    self.processor.execute(commit)
+
             self.save_event(event)
-            self.apply_commits()
         else:
             logger.info('Event already applied')
 
     def listen(self, sec=1):
         while True:
+            # Tick to current block time
             new_entries = self.get_new_entries()
             logger.info('There are {} new entries'.format(len(new_entries)))
 
             for event in new_entries:
-                logger.debug('Process event {}'.format(event))
                 self.process_event(event)
-                self.apply_commits()
+
+            block_time = self.w3.eth.getBlock('latest').get("timestamp")
+            if block_time > self.processor.clock:
+                self.processor.advance_time(block_time)
 
             time.sleep(sec)
 
     def event_time(self, event):
         return self.w3.eth.getBlock(event.get('blockNumber')).get("timestamp")
-
-    def apply_commits(self):
-        pending = Commit.objects(executed=False)
-
-        for commit in pending:
-            self.processor.execute(commit)
-            commit.executed = True
-            commit.save()
 
     def main(self):
         self.sync_db()

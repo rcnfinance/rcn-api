@@ -26,8 +26,7 @@ class LentHandler(EventHandler):
 
         commit.opcode = "lent"
         commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
-        commit.order = Commit.objects.count()
         commit.proof = self._transaction
         commit.data = data
-        commit.save()
+        return [commit]
     

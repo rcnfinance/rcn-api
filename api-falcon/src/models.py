@@ -1,11 +1,23 @@
 from mongoengine import StringField
-from mongoengine import Document
+from mongoengine import Document, EmbeddedDocument
+from mongoengine import ListField
+from mongoengine import IntField
+from mongoengine import LongField
+from mongoengine import BooleanField
+from mongoengine import DictField
+from mongoengine import EmbeddedDocumentListField
 
+class Commit(EmbeddedDocument):
+    opcode = StringField(required=True, max_length=15)
+    timestamp = LongField(required=True)
+    order = IntField(required=True)
+    proof = StringField(required=True, max_length=150)
+    data = DictField(required=True)
 
 class Loan(Document):
-    index = StringField(required=True, max_length=150, primary_key=True)
-    created = StringField(required=True, max_length=150)
-    status = StringField(default='0', max_length=150)
+    index = IntField(required=True, max_length=150, primary_key=True)
+    created = LongField(required=True)
+    status = IntField(default='0', max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
     lender = StringField(default='0x0', max_length=150)
@@ -25,15 +37,8 @@ class Loan(Document):
     lender_balance = StringField(default='0', max_length=150)
     expiration_requests = StringField(required=True, max_length=150)
     approved_transfer = StringField(default='0x0', max_length=150)
-
+    commits = EmbeddedDocumentListField(Commit)
 
 class Event(Document):
-    address = StringField(required=True, max_length=150)
-    block_hash = StringField(required=True, max_length=150)
-    bloc_number = StringField(required=True, max_length=150)
-    data = StringField(required=True, max_length=300)
-    log_index = StringField(required=True, max_length=150)
-    removed = StringField(required=True, max_length=150)
-    topics = StringField(required=True, max_length=150)
-    transaction_hash = StringField(required=True, max_length=150)
-    transaction_index = StringField(required=True, max_length=150)
+    uuid = StringField(required=True, max_length=150)
+
