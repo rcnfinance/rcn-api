@@ -26,3 +26,6 @@ class EventHandler():
 
     def _parse(self):
         raise NotImplementedError()
+
+    def do(self):
+        raise NotImplementedError()
