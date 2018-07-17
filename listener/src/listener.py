@@ -3,7 +3,6 @@ import time
 import logging
 import logging.handlers
 import web3
-
 from web3 import Web3
 from models import Event, Commit
 from handlers import get_class_by_event
@@ -22,7 +21,7 @@ class Listener:
         return event
 
     def event_exist(self, event):
-        return Event.objects(uuid=event_id(event)).first() != None
+        return Event.objects(uuid=event_id(event)).first() is not None
 
     def get_all_events(self):
         return self.log.get_all_entries()
@@ -44,11 +43,9 @@ class Listener:
             eventClass = get_class_by_event(event)
             logger.info('Apply event {}'.format(type(eventClass).__name__))
             commits = eventClass.do()
-            
-            if commits:
-                for commit in commits:
-                    self.processor.execute(commit)
 
+            if commits:
+                self.processor.execute(commits)
             self.save_event(event)
         else:
             logger.info('Event already applied')
@@ -64,7 +61,7 @@ class Listener:
 
             block_time = self.w3.eth.getBlock('latest').get("timestamp")
             if block_time > self.processor.clock:
-                self.processor.advance_time(block_time)
+                self.processor._advance_time(block_time)
 
             time.sleep(sec)
 
