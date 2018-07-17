@@ -1,6 +1,13 @@
 from graceful.serializers import BaseSerializer
 from graceful.fields import RawField
+from customFields import ListField
 
+class CommitSerializer(BaseSerializer):
+    opcode = RawField("opcode")
+    timestamp = RawField("timestamp")
+    order = RawField("order")
+    proof = RawField("proof")
+    data = RawField("data")
 
 class LoanSerializer(BaseSerializer):
     index = RawField('index')
@@ -25,3 +32,4 @@ class LoanSerializer(BaseSerializer):
     lender_balance = RawField('lender_balance')
     expiration_requests = RawField('expiration_requests')
     approved_transfer = RawField('approved_transfer')
+    commits = ListField("list of commits", serializer=CommitSerializer())
