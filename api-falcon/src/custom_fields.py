@@ -8,5 +8,8 @@ class ListField(BaseField):
 
     type = "list"
 
+    def from_representation(self, data):
+        raise NotImplementedError()
+
     def to_representation(self, value):
         return [self._serializer.to_representation(obj) for obj in value]

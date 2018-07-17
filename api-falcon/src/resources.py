@@ -39,4 +39,7 @@ class LoanItem(RetrieveAPI):
         try:
             return Loan.objects.get(index=loan_index)
         except Loan.DoesNotExist:
-            raise falcon.HTTPNotFound(title='Loan does not exists', description='Loan with index={} does not exists'.format(loan_index))
+            raise falcon.HTTPNotFound(
+                title='Loan does not exists',
+                description='Loan with index={} does not exists'.format(loan_index)
+            )

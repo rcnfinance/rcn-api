@@ -1,6 +1,7 @@
 from graceful.serializers import BaseSerializer
 from graceful.fields import RawField
-from customFields import ListField
+from custom_fields import ListField
+
 
 class CommitSerializer(BaseSerializer):
     opcode = RawField("opcode")
@@ -8,6 +9,7 @@ class CommitSerializer(BaseSerializer):
     order = RawField("order")
     proof = RawField("proof")
     data = RawField("data")
+
 
 class LoanSerializer(BaseSerializer):
     index = RawField('index')
