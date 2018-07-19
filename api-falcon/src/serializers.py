@@ -35,3 +35,4 @@ class LoanSerializer(BaseSerializer):
     expiration_requests = RawField('expiration_requests')
     approved_transfer = RawField('approved_transfer')
     commits = ListField("list of commits", serializer=CommitSerializer())
+    approbations = RawField("List of approbations")

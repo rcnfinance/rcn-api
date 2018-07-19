@@ -3,6 +3,7 @@ from mongoengine import Document, EmbeddedDocument
 from mongoengine import IntField
 from mongoengine import LongField
 from mongoengine import DictField
+from mongoengine import ListField
 from mongoengine import EmbeddedDocumentListField
 
 
@@ -38,6 +39,7 @@ class Loan(Document):
     expiration_requests = StringField(required=True, max_length=150)
     approved_transfer = StringField(default='0x0', max_length=150)
     commits = EmbeddedDocumentListField(Commit)
+    approbations = ListField(StringField())
 
 
 class Event(Document):
