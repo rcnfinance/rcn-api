@@ -57,7 +57,7 @@ class Processor:
             opcode = commit.opcode
             commit.order = self._pull_nonce()
 
-            logger.info("Processing {}".format(str(commit.order) + " " + commit.opcode))
+            logger.info("Processing {} {}".format(commit.order, commit.opcode))
 
             if opcode == "loan_request":
                 loan = Loan()
@@ -97,7 +97,6 @@ class Processor:
                 return
 
             if opcode == "lent":
-                logger.info(data)
                 loan = Loan.objects(index=data['loan']).first()
                 assert loan.status == 0, "Try to apply lend on already lent loan"
                 loan.status = 1
@@ -108,8 +107,37 @@ class Processor:
 
             if opcode == "transfer":
                 loan = Loan.objects(index=data['loan']).first()
-                commit['from'] = loan.lender
+                data['from'] = loan.lender
                 loan.lender = data['to']
+                loan.commits.append(commit)
+                loan.save()
+                return
+
+            if opcode == "approved_loan":
+                loan = Loan.objects(index=data["loan"]).first()
+                loan.approbations.append(data["approved_by"])
+                loan.commits.append(commit)
+                loan.save()
+                return
+
+            if opcode == "destroyed_loan":
+                loan = Loan.objects(index=data["loan"]).first()
+                loan.status = 2
+                loan.commits.append(commit)
+                loan.save()
+                return
+
+            if opcode == "partial_payment":
+                # DO MORE
+                loan = Loan.objects(index=data["loan"]).first()
+
+                loan.commits.append(commit)
+                loan.save()
+                return
+
+            if opcode == "total_payment":
+                loan = Loan.objects(index=data["loan"]).first()
+                loan.status = 3
                 loan.commits.append(commit)
                 loan.save()
                 return

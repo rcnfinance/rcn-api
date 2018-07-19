@@ -9,26 +9,23 @@ class TransferHandler(EventHandler):
 
     def _parse(self):
         data = self._event.get('data')[2:]
-        splited_args = utils.split_every(64, data)
-        # There is a bug with the "from" parameter
-        # self._from = utils.to_address(splited_args[0])
-        
-        # self._to = utils.to_address(splited_args[1])
-        # self._index = utils.to_int(splited_args[2])
-        # self._transaction = str(self._event.get('transactionHash'))
-        # self._block_number = self._event.get('blockNumber')
+        self._from = utils.to_address(web3.Web3.toHex(self._event.get("topics")[1]))
+        self._to = utils.to_address(web3.Web3.toHex(self._event.get("topics")[2]))
+        self._index = utils.to_int(data)
+        self._transaction = str(self._event.get('transactionHash'))
+        self._block_number = self._event.get('blockNumber')
 
     def do(self):
-        # commit = Commit()
+        commit = Commit()
 
-        # data = {}
-        # data['loan'] = self._index
-        # data['to'] =self._to
+        data = {}
+        data['loan'] = self._index
+        data['to'] = self._to
+        data['from'] = self._from
 
-        # commit.opcode = "lent"
-        # commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
-        # commit.proof = self._transaction
-        # commit.data = data
+        commit.opcode = "transfer"
+        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.proof = self._transaction
+        commit.data = data
 
-        # return [commit]
-        pass
+        return [commit]

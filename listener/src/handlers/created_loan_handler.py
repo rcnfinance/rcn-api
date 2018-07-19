@@ -3,6 +3,7 @@ import web3
 from datetime import datetime as dt
 from multiprocessing import Manager
 from multiprocessing import Process
+from multiprocessing import ProcessError
 from .event_handler import EventHandler
 from models import Commit
 from handlers import utils
@@ -22,10 +23,22 @@ class CreatedLoanHandler(EventHandler):
         self._transaction = str(self._event.get('transactionHash'))
 
     def do(self):
+        # TODO: Fix requests.exceptions.ChunkedEncodingError: ('Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
         self._logger.info("Calling Loan public functions for loan {}".format(self._index))
-        d_init = dt.now()
-        d = async_fill_loan(self._contract, self._w3, self._index, self._block_number)
+        incomplete_loan = True
+        while incomplete_loan:
+            d_init = dt.now()
+            try:
+                d = async_fill_loan(self._contract, self._w3, self._index, self._block_number)
+            except Exception as e:
+                self._logger.error(e.message, exc_info=True)
+            finally:
+                incomplete_loan = False if len(d) == 12 else True
+                if incomplete_loan:
+                    self._logger.info("Retry fill loan")
+
         d_fin = dt.now()
+
         self._logger.info("elapsed: {}".format(d_fin - d_init))
 
         commit = Commit()
@@ -38,49 +51,116 @@ class CreatedLoanHandler(EventHandler):
         return [commit]
 
 def fill_index(index, d):
-    d['index'] = index
+    try:
+        d['index'] = index
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_created(w3, block_number, d):
-    d['created'] = str(w3.eth.getBlock(block_number).timestamp)
+    try:
+        d['created'] = str(w3.eth.getBlock(block_number).timestamp)
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_status(contract, index, d):
-    d['status'] = contract.functions.getStatus(index).call()
+    try:
+        d['status'] = contract.functions.getStatus(index).call()
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_oracle(contract, index, d):
-    d['oracle'] = str(contract.functions.getOracle(index).call())
+    try:
+        d['oracle'] = str(contract.functions.getOracle(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_borrower(contract, index, d):
-    d['borrower'] = str(contract.functions.getBorrower(index).call())
+    try:
+        d['borrower'] = str(contract.functions.getBorrower(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_lender(contract, index, d):
-    d['lender'] = str(contract.functions.ownerOf(index).call())
+    try:
+        d['lender'] = str(contract.functions.ownerOf(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_creator(contract, index, d):
-    d['creator'] = str(contract.functions.getCreator(index).call())
+    try:
+        d['creator'] = str(contract.functions.getCreator(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_cosigner(contract, index, d):
-    d['cosigner'] = str(contract.functions.getCosigner(index).call())
+    try:
+        d['cosigner'] = str(contract.functions.getCosigner(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_amount(contract, index, d):
-    d['amount'] = str(contract.functions.getAmount(index).call())
+    try:
+        d['amount'] = str(contract.functions.getAmount(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_interest(contract, index, d):
-    d['interest'] = str(contract.functions.getInterest(index).call())
+    try:
+        d['interest'] = str(contract.functions.getInterest(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_punitory_interest(contract, index, d):
-    d['punitory_interest'] = str(contract.functions.getPunitoryInterest(index).call())
+    try:
+        d['punitory_interest'] = str(contract.functions.getPunitoryInterest(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_interest_timestamp(contract, index, d):
-    d['interest_timestamp'] = str(contract.functions.getInterestTimestamp(index).call())
+    try:
+        d['interest_timestamp'] = str(contract.functions.getInterestTimestamp(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_paid(contract, index, d):
-    d['paid'] = str(contract.functions.getPaid(index).call())
+    try:
+        d['paid'] = str(contract.functions.getPaid(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_interest_rate(contract, index, d):
-    d['interest_rate'] = str(contract.functions.getInterestRate(index).call())
+    try:
+        d['interest_rate'] = str(contract.functions.getInterestRate(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_interest_rate_punitory(contract, index, d):
-    d['interest_rate_punitory'] = str(contract.functions.getInterestRatePunitory(index).call())
+    try:
+        d['interest_rate_punitory'] = str(contract.functions.getInterestRatePunitory(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_due_time(contract, index, d):
-    d['due_time'] = str(dt.utcfromtimestamp(contract.functions.getDueTime(index).call()))
+    try:
+        d['due_time'] = str(dt.utcfromtimestamp(contract.functions.getDueTime(index).call()))
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_dues_in(contract, index, d):
-    d['dues_in'] = str(contract.functions.getDuesIn(index).call())
+    try:
+        d['dues_in'] = str(contract.functions.getDuesIn(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_currency(contract, index, d):
-    d['currency'] = str(contract.functions.getCurrency(index).call())
+    try:
+        d['currency'] = str(contract.functions.getCurrency(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_cancelable_at(contract, index, d):
-    d['cancelable_at'] = str(contract.functions.getCancelableAt(index).call())
+    try:
+        d['cancelable_at'] = str(contract.functions.getCancelableAt(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_lender_balance(contract, index, d):
-    d['lender_balance'] = str(contract.functions.getLenderBalance(index).call())
+    try:
+        d['lender_balance'] = str(contract.functions.getLenderBalance(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_expiration_requests(contract, index, d):
-    d['expiration_requests'] = str(contract.functions.getExpirationRequest(index).call())
+    try:
+        d['expiration_requests'] = str(contract.functions.getExpirationRequest(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
 def fill_approved_transfer(contract, index, d):
-    d['approved_transfer'] = str(contract.functions.getApproved(index).call())
+    try:
+        d['approved_transfer'] = str(contract.functions.getApproved(index).call())
+    except Exception as e:
+        print("EXCEPTION: {}".format(e))
+
 
 def async_fill_loan(contract, w3, index, block_number):
     manager = Manager()
@@ -89,31 +169,25 @@ def async_fill_loan(contract, w3, index, block_number):
     process = []
     process.append(Process(target=fill_index, args=(index, loan)))
     process.append(Process(target=fill_created, args=(w3, block_number, loan)))
-    # process.append(Process(target=fill_status, args=(contract, index, loan)))  # default 0
     process.append(Process(target=fill_oracle, args=(contract, index, loan)))
     process.append(Process(target=fill_borrower, args=(contract, index, loan)))
-    # process.append(Process(target=fill_lender, args=(contract, index, loan)))  # default 0x0
     process.append(Process(target=fill_creator, args=(contract, index, loan)))
-    # process.append(Process(target=fill_cosigner, args=(contract, index, loan)))  # default 0x0
     process.append(Process(target=fill_amount, args=(contract, index, loan)))
-    # process.append(Process(target=fill_interest, args=(contract, index, loan)))  # default 0
-    # process.append(Process(target=fill_punitory_interest, args=(contract, index, loan)))  # default 0
-    # process.append(Process(target=fill_interest_timestamp, args=(contract, index, loan)))  # default 0
-    # process.append(Process(target=fill_paid, args=(contract, index, loan)))  # default 0
     process.append(Process(target=fill_interest_rate, args=(contract, index, loan)))
     process.append(Process(target=fill_interest_rate_punitory, args=(contract, index, loan)))
-    # process.append(Process(target=fill_due_time, args=(contract, index, loan)))  # default 0
     process.append(Process(target=fill_dues_in, args=(contract, index, loan)))
     process.append(Process(target=fill_currency, args=(contract, index, loan)))
     process.append(Process(target=fill_cancelable_at, args=(contract, index, loan)))
-    # process.append(Process(target=fill_lender_balance, args=(contract, index, loan)))  # default 0
     process.append(Process(target=fill_expiration_requests, args=(contract, index, loan)))
-    # process.append(Process(target=fill_approved_transfer, args=(contract, index, loan)))  # default 0x0
 
-    for proc in process:
-        proc.start()
+    try:
+        for proc in process:
+            proc.start()
 
-    for proc in process:
-        proc.join()
-
+        for proc in process:
+            proc.join()
+    except ProcessError as e:
+        raise Exception(e.message)
+    except Exception as e:
+        raise Exception(e.message)
     return loan
