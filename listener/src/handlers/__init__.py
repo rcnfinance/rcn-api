@@ -21,6 +21,6 @@ def get_class_by_event(event):
         TotalPaymentHandler,
         TransferHandler
     ]
-    hash_signature_event = {event_class.signature_hash: event_class for event_class in events}
 
+    hash_signature_event = {event_class.signature_hash: event_class for event_class in events}
     return hash_signature_event.get(event.get('topics')[0])(event)

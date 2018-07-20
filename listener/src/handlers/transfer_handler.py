@@ -1,6 +1,7 @@
 import web3
 from .event_handler import EventHandler
 from handlers import utils
+from models import Commit
 
 class TransferHandler(EventHandler):
     signature = 'Transfer(address,address,uint256)'
@@ -8,10 +9,23 @@ class TransferHandler(EventHandler):
 
     def _parse(self):
         data = self._event.get('data')[2:]
-        splited_args = utils.split_every(64, data)
-        # self._from = utils.to_address(splited_args[0])
-        # self._to = utils.to_address(splited_args[1])
-        # self._token_id = utils.to_int(splited_args[2])
+        self._from = utils.to_address(web3.Web3.toHex(self._event.get("topics")[1]))
+        self._to = utils.to_address(web3.Web3.toHex(self._event.get("topics")[2]))
+        self._index = utils.to_int(data)
+        self._transaction = str(self._event.get('transactionHash'))
+        self._block_number = self._event.get('blockNumber')
 
     def do(self):
-        pass
+        commit = Commit()
+
+        data = {}
+        data['loan'] = self._index
+        data['to'] = self._to
+        data['from'] = self._from
+
+        commit.opcode = "transfer"
+        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.proof = self._transaction
+        commit.data = data
+
+        return [commit]

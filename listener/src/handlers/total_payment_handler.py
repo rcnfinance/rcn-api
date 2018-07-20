@@ -1,6 +1,7 @@
 import web3
 from .event_handler import EventHandler
 from handlers import utils
+from models import Commit
 
 class TotalPaymentHandler(EventHandler):
     signature = 'TotalPayment(uint256)'
@@ -10,6 +11,18 @@ class TotalPaymentHandler(EventHandler):
         data = self._event.get('data')[2:]
         splited_args = utils.split_every(64, data)
         self._index = utils.to_int(splited_args[0])
+        self._block_number = self._event.get('blockNumber')
+        self._transaction = str(self._event.get('transactionHash'))
 
     def do(self):
-        pass
+        commit = Commit()
+
+        data = {}
+        data['loan'] = self._index
+
+        commit.opcode = "total_payment"
+        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.proof = self._transaction
+        commit.data = data
+
+        return [commit]
