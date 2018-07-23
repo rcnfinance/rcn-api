@@ -15,7 +15,7 @@ class PartialPaymentHandler(EventHandler):
         self._from = utils.to_address(splited_args[2])
         self._amount = str(utils.to_int(splited_args[3]))
         self._block_number = self._event.get('blockNumber')
-        self._transaction = str(self._event.get('transactionHash'))
+        self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
         commit = Commit()

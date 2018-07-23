@@ -5,9 +5,9 @@ from models import Commit, Loan, Schedule
 logger = logging.getLogger(__name__)
 
 class Processor:
-    def __init__(self):
-        self.nonce = 0
-        self.clock = 0
+    def __init__(self, nonce=0, clock=0):
+        self.nonce = nonce
+        self.clock = clock
 
     def _pull_nonce(self):
         t = self.nonce
@@ -22,7 +22,7 @@ class Processor:
             if op:
                 logger.info('Handling schedule {}'.format(op.opcode))
                 self.clock = op.timestamp
-                commits = self._evaluate(op)
+                commits = self._evaluate_schedule(op)
                 # for commit in commits:
                 #     self.execute(commit)
                 self.execute(commits)
@@ -31,7 +31,7 @@ class Processor:
             else:
                 self.clock = target
 
-    def _evaluate(self, schedule):
+    def _evaluate_schedule(self, schedule):
         data = schedule.data
         opcode = schedule.opcode
 
