@@ -1,9 +1,11 @@
+import datetime
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListCreateAPI
 from graceful.parameters import StringParam
 import falcon
 from serializers import LoanSerializer
 from models import Loan
+from clock import Clock
 
 
 class LoanList(PaginatedListCreateAPI):
@@ -26,10 +28,6 @@ class LoanList(PaginatedListCreateAPI):
 
         return Loan.objects.filter(**filter_params).skip(offset).limit(page_size)
 
-    def create(self, params, meta, validated, **kwargs):
-        loan = Loan(**validated)
-        loan.save()
-        return loan
 
 
 class LoanItem(RetrieveAPI):
@@ -43,3 +41,14 @@ class LoanItem(RetrieveAPI):
                 title='Loan does not exists',
                 description='Loan with index={} does not exists'.format(loan_index)
             )
+
+
+class HealthStatusResource(object):
+    def on_get(self, req, resp):
+        clock = Clock()
+        now = datetime.datetime.utcnow()
+        lower_limit = datetime.timedelta(minutes=2)
+        resp.status = falcon.HTTP_503
+        is_sync = (now - lower_limit).timestamp() < clock.time
+        if is_sync:
+            resp.status = falcon.HTTP_200

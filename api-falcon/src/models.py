@@ -5,6 +5,7 @@ from mongoengine import LongField
 from mongoengine import DictField
 from mongoengine import ListField
 from mongoengine import EmbeddedDocumentListField
+from mongoengine import QuerySet
 
 
 class Commit(EmbeddedDocument):
@@ -49,3 +50,13 @@ class Schedule(Document):
     opcode = StringField(required=True, max_length=15)
     timestamp = LongField(required=True)
     data = DictField(required=True)
+
+class ClockQuerySet(QuerySet):
+    def get_clock(self):
+        return self.first()
+
+
+class ClockModel(Document):
+    time = StringField(required=True)
+
+    meta = {'queryset_class': ClockQuerySet}
