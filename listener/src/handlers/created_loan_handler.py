@@ -41,6 +41,19 @@ class CreatedLoanHandler(EventHandler):
 
         self._logger.info("elapsed: {}".format(d_fin - d_init))
 
+
+        # some rule
+        # if len(d.get("expiration_requests")) > 30:
+        #     return []
+        # else:
+        #     commit = Commit()
+        #     commit.opcode = "loan_request"
+        #     commit.timestamp = int(d['created'])
+        #     commit.proof = self._transaction
+        #     assert len(d) == 12, "Loan data not fully loaded"
+        #
+        #     commit.data = dict(d)
+        #     return [commit]
         commit = Commit()
         commit.opcode = "loan_request"
         commit.timestamp = int(d['created'])
@@ -49,6 +62,7 @@ class CreatedLoanHandler(EventHandler):
 
         commit.data = dict(d)
         return [commit]
+
 
 def fill_index(index, d):
     try:
