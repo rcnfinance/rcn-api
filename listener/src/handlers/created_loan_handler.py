@@ -20,7 +20,7 @@ class CreatedLoanHandler(EventHandler):
         self._borrower = utils.to_address(splited_args[1])
         self._creator = utils.to_address(splited_args[2])
         self._block_number = self._event.get('blockNumber')
-        self._transaction = str(self._event.get('transactionHash'))
+        self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
         # TODO: Fix requests.exceptions.ChunkedEncodingError: ('Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
@@ -41,6 +41,19 @@ class CreatedLoanHandler(EventHandler):
 
         self._logger.info("elapsed: {}".format(d_fin - d_init))
 
+
+        # some rule
+        # if len(d.get("expiration_requests")) > 30:
+        #     return []
+        # else:
+        #     commit = Commit()
+        #     commit.opcode = "loan_request"
+        #     commit.timestamp = int(d['created'])
+        #     commit.proof = self._transaction
+        #     assert len(d) == 12, "Loan data not fully loaded"
+        #
+        #     commit.data = dict(d)
+        #     return [commit]
         commit = Commit()
         commit.opcode = "loan_request"
         commit.timestamp = int(d['created'])
@@ -49,6 +62,7 @@ class CreatedLoanHandler(EventHandler):
 
         commit.data = dict(d)
         return [commit]
+
 
 def fill_index(index, d):
     try:
@@ -87,7 +101,7 @@ def fill_creator(contract, index, d):
         print("EXCEPTION: {}".format(e))
 def fill_cosigner(contract, index, d):
     try:
-        d['cosigner'] = str(contract.functions.getCosigner(index).call())
+        d['cosigner'] = contract.functions.getCosigner(index).call().hex()
     except Exception as e:
         print("EXCEPTION: {}".format(e))
 def fill_amount(contract, index, d):
@@ -137,7 +151,7 @@ def fill_dues_in(contract, index, d):
         print("EXCEPTION: {}".format(e))
 def fill_currency(contract, index, d):
     try:
-        d['currency'] = str(contract.functions.getCurrency(index).call())
+        d['currency'] = contract.web3.toHex(contract.functions.getCurrency(index).call())
     except Exception as e:
         print("EXCEPTION: {}".format(e))
 def fill_cancelable_at(contract, index, d):
@@ -157,7 +171,7 @@ def fill_expiration_requests(contract, index, d):
         print("EXCEPTION: {}".format(e))
 def fill_approved_transfer(contract, index, d):
     try:
-        d['approved_transfer'] = str(contract.functions.getApproved(index).call())
+        d['approved_transfer'] = contract.functions.getApproved(index).call().hex()
     except Exception as e:
         print("EXCEPTION: {}".format(e))
 

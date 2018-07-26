@@ -1,13 +1,14 @@
 import logging
 
 from models import Commit, Loan, Schedule
+from clock import Clock
 
 logger = logging.getLogger(__name__)
 
 class Processor:
     def __init__(self):
         self.nonce = 0
-        self.clock = 0
+        self.clock = Clock()
 
     def _pull_nonce(self):
         t = self.nonce
@@ -21,17 +22,15 @@ class Processor:
             op = Schedule.objects(timestamp__lte=target).order_by('-timestamp').first()
             if op:
                 logger.info('Handling schedule {}'.format(op.opcode))
-                self.clock = op.timestamp
-                commits = self._evaluate(op)
-                # for commit in commits:
-                #     self.execute(commit)
+                self.clock.advance_to(op.timestamp)
+                commits = self._evaluate_schedule(op)
                 self.execute(commits)
                 # Delete the runned schedule
                 op.delete()
             else:
-                self.clock = target
+                self.clock.advance_to(target)
 
-    def _evaluate(self, schedule):
+    def _evaluate_schedule(self, schedule):
         data = schedule.data
         opcode = schedule.opcode
 
@@ -78,7 +77,7 @@ class Processor:
 
                 # Schedule check expiration
                 # only schedule events for the next 1000 years
-                if int(loan.expiration_requests) - self.clock < 31536000000:
+                if int(loan.expiration_requests) - self.clock.time < 31536000000:
                     schedule = Schedule()
                     schedule.timestamp = loan.expiration_requests
                     schedule.opcode = 'check_expired'

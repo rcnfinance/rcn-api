@@ -5,6 +5,7 @@ from mongoengine import IntField
 from mongoengine import LongField
 from mongoengine import DictField
 from mongoengine import EmbeddedDocumentListField
+from mongoengine import QuerySet
 
 class Commit(EmbeddedDocument):
     opcode = StringField(required=True, max_length=15)
@@ -19,9 +20,9 @@ class Loan(Document):
     status = IntField(default='0', max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
-    lender = StringField(default='0x0', max_length=150)
+    lender = StringField(default='0x0000000000000000000000000000000000000000', max_length=150)
     creator = StringField(required=True, max_length=150)
-    cosigner = StringField(default='0x0', max_length=150)
+    cosigner = StringField(default='0x0000000000000000000000000000000000000000', max_length=150)
     amount = StringField(required=True, max_length=150)
     interest = StringField(default='0', max_length=150)
     punitory_interest = StringField(default='0', max_length=150)
@@ -35,7 +36,7 @@ class Loan(Document):
     cancelable_at = StringField(required=True, max_length=150)
     lender_balance = StringField(default='0', max_length=150)
     expiration_requests = StringField(required=True, max_length=150)
-    approved_transfer = StringField(default='0x0', max_length=150)
+    approved_transfer = StringField(default='0x0000000000000000000000000000000000000000', max_length=150)
     commits = EmbeddedDocumentListField(Commit)
     approbations = ListField(StringField())
 
@@ -46,3 +47,13 @@ class Schedule(Document):
     opcode = StringField(required=True, max_length=15)
     timestamp = LongField(required=True)
     data = DictField(required=True)
+
+class ClockQuerySet(QuerySet):
+    def get_clock(self):
+        return self.first()
+
+
+class ClockModel(Document):
+    time = StringField(required=True)
+
+    meta = {'queryset_class': ClockQuerySet}

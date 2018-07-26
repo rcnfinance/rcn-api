@@ -13,7 +13,7 @@ class ApprovedByHandler(EventHandler):
         self._index = utils.to_int(splited_args[0])
         self._address = utils.to_address(splited_args[1])
         self._block_number = self._event.get('blockNumber')
-        self._transaction = str(self._event.get('transactionHash'))
+        self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
         commit = Commit()

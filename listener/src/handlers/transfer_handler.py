@@ -12,7 +12,7 @@ class TransferHandler(EventHandler):
         self._from = utils.to_address(web3.Web3.toHex(self._event.get("topics")[1]))
         self._to = utils.to_address(web3.Web3.toHex(self._event.get("topics")[2]))
         self._index = utils.to_int(data)
-        self._transaction = str(self._event.get('transactionHash'))
+        self._transaction = self._event.get('transactionHash').hex()
         self._block_number = self._event.get('blockNumber')
 
     def do(self):

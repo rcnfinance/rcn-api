@@ -15,7 +15,7 @@ class LentHandler(EventHandler):
         self._lender = utils.to_address(splited_args[1])
         self._cosigner = utils.to_address(splited_args[2])
         self._block_number = self._event.get('blockNumber')
-        self._transaction = str(self._event.get('transactionHash'))
+        self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
         commit = Commit()
