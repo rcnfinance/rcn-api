@@ -105,6 +105,7 @@ class Listener:
         }
 
         self.log = self.w3.eth.filter(filter_params=filter_data)
+        time.sleep(30) # Wait warm up of the filter
         self.main()
 
 if __name__ == '__main__':
