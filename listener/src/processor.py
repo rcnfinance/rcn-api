@@ -125,7 +125,7 @@ class Processor:
                 loan.approbations.append(data["approved_by"])
                 loan.commits.append(commit)
                 loan.save()
-                self.log("Processing {} {} loan {} by ".format(commit.order, commit.opcode, loan.index, data['approved_by']))
+                self.log("Processing {} {} loan {} by {}".format(commit.order, commit.opcode, loan.index, data['approved_by']))
                 return
 
             if opcode == "destroyed_loan":
