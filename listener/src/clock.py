@@ -28,6 +28,10 @@ class Clock():
             self._clock.time = str(value)
             self._save()
 
+    def reset(self):
+        self._clock.time = '0'
+        self._save()
+
     @property
     def time(self):
         return int(self._clock.time)

@@ -83,6 +83,8 @@ class Listener:
         self.processor = Processor()
 
         self.connection = connect(db='rcn', host='mongo')
+        self.connection.drop_database('rcn')
+
         self.setup_logging(logging.INFO)
 
         config = json.load(open(CONFIG_PATH, 'r'))
@@ -109,6 +111,7 @@ class Listener:
         }
 
         self.log = self.w3.eth.filter(filter_params=filter_data)
+        time.sleep(30) # Wait warm up of the filter
         self.main()
 
 if __name__ == '__main__':

@@ -9,6 +9,7 @@ class Processor:
     def __init__(self):
         self.nonce = 0
         self.clock = Clock()
+        self.clock.reset()
 
     def _pull_nonce(self):
         t = self.nonce
