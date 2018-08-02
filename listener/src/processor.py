@@ -16,12 +16,12 @@ class Processor:
         return t
 
     def log(self, msg):
-        logger.info('PTime: {} - PNonce: {} - {})'.format(self.clock.time, self.nonce, msg))
+        logger.info('PTime: {} - PNonce: {} - {}'.format(self.clock.time, self.nonce, msg))
 
     def _advance_time(self, target):
         # For every second between the origin and the target
         # we must check the scheduled operations
-        self.log('Requested advance time to {}'.format(target))
+        self.log('Requested advance time to {} delta {}'.format(target, target - self.clock.time))
         while self.clock < target:
             op = Schedule.objects(timestamp__lte=target).order_by('-timestamp').first()
             if op:
@@ -40,6 +40,7 @@ class Processor:
 
         if opcode == "check_expired":
             loan = Loan.objects(index=data["loan"]).first()
+            self.log('Evaluate schedule {} loan {} at {}'.format(opcode, loan.index, schedule.timestamp))
             if loan.status == 0:
                 commit = Commit()
                 commit.opcode = "loan_expired"
