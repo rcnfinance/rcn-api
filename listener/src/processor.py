@@ -15,13 +15,17 @@ class Processor:
         self.nonce += 1
         return t
 
+    def log(self, msg):
+        logger.info('PTime: {} - PNonce: {} - {}'.format(self.clock.time, self.nonce, msg))
+
     def _advance_time(self, target):
         # For every second between the origin and the target
         # we must check the scheduled operations
+        self.log('Requested advance time to {} delta {}'.format(target, target - self.clock.time))
         while self.clock < target:
             op = Schedule.objects(timestamp__lte=target).order_by('-timestamp').first()
             if op:
-                logger.info('Handling schedule {}'.format(op.opcode))
+                self.log('Handling schedule {} scheduled {}'.format(op.opcode, op.timestamp))
                 self.clock.advance_to(op.timestamp)
                 commits = self._evaluate_schedule(op)
                 self.execute(commits)
@@ -36,6 +40,7 @@ class Processor:
 
         if opcode == "check_expired":
             loan = Loan.objects(index=data["loan"]).first()
+            self.log('Evaluate schedule {} loan {} at {}'.format(opcode, loan.index, schedule.timestamp))
             if loan.status == 0:
                 commit = Commit()
                 commit.opcode = "loan_expired"
@@ -56,8 +61,6 @@ class Processor:
             opcode = commit.opcode
             commit.order = self._pull_nonce()
 
-            logger.info("Processing {} {}".format(commit.order, commit.opcode))
-
             if opcode == "loan_request":
                 loan = Loan()
                 loan.index = data['index']
@@ -74,6 +77,7 @@ class Processor:
                 loan.expiration_requests = data['expiration_requests']
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} created loan {}".format(commit.order, commit.opcode, loan.index))
 
                 # Schedule check expiration
                 # only schedule events for the next 1000 years
@@ -84,6 +88,7 @@ class Processor:
                     schedule.data = {}
                     schedule.data['loan'] = loan.index
                     schedule.save()
+                    self.log("Created schedule {} at {} for loan {}".format(schedule.opcode, schedule.timestamp, loan.index))
 
                 return
 
@@ -93,6 +98,7 @@ class Processor:
                 assert int(loan.expiration_requests) <= self.clock, "The loan is not expired" # < or <= ? check contract
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
                 return
 
             if opcode == "lent":
@@ -102,6 +108,7 @@ class Processor:
                 loan.lender = data['lender']
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
                 return
 
             if opcode == "transfer":
@@ -110,6 +117,7 @@ class Processor:
                 loan.lender = data['to']
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {} from {} to {}".format(commit.order, commit.opcode, loan.index, data['from'], data['to']))
                 return
 
             if opcode == "approved_loan":
@@ -117,6 +125,7 @@ class Processor:
                 loan.approbations.append(data["approved_by"])
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {} by {}".format(commit.order, commit.opcode, loan.index, data['approved_by']))
                 return
 
             if opcode == "destroyed_loan":
@@ -124,14 +133,15 @@ class Processor:
                 loan.status = 2
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
                 return
 
             if opcode == "partial_payment":
                 # DO MORE
                 loan = Loan.objects(index=data["loan"]).first()
-
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
                 return
 
             if opcode == "total_payment":
@@ -139,6 +149,7 @@ class Processor:
                 loan.status = 3
                 loan.commits.append(commit)
                 loan.save()
+                self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
                 return
 
             assert False
