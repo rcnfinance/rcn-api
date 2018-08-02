@@ -79,6 +79,8 @@ class Listener:
         self.processor = Processor()
 
         self.connection = connect(db='rcn', host='mongo')
+        self.connection.drop_database('rcn')
+
         self.setup_logging(logging.INFO)
 
         config = json.load(open(CONFIG_PATH, 'r'))
