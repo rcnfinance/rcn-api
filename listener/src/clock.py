@@ -29,7 +29,7 @@ class Clock():
             self._save()
 
     def reset(self):
-        self._clock.time = 0
+        self._clock.time = '0'
         self._save()
 
     @property
