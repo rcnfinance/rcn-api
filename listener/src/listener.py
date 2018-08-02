@@ -30,12 +30,15 @@ class Listener:
         return self.log.get_new_entries()
 
     def sync_db(self):
+        logger.info('Started db sync')
         all_events = self.get_all_events()
         
         logger.info('There are {} new entries to sync'.format(len(all_events)))
 
         for event in all_events:
             self.process_event(event)
+
+        logger.info('Finished db sync')
 
     def process_event(self, event):
         logger.debug('Process event {}'.format(event))
@@ -51,6 +54,7 @@ class Listener:
             logger.info('Event already applied')
 
     def listen(self, sec=1):
+        logger.info('Started listening')
         while True:
             # Tick to current block time
             new_entries = self.get_new_entries()
