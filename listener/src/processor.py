@@ -2,7 +2,7 @@ import logging
 
 from models import Commit, Loan, Schedule
 from clock import Clock
-
+from mongoengine import connect
 from handlers import get_class_by_event
 
 logger = logging.getLogger(__name__)
@@ -19,7 +19,6 @@ class Processor:
         self.buffer.subscribe_integrity(self.integrity_error)
 
     def new_entries(self):
-        logger.info('New entries')
         for event in self.buffer.registry:
             if event.position > self.last_seen:
                 eventClass = get_class_by_event(event.data)
@@ -29,7 +28,8 @@ class Processor:
                 self.last_seen = event.position
 
     def integrity_error(self):
-        # TODO: Wipe to restauration point
+        self.connection = connect(db='rcn', host='mongo')
+        self.connection.drop_database('rcn')
         self.clock.reset()
         self.nonce = 0
 
