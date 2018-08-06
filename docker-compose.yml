@@ -27,7 +27,7 @@ services:
   listener:
     build: listener
     restart: always
-    command: python3 listener.py
+    command: python3 main.py
     volumes:
       - ./listener/src/:/project
     environment:

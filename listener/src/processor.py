@@ -3,13 +3,35 @@ import logging
 from models import Commit, Loan, Schedule
 from clock import Clock
 
+from handlers import get_class_by_event
+
 logger = logging.getLogger(__name__)
 
 class Processor:
-    def __init__(self):
+    last_seen = 0
+
+    def __init__(self, buffer):
+        self.buffer = buffer
         self.nonce = 0
         self.clock = Clock()
         self.clock.reset()
+        self.buffer.subscribe_changes(self.new_entries)
+        self.buffer.subscribe_integrity(self.integrity_error)
+
+    def new_entries(self):
+        logger.info('New entries')
+        for event in self.buffer.registry:
+            if event.position > self.last_seen:
+                eventClass = get_class_by_event(event.data)
+                logger.info('Apply event {}'.format(type(eventClass).__name__))
+                commits = eventClass.do()
+                self.execute(commits)
+                self.last_seen = event.position
+
+    def integrity_error(self):
+        # TODO: Wipe to restauration point
+        self.clock.reset()
+        self.nonce = 0
 
     def _pull_nonce(self):
         t = self.nonce
