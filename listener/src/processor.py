@@ -46,12 +46,13 @@ class Processor:
         # we must check the scheduled operations
         self.log('Requested advance time to {} delta {}'.format(target, target - self.clock.time))
         while self.clock < target:
-            op = Schedule.objects(timestamp__lte=target).order_by('-timestamp').first()
+            op = Schedule.objects(timestamp__lte=target).order_by('timestamp').first()
             if op:
                 self.log('Handling schedule {} scheduled {}'.format(op.opcode, op.timestamp))
                 self.clock.advance_to(op.timestamp)
                 commits = self._evaluate_schedule(op)
-                self.execute(commits)
+                if commits:
+                    self.execute(commits)
                 # Delete the runned schedule
                 op.delete()
             else:
