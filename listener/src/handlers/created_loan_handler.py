@@ -8,6 +8,7 @@ from multiprocessing import ProcessError
 from .event_handler import EventHandler
 from models import Commit
 from handlers import utils
+from web3_utils import SafeWeb3
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class CreatedLoanHandler(EventHandler):
         while incomplete_loan:
             d_init = dt.now()
             try:
-                d = async_fill_loan(self._contract, self._w3, self._index, self._block_number)
+                d = async_fill_loan(self._contract, SafeWeb3(self._w3), self._index, self._block_number)
             except Exception as e:
                 self._logger.error(e.message, exc_info=True)
             finally:
