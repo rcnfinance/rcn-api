@@ -1,4 +1,6 @@
 import datetime
+import logging
+import time
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListCreateAPI
 from graceful.parameters import StringParam
@@ -7,6 +9,7 @@ from serializers import LoanSerializer
 from models import Loan
 from clock import Clock
 
+logger = logging.getLogger(__name__)
 
 class LoanList(PaginatedListCreateAPI):
     serializer = LoanSerializer()
@@ -46,9 +49,10 @@ class LoanItem(RetrieveAPI):
 class HealthStatusResource(object):
     def on_get(self, req, resp):
         clock = Clock()
-        now = datetime.datetime.utcnow()
-        lower_limit = datetime.timedelta(minutes=2)
+        now = int(time.time())
+        lower_limit = 60 * 2 # 2 minutes
         resp.status = falcon.HTTP_503
-        is_sync = (now - lower_limit).timestamp() < clock.time
+        is_sync = now - clock.time < lower_limit
+        print('Sync status {} progress {} current {}'.format(is_sync, clock.time, now))
         if is_sync:
             resp.status = falcon.HTTP_200

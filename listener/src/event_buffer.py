@@ -13,6 +13,7 @@ class Event:
 class EventBuffer:
   synced_block = 0
   last_event = 0
+  last_timestamp = 0
 
   registry = []
   integrity_callbacks = []
@@ -21,9 +22,9 @@ class EventBuffer:
   # It should receive events, ignore duplicated ones and
   # register new ones. If an event between to already registered events
   # is dettected we should raise the alarm to the listeners.
-  def feed(self, lastblock, events):
+  def feed(self, lastblock, timestamp, events):
     state_changed = False
-
+  
     for event in events:
       if event is not Event:
         event = Event(event)
@@ -34,16 +35,18 @@ class EventBuffer:
         
         # Check if we have events already ahead
         if event.position < self.last_event:
+          logger.info('Rogue event dettected {}'.format(event.position))
           self.integrity_broken()
-          self.registry.sort(key=lambda x: x.position, reverse=False)
-          logger.info('Integrity error dettected current block {} last event {} rogue event {}'.format(self.synced_block, self.last_event, event.position))
         else:
           self.last_event = event.position
 
     if self.synced_block < lastblock:
       self.synced_block = lastblock
       state_changed = True
-    
+  
+    if timestamp > self.last_timestamp:
+      self.last_timestamp = timestamp
+
     if state_changed:
       self.new_entries()
 
@@ -56,9 +59,14 @@ class EventBuffer:
       self.entries_callbacks.append(callback)
 
   def integrity_broken(self):
+    self.registry.sort(key=lambda x: x.position)
+    logger.info('Integrity error dettected current block {} last event {}'.format(self.synced_block, self.last_event))
+    logger.debug('Current database:')
+    for l in self.registry:
+      logger.debug(l.data)
     for callback in self.integrity_callbacks:
       callback()
 
   def new_entries(self):
     for callable in self.entries_callbacks:
-      callable()
+      callable(self.last_timestamp)
