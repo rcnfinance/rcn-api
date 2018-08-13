@@ -15,4 +15,4 @@ class ApprovalHandler(EventHandler):
         # self._token_id = utils.to_int(splited_args[2])
 
     def do(self):
-        pass
+        return []

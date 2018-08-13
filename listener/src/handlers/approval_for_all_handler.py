@@ -14,4 +14,4 @@ class ApprovalForAllHandler(EventHandler):
         # self._approved = utils.to_bool(splited_args[2])
 
     def do(self):
-        pass
+        return []
