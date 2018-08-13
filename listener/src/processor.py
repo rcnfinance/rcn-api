@@ -1,5 +1,5 @@
 import logging
-
+import datetime
 from models import Commit, Loan, Schedule
 from clock import Clock
 from mongoengine import connect
@@ -79,6 +79,24 @@ class Processor:
             else:
                 return []
 
+        if opcode == "check_in_debt":
+            loan = Loan.objects(index=data["loan"]).first()
+            self.log('Evaluate schedule {} loan {} at {}'.format(opcode, loan.index, schedule.timestamp))
+            timestamp_now = datetime.datetime.utcnow().timestamp()
+            loan_dues_time = int(loan.due_time)
+            self.log("timestamp_now: {}, loan_dues_in: {}".format(timestamp_now, loan_dues_time))
+            if loan.status == 1 and timestamp_now > loan_dues_time:  # LENT
+                self.log("loan {} in debt".format(loan.index))
+                commit = Commit()
+                commit.opcode = "loan_in_debt"
+                commit.timestamp = schedule.timestamp
+                commit.data = {
+                    "loan": loan.index
+                }
+                return [commit]
+            else:
+                return []
+
         return []
 
     def execute(self, commits):
@@ -136,9 +154,21 @@ class Processor:
                     assert loan.status == 0, "Try to apply lend on already lent loan"
                     loan.status = 1
                     loan.lender = data['lender']
+                    loan.due_time = data["due_time"]
                     loan.commits.append(commit)
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
+
+                    # add schedule for in_debt
+                    schedule = Schedule()
+                    schedule.timestamp = loan.due_time
+                    schedule.opcode = "check_in_debt"
+                    schedule.data = {
+                        "loan": loan.index
+                    }
+                    schedule.save()
+                    self.log(
+                        "Created schedule {} at {} for loan {}".format(schedule.opcode, schedule.timestamp, loan.index))
 
                 if opcode == "transfer":
                     loan = Loan.objects(index=data['loan']).first()
