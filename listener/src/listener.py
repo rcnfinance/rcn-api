@@ -13,6 +13,8 @@ from utils import event_id
 from web3_utils import SafeWeb3
 
 CONFIG_PATH = "config.json"
+ABI_PATH = "engine-abi.json"
+
 logger = logging.getLogger(__name__)
 
 class Listener:
@@ -81,7 +83,7 @@ class Listener:
 
         url_node = config['URL_NODE']
         self.contract_address = Web3.toChecksumAddress(config['CONTRACT_ADDRESS'])
-        abi = config['ABI']
+        abi = json.load(open(ABI_PATH, 'r'))
 
         node_provider = web3.HTTPProvider(url_node)
         w3 = Web3(node_provider)
