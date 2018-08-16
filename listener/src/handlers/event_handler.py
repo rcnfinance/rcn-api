@@ -4,6 +4,7 @@ import web3
 
 
 CONFIG_PATH = "config.json"
+ABI_PATH = "engine-abi.json"
 
 class EventHandler():
     def __init__(self, event):
@@ -15,7 +16,7 @@ class EventHandler():
 
         url_node = config['URL_NODE']
         contract_address = config['CONTRACT_ADDRESS']
-        abi = config['ABI']
+        abi = json.load(open(ABI_PATH, 'r'))
 
         node_provider = web3.HTTPProvider(url_node)
         self._w3 = web3.Web3(node_provider)
