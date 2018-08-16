@@ -16,10 +16,6 @@ CONFIG_PATH = "config.json"
 logger = logging.getLogger(__name__)
 
 class Listener:
-    start_sync = 3169000
-    current_block = 3169000
-    safe_block = 3169000
-    
     def __init__(self, buffer):
         self.buffer = buffer
         self.buffer.subscribe_integrity(self.integrity_fault)
@@ -90,6 +86,10 @@ class Listener:
             address=self.contract_address,
             abi=abi
         )
+
+        self.start_sync = config['START_SYNC']
+        self.current_block = self.start_sync
+        self.safe_block = self.start_sync
 
         logger.info('Creating filter from block {}'.format(0))
 
