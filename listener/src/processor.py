@@ -170,6 +170,13 @@ class Processor:
                     self.log(
                         "Created schedule {} at {} for loan {}".format(schedule.opcode, schedule.timestamp, loan.index))
 
+                if opcode == "loan_in_debt":
+                    loan = Loan.objects(index=data['loan']).first()
+                    assert loan.status == 1, "The loan was paid or destroyed"
+                    loan.commits.append(commit)
+                    loan.save()
+                    self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
+
                 if opcode == "transfer":
                     loan = Loan.objects(index=data['loan']).first()
                     data['from'] = loan.lender
