@@ -1,8 +1,11 @@
+import os
 import json
 import time
 import logging
 import logging.handlers
 import web3
+from raven.handlers.logging import SentryHandler
+from raven.conf import setup_logging
 
 from web3 import Web3
 from models import Event, Commit
@@ -12,7 +15,6 @@ from utils import event_id
 
 from web3_utils import SafeWeb3
 
-CONFIG_PATH = "config.json"
 ABI_PATH = "engine-abi.json"
 
 logger = logging.getLogger(__name__)
@@ -67,7 +69,10 @@ class Listener:
         return self.w3.eth.getBlock(event.get('blockNumber')).get("timestamp")
 
     def setup_logging(self, level=logging.INFO):
+        handler = SentryHandler(os.environ.get("SENTRY_DSN"))
+        handler.setLevel(logging.ERROR)
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
+        setup_logging(handler)
 
     def run(self):
         self.connection = connect(db='rcn', host='mongo')
@@ -75,10 +80,8 @@ class Listener:
 
         self.setup_logging(logging.INFO)
 
-        config = json.load(open(CONFIG_PATH, 'r'))
-
-        url_node = config['URL_NODE']
-        self.contract_address = Web3.toChecksumAddress(config['CONTRACT_ADDRESS'])
+        url_node = os.environ['URL_NODE']
+        self.contract_address = Web3.toChecksumAddress(os.environ['CONTRACT_ADDRESS'])
         abi = json.load(open(ABI_PATH, 'r'))
 
         node_provider = web3.HTTPProvider(url_node)
@@ -89,7 +92,7 @@ class Listener:
             abi=abi
         )
 
-        self.start_sync = config['START_SYNC']
+        self.start_sync = int(os.environ['START_SYNC'])
         self.current_block = self.start_sync
         self.safe_block = self.start_sync
 
