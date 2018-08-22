@@ -32,6 +32,8 @@ services:
       - ./listener/src/:/project
     environment:
      - PYTHONUNBUFFERED=1
+    env_file:
+      - config.env
     depends_on:
       - mongo
     links:
