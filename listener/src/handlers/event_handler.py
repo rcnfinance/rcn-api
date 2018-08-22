@@ -1,9 +1,8 @@
+import os
 import logging
 import json
 import web3
 
-
-CONFIG_PATH = "config.json"
 ABI_PATH = "engine-abi.json"
 
 class EventHandler():
@@ -12,10 +11,8 @@ class EventHandler():
         self._parse()
         self._logger = logging.getLogger(self.__class__.__name__)
 
-        config = json.load(open(CONFIG_PATH, 'r'))
-
-        url_node = config['URL_NODE']
-        contract_address = config['CONTRACT_ADDRESS']
+        url_node = os.environ['URL_NODE']
+        contract_address = os.environ['CONTRACT_ADDRESS']
         abi = json.load(open(ABI_PATH, 'r'))
 
         node_provider = web3.HTTPProvider(url_node)
