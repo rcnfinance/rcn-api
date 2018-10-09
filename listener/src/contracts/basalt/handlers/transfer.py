@@ -1,9 +1,9 @@
 import web3
 from .event_handler import EventHandler
-from handlers import utils
-from models import Commit
+import utils
+from ..models import Commit
 
-class TransferHandler(EventHandler):
+class Transfer(EventHandler):
     signature = 'Transfer(address,address,uint256)'
     signature_hash = web3.Web3.sha3(text=signature)
 
@@ -16,6 +16,9 @@ class TransferHandler(EventHandler):
         self._block_number = self._event.get('blockNumber')
 
     def do(self):
+        self._logger.info("Apply handler")
+        block_timestamp = self._block_timestamp()
+        
         commit = Commit()
 
         data = {}
@@ -24,7 +27,7 @@ class TransferHandler(EventHandler):
         data['from'] = self._from
 
         commit.opcode = "transfer"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = block_timestamp
         commit.proof = self._transaction
         commit.data = data
 

@@ -1,19 +1,10 @@
 from mongoengine import StringField
-from mongoengine import Document, EmbeddedDocument
+from mongoengine import Document
+from mongoengine import ListField
 from mongoengine import IntField
 from mongoengine import LongField
-from mongoengine import DictField
-from mongoengine import ListField
 from mongoengine import EmbeddedDocumentListField
-from mongoengine import QuerySet
-
-
-class Commit(EmbeddedDocument):
-    opcode = StringField(required=True, max_length=15)
-    timestamp = LongField(required=True)
-    order = IntField(required=True)
-    proof = StringField(required=True, max_length=150)
-    data = DictField(required=True)
+from models import Commit
 
 
 class Loan(Document):
@@ -42,13 +33,21 @@ class Loan(Document):
     commits = EmbeddedDocumentListField(Commit)
     approbations = ListField(StringField())
 
+    def to_dict(self):
+        return {
+            "index": self.index,
+            "created": self.created,
+            "status": self.status,
+            "amount": self.amount,
+            "interest": self.interest,
+            "punitory_interest": self.punitory_interest,
+            "interest_timestamp": self.interest_timestamp,
+            "paid": self.paid,
+            "interest_rate": self.interest_rate,
+            "interest_rate_punitory": self.interest_rate_punitory,
+            "due_time": self.due_time,
+            "dues_in": self.dues_in,
+            "calcelable_at": self.cancelable_at,
+            "expiration_requests": self.expiration_requests
+        }
 
-class ClockQuerySet(QuerySet):
-    def get_clock(self):
-        return self.first()
-
-
-class ClockModel(Document):
-    time = StringField(required=True)
-
-    meta = {'queryset_class': ClockQuerySet}

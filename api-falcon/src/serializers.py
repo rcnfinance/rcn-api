@@ -10,7 +10,6 @@ class CommitSerializer(BaseSerializer):
     proof = RawField("proof")
     data = RawField("data")
 
-
 class LoanSerializer(BaseSerializer):
     index = RawField('index')
     created = RawField('created')

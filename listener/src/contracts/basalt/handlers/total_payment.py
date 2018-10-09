@@ -1,9 +1,9 @@
 import web3
 from .event_handler import EventHandler
-from handlers import utils
-from models import Commit
+import utils
+from ..models import Commit
 
-class TotalPaymentHandler(EventHandler):
+class TotalPayment(EventHandler):
     signature = 'TotalPayment(uint256)'
     signature_hash = web3.Web3.sha3(text=signature)
 
@@ -15,14 +15,17 @@ class TotalPaymentHandler(EventHandler):
         self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
+        self._logger.info("Apply handler")
         commit = Commit()
+        block_timestamp = self._block_timestamp()
 
         data = {}
         data['loan'] = self._index
 
         commit.opcode = "total_payment"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = block_timestamp
         commit.proof = self._transaction
         commit.data = data
+        # commit.loan = loan.to_dict()
 
         return [commit]

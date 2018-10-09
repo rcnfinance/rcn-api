@@ -1,9 +1,9 @@
 import web3
 from .event_handler import EventHandler
-from handlers import utils
-from models import Commit
+from ..models import Commit
+import utils
 
-class ApprovedByHandler(EventHandler):
+class ApprovedBy(EventHandler):
     signature = 'ApprovedBy(uint256,address)'
     signature_hash = web3.Web3.sha3(text=signature)
 
@@ -16,6 +16,7 @@ class ApprovedByHandler(EventHandler):
         self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
+        self._logger.info("Apply handler")
         commit = Commit()
 
         data = {}
@@ -23,7 +24,7 @@ class ApprovedByHandler(EventHandler):
         data['approved_by'] = self._address
 
         commit.opcode = "approved_loan"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.data = data
 

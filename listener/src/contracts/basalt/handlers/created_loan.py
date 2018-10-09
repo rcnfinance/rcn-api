@@ -6,13 +6,13 @@ from multiprocessing import Manager
 from multiprocessing import Process
 from multiprocessing import ProcessError
 from .event_handler import EventHandler
-from models import Commit
-from handlers import utils
-from web3_utils import SafeWeb3
+from ..models import Commit
+import utils
+# from web3_utils import SafeWeb3
 
 logger = logging.getLogger(__name__)
 
-class CreatedLoanHandler(EventHandler):
+class CreatedLoan(EventHandler):
     signature = 'CreatedLoan(uint256,address,address)'
     signature_hash = web3.Web3.sha3(text=signature)
 
@@ -26,13 +26,13 @@ class CreatedLoanHandler(EventHandler):
         self._transaction = self._event.get('transactionHash').hex()
 
     def do(self):
-        # TODO: Fix requests.exceptions.ChunkedEncodingError: ('Connection broken: IncompleteRead(0 bytes read)', IncompleteRead(0 bytes read))
+        self._logger.info("Apply handler")
         self._logger.info("Calling Loan public functions for loan {}".format(self._index))
         incomplete_loan = True
         while incomplete_loan:
             d_init = dt.now()
             try:
-                d = async_fill_loan(self._contract, SafeWeb3(self._w3), self._index, self._block_number)
+                d = async_fill_loan(self._contract_conn, self._index, self._block_number)
             except Exception as e:
                 self._logger.error(e.message, exc_info=True)
             finally:
@@ -41,26 +41,13 @@ class CreatedLoanHandler(EventHandler):
                     self._logger.info("Retry fill loan")
 
         d_fin = dt.now()
-
         self._logger.info("elapsed: {}".format(d_fin - d_init))
 
-
-        # some rule
-        # if len(d.get("expiration_requests")) > 30:
-        #     return []
-        # else:
-        #     commit = Commit()
-        #     commit.opcode = "loan_request"
-        #     commit.timestamp = int(d['created'])
-        #     commit.proof = self._transaction
-        #     assert len(d) == 12, "Loan data not fully loaded"
-        #
-        #     commit.data = dict(d)
-        #     return [commit]
         commit = Commit()
         commit.opcode = "loan_request"
         commit.timestamp = int(d['created'])
         commit.proof = self._transaction
+
         assert len(d) == 12, "Loan data not fully loaded"
 
         commit.data = dict(d)
@@ -179,7 +166,11 @@ def fill_approved_transfer(contract, index, d):
         logger.debug("EXCEPTION: {}".format(e))
 
 
-def async_fill_loan(contract, w3, index, block_number):
+def async_fill_loan(contract_conn, index, block_number):
+    w3 = contract_conn.w3
+    contract = contract_conn.contract
+    # print(w3.eth.getBlock(block_number).timestamp)
+
     manager = Manager()
     loan = manager.dict()
 
