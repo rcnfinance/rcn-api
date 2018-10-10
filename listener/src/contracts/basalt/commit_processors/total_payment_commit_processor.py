@@ -11,7 +11,7 @@ class TotalPaymentCommitProcessor(CommitProcessor):
         opcode = commit.opcode
         
         loan = Loan.objects(index=data["loan"]).first()
-        loan.status = 2
+        loan.status = 3
         loan.commits.append(commit)
         loan.save()
         self.logger.info("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
