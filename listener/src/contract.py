@@ -23,14 +23,18 @@ class Contract():
         self._handlers = {handler.signature_hash: handler for handler in self._event_handlers}
     
     def is_my_event(self, event):
-        event_hash = event.get("topics")[0]
+        event_hash = event.get("topics")[0].hex()
+        print("event_hash {}".format(event_hash))
+        # print("handlers in {}".format(self._name))
+        for handler_signature, handler_class in self._handlers.items():
+            print(handler_signature, handler_class)
         if event_hash in self._handlers:
             return True
         else:
             return False
 
     def handle_event(self, event):
-        event_hash = event.get("topics")[0]
+        event_hash = event.get("topics")[0].hex()
         handler = self._handlers.get(event_hash)
         self._logger.info("Handler name: {}".format(handler.__name__))
         h = handler(self._contract_connection, event)

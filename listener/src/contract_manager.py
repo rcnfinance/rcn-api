@@ -16,8 +16,13 @@ class ContractManager():
             self._schedule_processors.update(contract._schedule_processors)
 
     def handle_event(self, event):
+        # print("contracts in contractManager")
+        # print(self._contracts)
+        print("len contracts {}".format(len(self._contracts)))
         for contract in self._contracts:
-            if contract.is_my_event(event):
+            b = contract.is_my_event(event)
+            print(contract._name, b)
+            if b: #contract.is_my_event(event):
                 return contract.handle_event(event)
         return None
 

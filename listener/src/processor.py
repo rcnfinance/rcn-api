@@ -21,19 +21,20 @@ class Processor:
 
     def new_entries(self, timestamp):
         for event in self.buffer.registry:
+            # print(event.data)
             if event.position > self.last_seen:
                 handler = self._contract_manager.handle_event(event.data)
                 # eventClass = get_class_by_event(event.data)
                 # logger.info('Apply event {} position {} index {}'.format(type(eventClass).__name__, event.position, self.buffer.registry.index(event)))
                 self.last_seen = event.position
-                commits = handler.do()
+                commits = handler.handle()
                 if commits: 
                    self.execute(commits)
 
         self._advance_time(timestamp)
 
     def integrity_error(self):
-        self.connection = connect(db='rcn', host='mongo')
+        self.connection = connect(db='rcn', host='localhost')
         self.connection.drop_database('rcn')
         self.clock.reset()
         self.nonce = 0

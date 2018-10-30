@@ -1,6 +1,8 @@
 from mongoengine import StringField
 from mongoengine import LongField
 from mongoengine import DictField
+from mongoengine import ListField
+from mongoengine import BooleanField
 from mongoengine import IntField
 from mongoengine import Document
 from mongoengine import QuerySet
@@ -28,3 +30,16 @@ class ClockModel(Document):
     time = StringField(required=True)
 
     meta = {'queryset_class': ClockQuerySet}
+
+
+class Debt(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    error = BooleanField()
+    currency = StringField(required=True, max_length=150)
+    balance = StringField(required=True, max_length=150)
+    model = StringField(required=True, max_length=150)
+    creator = StringField(required=True, max_length=150)
+    oracle = StringField(required=True, max_length=150)
+
+    config = DictField()
+    states = ListField()
