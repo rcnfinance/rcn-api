@@ -144,8 +144,8 @@ workflows:
       - staging-mainnet:
           filters:
             branches:
-              only: aws
+              only: development
       - staging-ropsten:
           filters:
             branches:
-              only: aws
+              only: development
