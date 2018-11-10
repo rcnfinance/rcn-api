@@ -28,11 +28,11 @@ jobs:
       - run:
           name: Upload to S3
           command: |
-            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/${BUILD_NAME}/
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/ropsten/deploy-${BUILD_NAME}.tgz
       - run:
           name: Create Deploy
           command: |
-            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-ropsten --s3-location bucket=devops.rcn-api,key=${BUILD_NAME}/deploy-${BUILD_NAME}.tar.gz,bundleType=zip
+            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-ropsten --s3-location bucket=devops.rcn-api,key=ropsten/deploy-${BUILD_NAME}.tgz,bundleType=tgz --file-exists-behavior OVERWRITE
   deploy-mainnet:  
     docker:
       - image: circleci/python:3.6.1
@@ -60,11 +60,11 @@ jobs:
       - run:
           name: Upload to S3
           command: |
-            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/${BUILD_NAME}/
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/mainnet/deploy-${BUILD_NAME}.tgz
       - run:
           name: Create Deploy
           command: |
-            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-mainnet --s3-location bucket=devops.rcn-api,key=${BUILD_NAME}/deploy-${BUILD_NAME}.tar.gz,bundleType=zip
+            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-mainnet --s3-location bucket=devops.rcn-api,key=mainnet/deploy-${BUILD_NAME}.tgz,bundleType=tgz --file-exists-behavior OVERWRITE
 
 workflows:
   version: 2
