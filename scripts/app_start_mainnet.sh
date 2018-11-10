@@ -1,3 +1,3 @@
 [ "$(docker ps -q)" ] && docker stop $(docker ps -aq)
 [ "$(docker ps -aq)" ] && docker rm -f $(docker ps -aq)
-docker-compose up -d --build -f docker-compose.prod.yml --force-recreate
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --force-recreate
