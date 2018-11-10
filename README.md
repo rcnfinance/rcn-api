@@ -1,7 +1,5 @@
 # RCN-API
 
-Backend blabla rcn blabla
-
 ## Getting Started
 
 ### Prerequisites
