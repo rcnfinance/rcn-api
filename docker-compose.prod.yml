@@ -1,0 +1,40 @@
+version: '2'
+services:
+  api-falcon:
+    restart: always
+    build: api-falcon
+    volumes:
+      - ./api-falcon/src/:/project/
+    command: gunicorn -b 0.0.0.0:8000 --access-logfile - --error-logfile - api
+    ports:
+      - 8000:8000
+    links:
+      - mongo:mongo
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:rc-xenial
+    restart: always
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
+  listener:
+    build: listener
+    restart: always
+    command: python3 main.py
+    volumes:
+      - ./listener/src/:/project
+    environment:
+     - PYTHONUNBUFFERED=1
+    env_file:
+      - config.prod.env
+    depends_on:
+      - mongo
+    links:
+      - mongo:mongo
