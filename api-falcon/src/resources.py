@@ -1,15 +1,17 @@
 import datetime
 import logging
 import time
-from graceful.resources.generic import RetrieveAPI
-from graceful.resources.generic import PaginatedListCreateAPI
-from graceful.parameters import StringParam
 import falcon
+
+from graceful.resources.generic import RetrieveAPI, PaginatedListCreateAPI
+from graceful.parameters import StringParam
+
 from serializers import LoanSerializer
 from models import Loan
 from clock import Clock
 
 logger = logging.getLogger(__name__)
+
 
 class LoanList(PaginatedListCreateAPI):
     serializer = LoanSerializer()
