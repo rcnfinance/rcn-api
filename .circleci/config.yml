@@ -1,15 +1,41 @@
 version: 2
 
-deployment:
-  staging:
-    branch: aws
-    codedeploy:
-      rcn-api:
-        application_root: /
-        region: us-east-2
-        revision_location:
-          revision_type: S3
-          s3_location:
-            bucket: devops.rcn-api
-            key_pattern: rcn-api-ropsten-{BRANCH}-{SHORT_COMMIT}
-        deployment_group: rcn-api-ropsten
+jobs:
+  deploy:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Create build name
+          command: |
+            echo 'export BUILD_NAME="ropsten-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz .
+            ls
+      - run:
+          name: Upload to S3
+          command: |
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/${BUILD_NAME}/
+      - run:
+          name: Create Deploy
+          command: |
+            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-ropsten --s3-location bucket=devops.rcn-api,key=${BUILD_NAME}/deploy-${BUILD_NAME}.tar.gz,bundleType=zip
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: aws
