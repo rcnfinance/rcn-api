@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  deploy:  
+  deploy-ropsten:  
     docker:
       - image: circleci/python:3.6.1
     environment:
@@ -14,14 +14,17 @@ jobs:
           command: |
             echo 'export BUILD_NAME="ropsten-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
       - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.ropsten.yml ./appspec.yml
+      - run:
           name: Install awscli
           command: |
             sudo pip install awscli
       - run:
           name: Compress project
           command: |
-            tar -czvf ../deploy-${BUILD_NAME}.tar.gz .
-            ls
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
       - run:
           name: Upload to S3
           command: |
@@ -30,12 +33,48 @@ jobs:
           name: Create Deploy
           command: |
             aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-ropsten --s3-location bucket=devops.rcn-api,key=${BUILD_NAME}/deploy-${BUILD_NAME}.tar.gz,bundleType=zip
+  deploy-mainnet:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Create build name
+          command: |
+            echo 'export BUILD_NAME="mainnet-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.mainnet.yml ./appspec.yml
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Upload to S3
+          command: |
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/${BUILD_NAME}/
+      - run:
+          name: Create Deploy
+          command: |
+            aws deploy create-deployment --application-name rcn-api --deployment-group-name rcn-api-mainnet --s3-location bucket=devops.rcn-api,key=${BUILD_NAME}/deploy-${BUILD_NAME}.tar.gz,bundleType=zip
 
 workflows:
   version: 2
   build-deploy:
     jobs:
-      - deploy:
+      - deploy-ropsten:
+          filters:
+            branches:
+              only: aws
+      - deploy-mainnet:
           filters:
             branches:
               only: aws

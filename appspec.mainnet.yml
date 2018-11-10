@@ -9,7 +9,7 @@ hooks:
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: scripts/app_start.sh
+    - location: scripts/app_start_mainnet.sh
       timeout: 3000
       runas: root
   ApplicationStop:
