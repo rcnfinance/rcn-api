@@ -73,8 +73,8 @@ workflows:
       - deploy-ropsten:
           filters:
             branches:
-              only: aws
+              only: master
       - deploy-mainnet:
           filters:
             branches:
-              only: aws
+              only: master
