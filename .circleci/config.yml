@@ -25,9 +25,13 @@ jobs:
           name: Compress project
           command: |
             tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-ropsten.tar.gz
       # Save build
       - store_artifacts:
-          path: ../deploy-${BUILD_NAME}.tar.gz
+          path: ./deploy-ropsten.tar.gz
       - run:
           name: Upload to S3
           command: |
@@ -60,9 +64,13 @@ jobs:
           name: Compress project
           command: |
             tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-mainnet.tar.gz
       # Save build
       - store_artifacts:
-          path: ../deploy-${BUILD_NAME}.tar.gz
+          path: ./deploy-staging-mainnet.tar.gz
       - run:
           name: Upload to S3
           command: |
@@ -95,9 +103,13 @@ jobs:
           name: Compress project
           command: |
             tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-ropsten.tar.gz
       # Save build
       - store_artifacts:
-          path: ../deploy-${BUILD_NAME}.tar.gz
+          path: ./deploy-staging-ropsten.tar.gz
       - run:
           name: Upload to S3
           command: |
