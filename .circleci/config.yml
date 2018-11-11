@@ -1,6 +1,25 @@
 version: 2
 
 jobs:
+  build-mainnet:
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.mainnet.yml ./appspec.yml
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-mainnet.tar.gz *
+      # Save build
+      - store_artifacts:
+          path: ../deploy-mainnet.tar.gz
   deploy-ropsten:  
     docker:
       - image: circleci/python:3.6.1
@@ -31,7 +50,7 @@ jobs:
             cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-ropsten.tar.gz
       # Save build
       - store_artifacts:
-          path: ./deploy-ropsten.tar.gz
+          path: ../deploy-ropsten.tar.gz
       - run:
           name: Upload to S3
           command: |
@@ -70,7 +89,7 @@ jobs:
             cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-mainnet.tar.gz
       # Save build
       - store_artifacts:
-          path: ./deploy-staging-mainnet.tar.gz
+          path: ../deploy-staging-mainnet.tar.gz
       - run:
           name: Upload to S3
           command: |
@@ -109,7 +128,7 @@ jobs:
             cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-ropsten.tar.gz
       # Save build
       - store_artifacts:
-          path: ./deploy-staging-ropsten.tar.gz
+          path: ../deploy-staging-ropsten.tar.gz
       - run:
           name: Upload to S3
           command: |
@@ -122,6 +141,7 @@ workflows:
   version: 2
   build-deploy:
     jobs:
+      - build-mainnet
       - deploy-ropsten:
           filters:
             branches:
