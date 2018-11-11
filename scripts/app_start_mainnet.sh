@@ -1,3 +1,2 @@
-[ "$(docker ps -q)" ] && docker stop $(docker ps -aq)
-[ "$(docker ps -aq)" ] && docker rm -f $(docker ps -aq)
+#!/usr/bin/env bash
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build --force-recreate

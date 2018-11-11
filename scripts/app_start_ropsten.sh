@@ -1,3 +1,2 @@
-[ "$(docker ps -q)" ] && docker stop $(docker ps -aq)
-[ "$(docker ps -aq)" ] && docker rm -f $(docker ps -aq)
+#!/usr/bin/env bash
 docker-compose up -d --build --force-recreate
