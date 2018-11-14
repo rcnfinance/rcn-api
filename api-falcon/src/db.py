@@ -1,3 +1,3 @@
 from mongoengine import connect
 
-connection = connect(db='rcn', host='localhost')
+connection = connect(db='rcn', host='mongo')

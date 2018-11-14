@@ -10,6 +10,7 @@ class CommitSerializer(BaseSerializer):
     proof = RawField("proof")
     data = RawField("data")
 
+
 class DebtSerializer(BaseSerializer):
     id = RawField("id")
     error = RawField("error")
@@ -18,4 +19,36 @@ class DebtSerializer(BaseSerializer):
     model = RawField("model")
     creator = RawField("creator")
     oracle = RawField("oracle")
+    commits = ListField("list of commits", serializer=CommitSerializer())
 
+
+class ConfigSerializer(BaseSerializer):
+    id = RawField("id")
+    data = RawField("data")
+    commits = ListField("list of commits", serializer=CommitSerializer())
+
+
+class RequestSerializer(BaseSerializer):
+    id = RawField("id")
+    open = RawField("open")
+    approved = RawField("approved")
+    position = RawField("position")
+    expiration = RawField("expiration")
+    amount = RawField("amount")
+    cosigner = RawField("cosigner")
+    model = RawField("model")
+    creator = RawField("creator")
+    oracle = RawField("oracle")
+    borrower = RawField("borrower")
+    salt = RawField("salt")
+    loanData = RawField("loanData")
+    canceled = RawField("canceled")
+    created = RawField("created")
+    commits = ListField("list of commits", serializer=CommitSerializer())
+
+
+class OracleHistorySerializer(BaseSerializer):
+    id = RawField("id")
+    tokens = RawField("tokens")
+    equivalent = RawField("equivalent")
+    timestamp = RawField("timestamp")
