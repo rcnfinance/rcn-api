@@ -3,6 +3,7 @@ import time
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListCreateAPI
 from graceful.parameters import StringParam
+from graceful.parameters import BoolParam
 import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
@@ -21,8 +22,23 @@ logger = logging.getLogger(__name__)
 class DebtList(PaginatedListCreateAPI):
     serializer = DebtSerializer()
 
+    error = BoolParam("Error filter")
+    currency = StringParam("Currency filter")
+    model = StringParam("Model filter")
+    creator = StringParam("Creator filter")
+    oracle = StringParam("Oracle filter")
+
     def list(self, params, meta, **kwargs):
-        return Debt.objects.all()
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        return Debt.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
 class DebtItem(RetrieveAPI):
@@ -33,8 +49,8 @@ class DebtItem(RetrieveAPI):
             return Debt.objects.get(id=id_debt)
         except Debt.DoesNotExist:
             raise falcon.HTTPNotFound(
-                title='Loan does not exists',
-                description='Loan with index={} does not exists'.format(id_debt)
+                title='Debt does not exists',
+                description='Debt with index={} does not exists'.format(id_debt)
             )
 
 
@@ -61,8 +77,26 @@ class ConfigItem(RetrieveAPI):
 class RequestList(PaginatedListCreateAPI):
     serializer = RequestSerializer()
 
+    open = BoolParam("Open filter")
+    approved = BoolParam("Approved filter")
+    cosigner = StringParam("Cosigner filter")
+    model = StringParam("Model filter")
+    creator = StringParam("Creator filter")
+    oracle = StringParam("Oracle filter")
+    borrower = StringParam("Borrower filter")
+    canceled = StringParam("Canceled filter")
+
     def list(self, params, meta, **kwargs):
-        return Request.objects.all()
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        return Request.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
 class RequestItem(RetrieveAPI):
