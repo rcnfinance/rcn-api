@@ -16,13 +16,8 @@ class ContractManager():
             self._schedule_processors.update(contract._schedule_processors)
 
     def handle_event(self, event):
-        # print("contracts in contractManager")
-        # print(self._contracts)
-        print("len contracts {}".format(len(self._contracts)))
         for contract in self._contracts:
-            b = contract.is_my_event(event)
-            print(contract._name, b)
-            if b: #contract.is_my_event(event):
+            if contract.is_my_event(event):
                 return contract.handle_event(event)
         return None
 
@@ -34,6 +29,7 @@ class ContractManager():
 
     def handle_commit(self, commit, optional_data={}):
         commit_processor = self._get_commit_processor_by_opcode(commit.opcode)
+        print("commit class {}".format(commit_processor.__class__.__name__))
         commit_processor.process(commit, **optional_data)
 
     def handle_schedule(self, schedule, optional_data={}):

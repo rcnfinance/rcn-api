@@ -5,10 +5,9 @@ import logging.handlers
 from raven.handlers.logging import SentryHandler
 from raven.conf import setup_logging
 
-# from mongoengine import connect
-# from web3_utils import SafeWeb3
 
 logger = logging.getLogger(__name__)
+
 
 class Listener:
     def __init__(self, buffer, contract_manager):
@@ -26,7 +25,7 @@ class Listener:
             "address": contract_addresses
         })
         return logs
-    
+
     def get_last_events(self, start):
         logger.info("Getting events in range {} to latest".format(start))
         contract_addresses = [contract._address for contract in self._contract_manager._contracts]
@@ -54,7 +53,11 @@ class Listener:
             else:
                 dest_timestamp = self._contract_manager._ethereum_connection.w3.eth.getBlock(dest_number).timestamp
                 new_entries = self.get_range_events(self.safe_block, dest_number)
-            logger.info('There are {} new entries {} -> {} | {}'.format(len(new_entries), self.safe_block, dest_number, last_block.number))
+
+            message = 'There are {} new entries {} -> {} | {}'.format(
+                len(new_entries), self.safe_block, dest_number, last_block.number
+            )
+            logger.info(message)
 
             self.buffer.feed(dest_number, dest_timestamp, new_entries)
 

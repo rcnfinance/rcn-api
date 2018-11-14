@@ -10,12 +10,14 @@ all_contracts = [debt_engine, installments]
 
 contract_manager = ContractManager(all_contracts)
 
+
 def run():
     connect(db="rcn", host="localhost")
     buffer = EventBuffer()
     processor = Processor(buffer, contract_manager)
     listener = Listener(buffer, contract_manager)
     listener.run()
+
 
 if __name__ == '__main__':
     run()

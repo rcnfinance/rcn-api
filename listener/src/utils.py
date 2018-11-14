@@ -1,17 +1,22 @@
 import web3
 
+
 def split_every(n, string):
     return [string[i:i + n] for i in range(0, len(string), n)]
+
 
 def to_address(hex_string):
     return '0x' + hex_string[-40:]
 
+
 def to_int(hex_string):
     return web3.Web3.toInt(hexstr=hex_string)
+
 
 def to_bool(hex_string):
     # TODO: fix this
     return hex_string
+
 
 def calculate_interest(time_delta, interest_rate, amount):
     if amount == 0:
@@ -26,8 +31,8 @@ def calculate_interest(time_delta, interest_rate, amount):
     return int(real_delta), int(interest)
 
 
-def get_internal_interest(timestamp, loan_interest_timestamp, loan_interest, loan_punitory_interest, loan_due_time, loan_paid,
-                          loan_amount, loan_interest_rate, loan_interest_rate_punitory):
+def get_internal_interest(timestamp, loan_interest_timestamp, loan_interest, loan_punitory_interest, loan_due_time,
+                          loan_paid, loan_amount, loan_interest_rate, loan_interest_rate_punitory):
     # loan object from models.py
     # timestamp int
     # return None if timestamp < loan.interest_timestamp

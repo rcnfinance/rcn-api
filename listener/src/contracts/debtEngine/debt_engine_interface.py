@@ -8,3 +8,7 @@ class DebtEngineInterface():
     def get_model_by_id(self, id_):
         model = self.get_debt_by_id(id_)[4]
         return model
+
+    def get_state_by_id(self, id_):
+        state = self.contract.coontract.functions.states(id_).call()
+        return state

@@ -3,9 +3,9 @@ from db import connection
 from models import Schedule
 from clock import Clock
 from mongoengine import connect
-# from handlers import get_class_by_event
 
 logger = logging.getLogger(__name__)
+
 
 class Processor:
     last_seen = 0
@@ -21,15 +21,12 @@ class Processor:
 
     def new_entries(self, timestamp):
         for event in self.buffer.registry:
-            # print(event.data)
             if event.position > self.last_seen:
                 handler = self._contract_manager.handle_event(event.data)
-                # eventClass = get_class_by_event(event.data)
-                # logger.info('Apply event {} position {} index {}'.format(type(eventClass).__name__, event.position, self.buffer.registry.index(event)))
                 self.last_seen = event.position
                 commits = handler.handle()
-                if commits: 
-                   self.execute(commits)
+                if commits:
+                    self.execute(commits)
 
         self._advance_time(timestamp)
 
@@ -66,18 +63,19 @@ class Processor:
                 self.clock.advance_to(target)
 
     def _evaluate_schedule(self, schedule):
-        
         additional_data = {
             "clock": self.clock
         }
 
         return self._contract_manager.handle_schedule(schedule)
 
-
     def execute(self, commits):
         for commit in commits:
             if commit.timestamp < self.clock.time:
-                logger.info('Old commit loaded {} {} {} {}'.format(commit.timestamp, self.clock.time, commit.timestamp - self.clock.time, commit.opcode))
+                message = 'Old commit loaded {} {} {} {}'.format(
+                    commit.timestamp, self.clock.time, commit.timestamp - self.clock.time, commit.opcode
+                )
+                logger.info(message)
                 self.buffer.integrity_broken()
                 return
             else:

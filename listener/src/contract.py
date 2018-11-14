@@ -24,11 +24,8 @@ class Contract():
     
     def is_my_event(self, event):
         event_hash = event.get("topics")[0].hex()
-        print("event_hash {}".format(event_hash))
-        # print("handlers in {}".format(self._name))
-        for handler_signature, handler_class in self._handlers.items():
-            print(handler_signature, handler_class)
-        if event_hash in self._handlers:
+        event_address = event.get("address")
+        if event_hash in self._handlers and event_address == self._address:
             return True
         else:
             return False

@@ -6,6 +6,7 @@ class EventHandler():
         self._event = event
         self._contract_conn = contract_conn
         self._logger = logging.getLogger(self.__class__.__name__)
+        self._event_abi = self._contract_conn.abi
         self._parse()
 
     def _parse(self):
