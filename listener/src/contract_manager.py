@@ -1,3 +1,9 @@
+import logging
+
+
+logger = logging.getLogger(__name__)
+
+
 class ContractManager():
     def __init__(self, contract_list):
         self._contracts = contract_list
@@ -29,7 +35,7 @@ class ContractManager():
 
     def handle_commit(self, commit, optional_data={}):
         commit_processor = self._get_commit_processor_by_opcode(commit.opcode)
-        print("commit class {}".format(commit_processor.__class__.__name__))
+        logger.info("commit class {}".format(commit_processor.__class__.__name__))
         commit_processor.process(commit, **optional_data)
 
     def handle_schedule(self, schedule, optional_data={}):
