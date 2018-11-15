@@ -28,7 +28,7 @@ docker-compose up -d
 #### Test APIrest
 
 ```bash
-curl http://localhost:8000/v1/loans/
+curl http://localhost:8000/v4/debts/
 ```
 
 api doc: see api-falcon/doc/api_doc.yaml
