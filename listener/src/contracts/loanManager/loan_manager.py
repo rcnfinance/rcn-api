@@ -21,6 +21,11 @@ from .commit_processors.canceled import Canceled as CanceledCommitProcessor
 from .commit_processors.cosigned import Cosigned as CosignedCommitProcessor
 from .commit_processors.lent import Lent as LentCommitProcessor
 from .commit_processors.requested import Requested as RequestedCommitProcessor
+from .commit_processors.approved_error import ApprovedError as ApprovedErrorCommitProcessor
+from .commit_processors.approved_rejected import ApprovedRejected as ApprovedRejectectCommitProcessor
+from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
+from .commit_processors.settled_cancel import SettledCancel as SettledCancelCommitProcessor
+from .commit_processors.settled_lend import SettledLend as SettledLendCommitProcessor
 
 ADDRESS = "0xA6E4B95A0D1be10E886317Fe711a4515544c578a"
 
@@ -41,7 +46,12 @@ commit_processors = [
     CanceledCommitProcessor(),
     CosignedCommitProcessor(),
     LentCommitProcessor(),
-    RequestedCommitProcessor()
+    RequestedCommitProcessor(),
+    ApprovedErrorCommitProcessor(),
+    ReadedOracleCommitProcessor(),
+    ApprovedRejectectCommitProcessor(),
+    SettledCancelCommitProcessor(),
+    SettledLendCommitProcessor()
 ]
 
 schedule_processors = []
