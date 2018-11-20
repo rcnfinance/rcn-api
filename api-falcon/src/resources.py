@@ -1,7 +1,7 @@
 import logging
 import time
 from graceful.resources.generic import RetrieveAPI
-from graceful.resources.generic import PaginatedListCreateAPI
+from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
 from graceful.parameters import BoolParam
 import falcon
@@ -19,7 +19,7 @@ from clock import Clock
 logger = logging.getLogger(__name__)
 
 
-class DebtList(PaginatedListCreateAPI):
+class DebtList(PaginatedListAPI):
     serializer = DebtSerializer()
 
     error = BoolParam("Error filter")
@@ -54,7 +54,7 @@ class DebtItem(RetrieveAPI):
             )
 
 
-class ConfigList(PaginatedListCreateAPI):
+class ConfigList(PaginatedListAPI):
     serializer = ConfigSerializer()
 
     def list(self, params, meta, **kwargs):
@@ -65,7 +65,7 @@ class ConfigList(PaginatedListCreateAPI):
         page = filter_params.pop("page")
 
         offset = page * page_size
-        
+
         return Config.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
@@ -82,7 +82,7 @@ class ConfigItem(RetrieveAPI):
             )
 
 
-class RequestList(PaginatedListCreateAPI):
+class RequestList(PaginatedListAPI):
     serializer = RequestSerializer()
 
     open = BoolParam("Open filter")
@@ -120,7 +120,7 @@ class RequestItem(RetrieveAPI):
             )
 
 
-class OracleHistoryList(PaginatedListCreateAPI):
+class OracleHistoryList(PaginatedListAPI):
     serializer = OracleHistorySerializer()
 
     def list(self, params, meta, **kwargs):
