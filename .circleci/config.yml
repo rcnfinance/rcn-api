@@ -1,0 +1,156 @@
+version: 2
+
+jobs:
+  build-mainnet:
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.mainnet.yml ./appspec.yml
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-mainnet.tar.gz *
+      # Save build
+      - store_artifacts:
+          path: ../deploy-mainnet.tar.gz
+  deploy-ropsten:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Create build name
+          command: |
+            echo 'export BUILD_NAME="ropsten-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.ropsten.yml ./appspec.yml
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-ropsten.tar.gz
+      # Save build
+      - store_artifacts:
+          path: ../deploy-ropsten.tar.gz
+      - run:
+          name: Upload to S3
+          command: |
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/ropsten/deploy-${BUILD_NAME}.tgz
+      - run:
+          name: Create Deploy
+          command: |
+            aws deploy create-deployment --file-exists-behavior=OVERWRITE --application-name rcn-api --deployment-group-name rcn-api-ropsten --s3-location bucket=devops.rcn-api,key=ropsten/deploy-${BUILD_NAME}.tgz,bundleType=tgz
+  staging-mainnet:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Create build name
+          command: |
+            echo 'export BUILD_NAME="mainnet-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.mainnet.yml ./appspec.yml
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-mainnet.tar.gz
+      # Save build
+      - store_artifacts:
+          path: ../deploy-staging-mainnet.tar.gz
+      - run:
+          name: Upload to S3
+          command: |
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/staging/mainnet/deploy-${BUILD_NAME}.tgz
+      - run:
+          name: Create Deploy
+          command: |
+            aws deploy create-deployment --file-exists-behavior=OVERWRITE --application-name rcn-api --deployment-group-name rcn-api-staging-mainnet --s3-location bucket=devops.rcn-api,key=staging/mainnet/deploy-${BUILD_NAME}.tgz,bundleType=tgz
+  staging-ropsten:  
+    docker:
+      - image: circleci/python:3.6.1
+    environment:
+      AWS_DEFAULT_OUTPUT: json
+      AWS_DEFAULT_REGION: us-east-2
+    steps:
+      - checkout
+      - run:
+          name: Create build name
+          command: |
+            echo 'export BUILD_NAME="ropsten-"${CIRCLE_BRANCH}${CIRCLE_SHA1}' >> $BASH_ENV
+      - run:
+          name: Select AppSpec
+          command: |
+            mv ./appspec.ropsten.yml ./appspec.yml
+      - run:
+          name: Install awscli
+          command: |
+            sudo pip install awscli
+      - run:
+          name: Compress project
+          command: |
+            tar -czvf ../deploy-${BUILD_NAME}.tar.gz *
+      - run:
+          name: Copy project artifact 
+          command: |
+            cp ../deploy-${BUILD_NAME}.tar.gz ../deploy-staging-ropsten.tar.gz
+      # Save build
+      - store_artifacts:
+          path: ../deploy-staging-ropsten.tar.gz
+      - run:
+          name: Upload to S3
+          command: |
+            aws s3 cp ../deploy-${BUILD_NAME}.tar.gz s3://devops.rcn-api/staging/ropsten/deploy-${BUILD_NAME}.tgz
+      - run:
+          name: Create Deploy
+          command: |
+            aws deploy create-deployment --file-exists-behavior=OVERWRITE --application-name rcn-api --deployment-group-name rcn-api-staging-ropsten --s3-location bucket=devops.rcn-api,key=staging/ropsten/deploy-${BUILD_NAME}.tgz,bundleType=tgz
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build-mainnet
+      - deploy-ropsten:
+          filters:
+            branches:
+              only: master
+      - staging-mainnet:
+          filters:
+            branches:
+              only: development
+      - staging-ropsten:
+          filters:
+            branches:
+              only: development
