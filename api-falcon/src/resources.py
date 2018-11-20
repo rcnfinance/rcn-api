@@ -58,7 +58,15 @@ class ConfigList(PaginatedListCreateAPI):
     serializer = ConfigSerializer()
 
     def list(self, params, meta, **kwargs):
-        return Config.objects.all()
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+        
+        return Config.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
 class ConfigItem(RetrieveAPI):
