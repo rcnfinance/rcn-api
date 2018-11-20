@@ -116,7 +116,16 @@ class OracleHistoryList(PaginatedListCreateAPI):
     serializer = OracleHistorySerializer()
 
     def list(self, params, meta, **kwargs):
-        return OracleHistory.objects.all()
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        return OracleHistory.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
 class OracleHistoryItem(RetrieveAPI):
