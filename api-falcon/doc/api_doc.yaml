@@ -20,6 +20,11 @@ servers:
       description: this value is assigned by the service provider, in this example `gigantic-server.com`
     port:
       default: '8000'
+    basePath:
+      enum:
+        - /
+        - v4
+      default: v4
 
 paths:
   /health_status:
