@@ -11,28 +11,44 @@ class CommitSerializer(BaseSerializer):
     data = RawField("data")
 
 
-class LoanSerializer(BaseSerializer):
-    index = RawField('index')
-    created = RawField('created')
-    status = RawField('status')
-    oracle = RawField('oracle')
-    borrower = RawField('borrower')
-    lender = RawField('lender')
-    creator = RawField('creator')
-    cosigner = RawField('cosigner')
-    amount = RawField('amount')
-    interest = RawField('interest')
-    punitory_interest = RawField('punitory_interest')
-    interest_timestamp = RawField('interest_timestamp')
-    paid = RawField('paid')
-    interest_rate = RawField('interest_rate')
-    interest_rate_punitory = RawField('interest_rate_punitory')
-    due_time = RawField('due_time')
-    dues_in = RawField('dues_in')
-    currency = RawField('currency')
-    cancelable_at = RawField('cancelable_at')
-    lender_balance = RawField('lender_balance')
-    expiration_requests = RawField('expiration_requests')
-    approved_transfer = RawField('approved_transfer')
+class DebtSerializer(BaseSerializer):
+    id = RawField("id")
+    error = RawField("error")
+    currency = RawField("currency")
+    balance = RawField("balance")
+    model = RawField("model")
+    creator = RawField("creator")
+    oracle = RawField("oracle")
     commits = ListField("list of commits", serializer=CommitSerializer())
-    approbations = RawField("List of approbations")
+
+
+class ConfigSerializer(BaseSerializer):
+    id = RawField("id")
+    data = RawField("data")
+    commits = ListField("list of commits", serializer=CommitSerializer())
+
+
+class RequestSerializer(BaseSerializer):
+    id = RawField("id")
+    open = RawField("open")
+    approved = RawField("approved")
+    position = RawField("position")
+    expiration = RawField("expiration")
+    amount = RawField("amount")
+    cosigner = RawField("cosigner")
+    model = RawField("model")
+    creator = RawField("creator")
+    oracle = RawField("oracle")
+    borrower = RawField("borrower")
+    salt = RawField("salt")
+    loanData = RawField("loanData")
+    canceled = RawField("canceled")
+    created = RawField("created")
+    commits = ListField("list of commits", serializer=CommitSerializer())
+
+
+class OracleHistorySerializer(BaseSerializer):
+    id = RawField("id")
+    tokens = RawField("tokens")
+    equivalent = RawField("equivalent")
+    timestamp = RawField("timestamp")
