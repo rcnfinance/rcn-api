@@ -50,7 +50,7 @@ class DebtItem(RetrieveAPI):
         except Debt.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title='Debt does not exists',
-                description='Debt with index={} does not exists'.format(id_debt)
+                description='Debt with id={} does not exists'.format(id_debt)
             )
 
 
@@ -78,7 +78,7 @@ class ConfigItem(RetrieveAPI):
         except Config.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title='Config does not exists',
-                description='Config with index={} does not exists'.format(id_config)
+                description='Config with id={} does not exists'.format(id_config)
             )
 
 
@@ -141,7 +141,7 @@ class OracleHistoryItem(RetrieveAPI):
 
     def retrieve(self, params, meta, id_request, **kwargs):
         try:
-            OracleHistory.objects.get(id=id_request)
+            return OracleHistory.objects.get(id=id_request)
         except OracleHistory.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title="History does not exists",
