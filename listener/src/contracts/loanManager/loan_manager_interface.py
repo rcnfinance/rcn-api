@@ -6,8 +6,7 @@ class LoanManagerInterface():
     def get_request_data(self, _id):
         request_data = self.fn.requests(_id).call()
         parsed_request_data = self.__parse_data(request_data)
-        parsed_request_data["currency"] = self.get_currency(_id)
-        parsed_request_data["due_time"] = self.get_due_time(_id)
+        parsed_request_data["currency"] = self.get_currency(int(_id, 16))
 
         return parsed_request_data
 
@@ -33,7 +32,7 @@ class LoanManagerInterface():
         return self.fn.getDirectory().call()
 
     def get_currency(self, _id):
-        return self.fn.getCurrency(_id).call()
+        return self.fn.getCurrency(_id).call().hex()
 
     def get_due_time(self, _id):
         return self.fn.getDueTime(_id).call()

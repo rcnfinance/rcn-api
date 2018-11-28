@@ -81,11 +81,11 @@ class InstallmentsCreated(Created):
 
         data = {
             "installments": config[0],
-            "duration": config[1],
-            "lentTime": config[2],
-            "cuota": config[3],
-            "interestRate": config[4],
-            "timeUnit": config[5],
+            "timeUnit": config[1],
+            "duration": config[2],
+            "lentTime": config[3],
+            "cuota": int(config[4]),
+            "interestRate": int(config[5].hex(), 16),
             "id": self._id,
         }
 

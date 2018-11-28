@@ -3,7 +3,21 @@ from contract import Contract
 from ethereum_connection import EthereumConnection
 from ethereum_connection import ContractConnection
 
-from .loan_manager_interface import LoanManagerInteface
+from .loan_manager_interface import LoanManagerInterface
+
+
+ADDRESS = "0xA6E4B95A0D1be10E886317Fe711a4515544c578a"
+
+ABI_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)),
+    "abi.json"
+)
+URL_NODE = "https://ropsten.node.rcn.loans:8545/"
+
+eth_conn = EthereumConnection(URL_NODE)
+contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)
+
+loan_manager_interface = LoanManagerInterface(contract_connection)
 
 from .handlers.approved import Approved
 from .handlers.approved_error import ApprovedError
@@ -26,19 +40,6 @@ from .commit_processors.approved_rejected import ApprovedRejected as ApprovedRej
 from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
 from .commit_processors.settled_cancel import SettledCancel as SettledCancelCommitProcessor
 from .commit_processors.settled_lend import SettledLend as SettledLendCommitProcessor
-
-ADDRESS = "0xA6E4B95A0D1be10E886317Fe711a4515544c578a"
-
-ABI_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    "abi.json"
-)
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
-
-eth_conn = EthereumConnection(URL_NODE)
-contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)
-
-debt_engine_interface = LoanManagerInteface(contract_connection)
 
 
 commit_processors = [

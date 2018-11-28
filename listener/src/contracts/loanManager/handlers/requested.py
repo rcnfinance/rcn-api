@@ -1,6 +1,7 @@
 import web3
 from contracts.event import EventHandler
 from models import Request, Commit
+from contracts.loanManager.loan_manager import loan_manager_interface
 
 
 class Requested(EventHandler):
@@ -26,17 +27,17 @@ class Requested(EventHandler):
             "id": self._id,
             "open": True,
             "approved": request_data.get("creator") == request_data.get("borrower"),
-            "position": 0,
+            "position": "0",
             "cosigner": "0x0",
             "currency": request_data.get("currency"),
-            "amount": request_data.get("amount"),
+            "amount": str(request_data.get("amount")),
             "model": request_data.get("model"),
             "creator": request_data.get("creator"),
             "oracle": request_data.get("oracle"),
             "borrower": request_data.get("borrower"),
-            "salt": self._salt,
+            "salt": str(self._salt),
             "loanData": request_data.get("loanData"),
-            "expiration": request_data.get("expiration"),
+            "expiration": str(request_data.get("expiration")),
             "created": str(self._block_timestamp())
         }
 
