@@ -6,6 +6,7 @@ from mongoengine import IntField
 from mongoengine import Document
 from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
+from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
 
 
@@ -15,6 +16,15 @@ class Commit(EmbeddedDocument):
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
+
+class Descriptor(EmbeddedDocument):
+    firstObligation = StringField(required=True, max_length=150)
+    totalObligation = StringField(required=True, max_length=150)
+    duration = StringField(required=True, max_length=150)
+    interestRate = StringField(required=True, max_length=150)
+    punitiveInterestRate = StringField(required=True, max_length=150)
+    frequency = StringField(required=True, max_length=150)
+    installments = StringField(required=True, max_length=150)    
 
 
 class Schedule(Document):
@@ -67,6 +77,9 @@ class Request(Document):
     loanData = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
     created = StringField(required=True, max_length=100)
+    descriptor = EmbeddedDocumentField(Descriptor)
+    currency = StringField(required=True, max_length=150) 
+    status = StringField(required=True, max_length=150)
     commits = EmbeddedDocumentListField(Commit)
 
 
@@ -75,3 +88,5 @@ class OracleHistory(Document):
     tokens = StringField(required=True, max_length=150)
     equivalent = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=100)
+
+

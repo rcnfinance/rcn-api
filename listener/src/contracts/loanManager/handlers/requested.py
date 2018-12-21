@@ -22,6 +22,7 @@ class Requested(EventHandler):
         commit.proof = self._transaction
 
         request_data = loan_manager_interface.get_request_data(self._id)
+        print("requestData =", request_data)
 
         data = {
             "id": self._id,
