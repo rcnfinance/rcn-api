@@ -24,7 +24,7 @@ class LoanManagerInterface():
         print("loanID=",_id)
         parsed_request_data = self.__parse_data(request_data)
         parsed_request_data["currency"] = self.get_currency(int(_id, 16))
-        parsed_request_data["status"] = self.get_status(int(_id, 16))
+        parsed_request_data["status"] = str(self.get_status(int(_id, 16)))
         parsed_request_data["descriptor"] = self.get_descriptor(parsed_request_data)
 
         return parsed_request_data
@@ -82,13 +82,13 @@ class LoanManagerInterface():
         yearAccrued = (totalObligation * 86400 * 360) / duration;
         interestRate = ((yearAccrued / parsed_request_data["amount"]) - 1) * 100;
 
-        descriptor.firstObligation = firstObligationAmount
-        descriptor.totalObligation = totalObligation
-        descriptor.duration = duration
-        descriptor.interestRate = interestRate
-        descriptor.punitiveInterestRate = contractModel.simPunitiveInterestRate(loanData).call()
-        descriptor.frequency = contractModel.simFrequency(loanData).call()
-        descriptor.installments = contractModel.simInstallments(loanData).call()
+        descriptor.firstObligation = str(firstObligationAmount)
+        descriptor.totalObligation = str(totalObligation)
+        descriptor.duration = str(duration)
+        descriptor.interestRate = str(interestRate)
+        descriptor.punitiveInterestRate = str(contractModel.simPunitiveInterestRate(loanData).call())
+        descriptor.frequency = str(contractModel.simFrequency(loanData).call())
+        descriptor.installments = str(contractModel.simInstallments(loanData).call())
  
 
         print("firstObligation=",descriptor.firstObligation)

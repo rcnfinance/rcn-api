@@ -25,6 +25,9 @@ class Requested(CommitProcessor):
         request.salt = data.get("salt")
         request.loanData = data.get("loanData")
         request.created = data.get("created")
+        request.descriptor = data.get("descriptor")
+        request.currency = data.get("currency")
+        request.status = data.get("status")
         request.commits.append(commit)
 
         request.save()

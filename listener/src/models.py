@@ -75,7 +75,6 @@ class Request(Document):
     borrower = StringField(required=True, max_length=150)
     salt = StringField(required=True, max_length=150)
     loanData = StringField(required=True, max_length=150)
-    canceled = BooleanField(default=False)
     created = StringField(required=True, max_length=100)
     descriptor = EmbeddedDocumentField(Descriptor)
     currency = StringField(required=True, max_length=150) 
