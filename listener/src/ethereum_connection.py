@@ -20,12 +20,12 @@ class EthereumConnection():
 class ContractConnection():
     def __init__(self, eth_conn, contract_address, abi_path):
         self._eth_conn = eth_conn
-        self._contract_address = contract_address
+        self._contract_address = self._eth_conn.w3.toChecksumAddress(contract_address)
         self._abi_path = abi_path
 
         self.__json_abi = self.__open_abi()
         self._contract = self._eth_conn.w3.eth.contract(
-            address=self._eth_conn.w3.toChecksumAddress(self._contract_address),
+            address=self._contract_address,
             abi=self.__json_abi
         )
 
