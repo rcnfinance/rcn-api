@@ -1,4 +1,4 @@
-from models import Request
+from models import Loan
 from contracts.commit_processor import CommitProcessor
 
 
@@ -9,8 +9,8 @@ class Approved(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        request = Request.objects.get(id=data.get("id"))
+        loan = Loan.objects.get(id=data.get("id"))
 
-        request.approved = data.get("approved")
-        request.commits.append(commit)
-        request.save()
+        loan.approved = data.get("approved")
+        loan.commits.append(commit)
+        loan.save()

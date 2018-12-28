@@ -9,6 +9,15 @@ class CommitSerializer(BaseSerializer):
     order = RawField("order")
     proof = RawField("proof")
     data = RawField("data")
+
+class Descriptor(BaseSerializer):
+    firstObligation = RawField("firstObligation")
+    totalObligation = RawField("totalObligation")
+    duration = RawField("duration")
+    interestRate = RawField("interestRate")
+    punitiveInterestRate = RawField("punitiveInterestRate")
+    frequency = RawField("frecuency")
+    installments = RawField("installments")        
         
 
 class DebtSerializer(BaseSerializer):
@@ -28,7 +37,7 @@ class ConfigSerializer(BaseSerializer):
     commits = ListField("list of commits", serializer=CommitSerializer())
 
 
-class RequestSerializer(BaseSerializer):
+class LoanSerializer(BaseSerializer):
     id = RawField("id")
     open = RawField("open")
     approved = RawField("approved")
@@ -42,8 +51,10 @@ class RequestSerializer(BaseSerializer):
     borrower = RawField("borrower")
     salt = RawField("salt")
     loanData = RawField("loanData")
-    canceled = RawField("canceled")
     created = RawField("created")
+    descriptor = RawField("descriptor")
+    currency = RawField("currency")
+    status = RawField("status")
     commits = ListField("list of commits", serializer=CommitSerializer())
 
    

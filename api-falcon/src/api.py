@@ -5,8 +5,8 @@ from resources import DebtList
 from resources import ConfigItem
 from resources import ConfigList
 from resources import HealthStatusResource
-from resources import RequestList
-from resources import RequestItem
+from resources import LoanList
+from resources import LoanItem
 from resources import OracleHistoryList
 from resources import OracleHistoryItem
 from falcon_cors import CORS
@@ -24,8 +24,8 @@ api.add_route("/v4/debts/{id_debt}/", DebtItem())
 api.add_route("/v4/configs/", ConfigList())
 api.add_route("/v4/configs/{id_config}/", ConfigItem())
 
-api.add_route("/v4/requests", RequestList())
-api.add_route("/v4/requests/{id_request}", RequestItem())
+api.add_route("/v4/loans/", LoanList())
+api.add_route("/v4/loans/{id_loan}", LoanItem())
 
 api.add_route("/v4/oracle_history/", OracleHistoryList())
-api.add_route("/v4/oracle_history/{id_request}", OracleHistoryItem())
+api.add_route("/v4/oracle_history/{id_loan}", OracleHistoryItem())

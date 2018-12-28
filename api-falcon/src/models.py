@@ -61,7 +61,7 @@ class Debt(Document):
     created = StringField(required=True, max_length=100)
     commits = EmbeddedDocumentListField(Commit)
 
-class Request(Document):
+class Loan(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     open = BooleanField(required=True)
     approved = BooleanField(required=True)

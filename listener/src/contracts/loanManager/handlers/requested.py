@@ -1,6 +1,6 @@
 import web3
 from contracts.event import EventHandler
-from models import Request, Commit
+from models import Loan, Commit
 from contracts.loanManager.loan_manager import loan_manager_interface
 
 

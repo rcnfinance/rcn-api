@@ -7,11 +7,11 @@ from graceful.parameters import BoolParam
 import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
-from serializers import RequestSerializer
+from serializers import LoanSerializer
 from serializers import OracleHistorySerializer
 from models import Debt
 from models import Config
-from models import Request
+from models import Loan
 from models import OracleHistory
 from clock import Clock
 
@@ -82,8 +82,8 @@ class ConfigItem(RetrieveAPI):
             )
 
 
-class RequestList(PaginatedListAPI):
-    serializer = RequestSerializer()
+class LoanList(PaginatedListAPI):
+    serializer = LoanSerializer()
 
     open = BoolParam("Open filter")
     approved = BoolParam("Approved filter")
@@ -104,19 +104,19 @@ class RequestList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Request.objects.filter(**filter_params).skip(offset).limit(page_size)
+        return Loan.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
-class RequestItem(RetrieveAPI):
-    serializer = RequestSerializer()
+class LoanItem(RetrieveAPI):
+    serializer = LoanSerializer()
 
-    def retrieve(self, params, meta, id_request, **kwargs):
+    def retrieve(self, params, meta, id_loan, **kwargs):
         try:
-            return Request.objects.get(id=id_request)
-        except Request.DoesNotExist:
+            return Loan.objects.get(id=id_loan)
+        except Loan.DoesNotExist:
             raise falcon.HTTPNotFound(
-                title="Request does not exists",
-                description="Request with id={} does not exists".format(id_request)
+                title="Loan does not exists",
+                description="Loan with id={} does not exists".format(id_loan)
             )
 
 
@@ -139,13 +139,13 @@ class OracleHistoryList(PaginatedListAPI):
 class OracleHistoryItem(RetrieveAPI):
     serializer = OracleHistorySerializer()
 
-    def retrieve(self, params, meta, id_request, **kwargs):
+    def retrieve(self, params, meta, id_loan, **kwargs):
         try:
-            return OracleHistory.objects.get(id=id_request)
+            return OracleHistory.objects.get(id=id_loan)
         except OracleHistory.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title="History does not exists",
-                description="History with id={} does not exists".format(id_request)
+                description="History with id={} does not exists".format(id_loan)
             )
 
 

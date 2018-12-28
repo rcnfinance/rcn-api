@@ -1,4 +1,4 @@
-from models import Request
+from models import Loan
 from contracts.commit_processor import CommitProcessor
 
 
@@ -9,9 +9,9 @@ class Lent(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        request = Request.objects.get(id=data.get("id"))
+        loan = Loan.objects.get(id=data.get("id"))
 
-        request.open = data.get("open")
-        request.commits.append(commit)
+        loan.open = data.get("open")
+        loan.commits.append(commit)
 
-        request.save()
+        loan.save()
