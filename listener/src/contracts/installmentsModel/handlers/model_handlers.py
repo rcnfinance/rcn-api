@@ -79,13 +79,15 @@ class InstallmentsCreated(Created):
 
         config = installments_model_interface.get_config_by_id(self._id)
 
+        print(config)
+
         data = {
             "installments": config[0],
             "timeUnit": config[1],
             "duration": config[2],
             "lentTime": config[3],
             "cuota": int(config[4]),
-            "interestRate": int(config[5].hex(), 16),
+            "interestRate": int(config[5]),
             "id": self._id,
         }
 

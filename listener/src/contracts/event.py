@@ -17,3 +17,8 @@ class EventHandler():
 
     def _block_timestamp(self):
         return self._contract_conn.w3.eth.getBlock(self._block_number).timestamp
+
+# def get_abi_event(abi, signature):
+#     for abi_event in abi.events:
+#         if signature.name == abi_event.name
+#         return abi_event

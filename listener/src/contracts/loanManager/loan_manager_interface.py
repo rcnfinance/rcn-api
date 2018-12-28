@@ -3,6 +3,7 @@ import os
 from ethereum_connection import EthereumConnection
 from ethereum_connection import ContractConnection
 
+MODEL_ADDRESS = "0xE3633E63Da6154D9450e34F0d4c64c6A51f6918e"
 
 ABI_PATH = os.path.join(
     "/project/contracts/installmentsModel",
@@ -33,17 +34,16 @@ class LoanManagerInterface():
         parsed_data = {}
         parsed_data["open"] = request_data[0]
         parsed_data["approved"] = request_data[1]
-        parsed_data["currency"] = request_data[2].hex()
-        parsed_data["position"] = request_data[3]
-        parsed_data["expiration"] = request_data[4]
-        parsed_data["amount"] = request_data[5]
-        parsed_data["cosigner"] = request_data[6]
-        parsed_data["model"] = request_data[7]
-        parsed_data["creator"] = request_data[8]
-        parsed_data["oracle"] = request_data[9]
-        parsed_data["borrower"] = request_data[10]
-        parsed_data["nonce"] = request_data[11]
-        parsed_data["loanData"] = request_data[12].hex()
+        parsed_data["position"] = request_data[2]
+        parsed_data["expiration"] = request_data[3]
+        parsed_data["amount"] = request_data[4]
+        parsed_data["cosigner"] = request_data[5]
+        parsed_data["model"] = request_data[6]
+        parsed_data["creator"] = request_data[7]
+        parsed_data["oracle"] = request_data[8]
+        parsed_data["borrower"] = request_data[9]
+        parsed_data["nonce"] = request_data[10]
+        parsed_data["loanData"] = request_data[11].hex()
 
         return parsed_data
 
@@ -61,44 +61,45 @@ class LoanManagerInterface():
 
     def get_descriptor(self, parsed_request_data):
     
-        contract_connectionModel = ContractConnection(eth_conn, parsed_request_data["model"], ABI_PATH)
+        contract_connectionModel = ContractConnection(eth_conn, MODEL_ADDRESS, ABI_PATH)
         contractModel = contract_connectionModel.contract.functions   
         loanData = parsed_request_data["loanData"]
         print("abi-path",ABI_PATH)
-        print("model=",parsed_request_data["model"])
+        print("model=",MODEL_ADDRESS)
         print("contractModel=",contractModel) 
-        print("loanData",loanData)
+        print("loanData=",loanData)
 
-        validate = contractModel.validate(loanData).call()
-        print("esDataLoanValida:",validate)
+        if str(loanData) != "":
+            validate = contractModel.validate(loanData).call()
+            print("esDataLoanValida:",validate)
 
-        descriptor = Descriptor()
+            descriptor = Descriptor()
 
-        (firstObligationAmount, firstObligationTime) = contractModel.simFirstObligation(loanData).call()
+            (firstObligationAmount, firstObligationTime) = contractModel.simFirstObligation(loanData).call()
 
-        totalObligation = contractModel.simTotalObligation(loanData).call()
-        duration = contractModel.simDuration(loanData).call()
+            totalObligation = contractModel.simTotalObligation(loanData).call()
+            duration = contractModel.simDuration(loanData).call()
 
-        yearAccrued = (totalObligation * 86400 * 360) / duration;
-        interestRate = ((yearAccrued / parsed_request_data["amount"]) - 1) * 100;
+            yearAccrued = (totalObligation * 86400 * 360) / duration
+            interestRate = ((yearAccrued / float(parsed_request_data["amount"])) - 1) * 100
 
-        descriptor.firstObligation = str(firstObligationAmount)
-        descriptor.totalObligation = str(totalObligation)
-        descriptor.duration = str(duration)
-        descriptor.interestRate = str(interestRate)
-        descriptor.punitiveInterestRate = str(contractModel.simPunitiveInterestRate(loanData).call())
-        descriptor.frequency = str(contractModel.simFrequency(loanData).call())
-        descriptor.installments = str(contractModel.simInstallments(loanData).call())
- 
+            descriptor.firstObligation = str(firstObligationAmount)
+            descriptor.totalObligation = str(totalObligation)
+            descriptor.duration = str(duration)
+            descriptor.interestRate = str(interestRate)
+            descriptor.punitiveInterestRate = str(contractModel.simPunitiveInterestRate(loanData).call())
+            descriptor.frequency = str(contractModel.simFrequency(loanData).call())
+            descriptor.installments = str(contractModel.simInstallments(loanData).call())
+    
 
-        print("firstObligation=",descriptor.firstObligation)
-        print("totalObligation=",descriptor.totalObligation)
-        print("duration=",descriptor.duration)
-        print("interestRate=",descriptor.interestRate)
-        print("punitiveInterestRate=",descriptor.punitiveInterestRate)
-        print("frequency=",descriptor.frequency)
-        print("installments=",descriptor.installments)
+            print("firstObligation=",descriptor.firstObligation)
+            print("totalObligation=",descriptor.totalObligation)
+            print("duration=",descriptor.duration)
+            print("interestRate=",descriptor.interestRate)
+            print("punitiveInterestRate=",descriptor.punitiveInterestRate)
+            print("frequency=",descriptor.frequency)
+            print("installments=",descriptor.installments)
 
-        return descriptor
+            return descriptor
 
 

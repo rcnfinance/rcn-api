@@ -9,7 +9,7 @@ class CommitSerializer(BaseSerializer):
     order = RawField("order")
     proof = RawField("proof")
     data = RawField("data")
-
+        
 
 class DebtSerializer(BaseSerializer):
     id = RawField("id")
@@ -46,7 +46,7 @@ class RequestSerializer(BaseSerializer):
     created = RawField("created")
     commits = ListField("list of commits", serializer=CommitSerializer())
 
-
+   
 class OracleHistorySerializer(BaseSerializer):
     id = RawField("id")
     tokens = RawField("tokens")
