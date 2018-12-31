@@ -24,7 +24,6 @@ class Created3(EventHandler):
         debt = debt_engine_interface.get_debt_by_id(self._id)
 
         error = debt[0]
-        currency = debt[1].hex()
         balance = debt[2]
         model = debt[3]
         creator = debt[4]
@@ -34,7 +33,6 @@ class Created3(EventHandler):
         data = {
             "_data": self._data,
             "error": error,
-            "currency": currency,
             "balance": str(balance),
             "model": model,
             "creator": creator,
