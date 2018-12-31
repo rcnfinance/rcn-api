@@ -14,7 +14,6 @@ class CommitSerializer(BaseSerializer):
 class DebtSerializer(BaseSerializer):
     id = RawField("id")
     error = RawField("error")
-    currency = RawField("currency")
     balance = RawField("balance")
     model = RawField("model")
     creator = RawField("creator")

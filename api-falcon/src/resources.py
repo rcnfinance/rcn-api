@@ -23,7 +23,6 @@ class DebtList(PaginatedListAPI):
     serializer = DebtSerializer()
 
     error = BoolParam("Error filter")
-    currency = StringParam("Currency filter")
     model = StringParam("Model filter")
     creator = StringParam("Creator filter")
     oracle = StringParam("Oracle filter")
