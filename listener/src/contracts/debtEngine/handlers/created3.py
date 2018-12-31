@@ -24,10 +24,10 @@ class Created3(EventHandler):
         debt = debt_engine_interface.get_debt_by_id(self._id)
 
         error = debt[0]
-        balance = debt[2]
-        model = debt[3]
-        creator = debt[4]
-        oracle = debt[5]
+        balance = debt[1]
+        model = debt[2]
+        creator = debt[3]
+        oracle = debt[4]
         created = str(self._block_timestamp())
 
         data = {
