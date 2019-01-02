@@ -12,3 +12,17 @@ class ListField(BaseField):
 
     def to_representation(self, value):
         return [self._serializer.to_representation(obj) for obj in value]
+
+
+class ObjectField(BaseField):
+    def __init__(self, details, serializer=None, **kwargs):
+        super().__init__(details, **kwargs)
+        self._serializer = serializer
+
+    type = "raw"
+
+    def from_representation(self, data):
+        raise NotImplementedError()
+
+    def to_representation(self, value):
+        return self._serializer.to_representation(value)
