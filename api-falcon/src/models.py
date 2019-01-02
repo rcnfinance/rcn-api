@@ -25,7 +25,7 @@ class Descriptor(EmbeddedDocument):
     interestRate = StringField(required=True, max_length=150)
     punitiveInterestRate = StringField(required=True, max_length=150)
     frequency = StringField(required=True, max_length=150)
-    installments = StringField(required=True, max_length=150)    
+    installments = StringField(required=True, max_length=150) 
     
 
 class Schedule(Document):

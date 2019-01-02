@@ -1,6 +1,5 @@
 from graceful.fields import BaseField
 
-
 class ListField(BaseField):
     def __init__(self, details, serializer=None, **kwargs):
         super().__init__(details, **kwargs)
