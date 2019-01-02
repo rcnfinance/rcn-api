@@ -9,7 +9,7 @@ class CommitSerializer(BaseSerializer):
     timestamp = RawField("timestamp")
     order = RawField("order")
     proof = RawField("proof")
-    data = ObjectField("data")
+    data = RawField("data")
 
 class DescriptorSerializer(BaseSerializer):
     first_obligation = RawField("first_obligation")

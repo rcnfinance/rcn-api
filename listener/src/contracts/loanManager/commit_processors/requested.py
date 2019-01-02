@@ -1,4 +1,5 @@
 from models import Loan
+from models import Descriptor
 from contracts.commit_processor import CommitProcessor
 
 
@@ -25,7 +26,7 @@ class Requested(CommitProcessor):
         loan.salt = data.get("salt")
         loan.loanData = data.get("loanData")
         loan.created = data.get("created")
-        loan.descriptor = data.get("descriptor")
+        loan.descriptor = Descriptor(**data.get("descriptor"))
         loan.currency = data.get("currency")
         loan.status = data.get("status")
         loan.commits.append(commit)

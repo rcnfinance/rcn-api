@@ -73,7 +73,8 @@ class LoanManagerInterface():
             validate = contractModel.validate(loanData).call()
             print("esDataLoanValida:",validate)
 
-            descriptor = Descriptor()
+            # descriptor = Descriptor()
+            descriptor = {}
 
             (firstObligationAmount, firstObligationTime) = contractModel.simFirstObligation(loanData).call()
 
@@ -83,22 +84,22 @@ class LoanManagerInterface():
             yearAccrued = (totalObligation * 86400 * 360) / duration
             interestRate = ((yearAccrued / float(parsed_request_data["amount"])) - 1) * 100
 
-            descriptor.first_obligation = str(firstObligationAmount)
-            descriptor.total_obligation = str(totalObligation)
-            descriptor.duration = str(duration)
-            descriptor.interest_rate = str(interestRate)
-            descriptor.punitive_interest_rate = str(contractModel.simPunitiveInterestRate(loanData).call())
-            descriptor.frequency = str(contractModel.simFrequency(loanData).call())
-            descriptor.installments = str(contractModel.simInstallments(loanData).call())
+            descriptor["first_obligation"] = str(firstObligationAmount)
+            descriptor["total_obligation"] = str(totalObligation)
+            descriptor["duration"] = str(duration)
+            descriptor["interest_rate"] = str(interestRate)
+            descriptor["punitive_interest_rate"] = str(contractModel.simPunitiveInterestRate(loanData).call())
+            descriptor["frequency"] = str(contractModel.simFrequency(loanData).call())
+            descriptor["installments"] = str(contractModel.simInstallments(loanData).call())
     
 
-            print("firstObligation=",descriptor.first_obligation)
-            print("totalObligation=",descriptor.total_obligation)
-            print("duration=",descriptor.duration)
-            print("interestRate=",descriptor.interest_rate)
-            print("punitiveInterestRate=",descriptor.punitive_interest_rate)
-            print("frequency=",descriptor.frequency)
-            print("installments=",descriptor.installments)
+            # print("firstObligation=",descriptor.first_obligation)
+            # print("totalObligation=",descriptor.total_obligation)
+            # print("duration=",descriptor.duration)
+            # print("interestRate=",descriptor.interest_rate)
+            # print("punitiveInterestRate=",descriptor.punitive_interest_rate)
+            # print("frequency=",descriptor.frequency)
+            # print("installments=",descriptor.installments)
 
             return descriptor
 
