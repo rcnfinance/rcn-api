@@ -16,16 +16,17 @@ class Commit(EmbeddedDocument):
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
+    meta = {'allow_inheritance': False}
 
 class Descriptor(EmbeddedDocument):
-    firstObligation = StringField(required=True, max_length=150)
-    totalObligation = StringField(required=True, max_length=150)
+    first_obligation = StringField(required=True, max_length=150)
+    total_obligation = StringField(required=True, max_length=150)
     duration = StringField(required=True, max_length=150)
-    interestRate = StringField(required=True, max_length=150)
-    punitiveInterestRate = StringField(required=True, max_length=150)
+    interest_rate = StringField(required=True, max_length=150)
+    punitive_interest_rate = StringField(required=True, max_length=150)
     frequency = StringField(required=True, max_length=150)
-    installments = StringField(required=True, max_length=150)    
-
+    installments = StringField(required=True, max_length=150) 
+    meta = {'allow_inheritance': False}
 
 class Schedule(Document):
     opcode = StringField(required=True, max_length=50)

@@ -9,14 +9,14 @@ class CommitSerializer(BaseSerializer):
     timestamp = RawField("timestamp")
     order = RawField("order")
     proof = RawField("proof")
-    data = RawField("data")
+    data = ObjectField("data")
 
 class DescriptorSerializer(BaseSerializer):
-    firstObligation = RawField("firstObligation")
-    totalObligation = RawField("totalObligation")
+    first_obligation = RawField("first_obligation")
+    total_obligation = RawField("total_obligation")
     duration = RawField("duration")
-    interestRate = RawField("interestRate")
-    punitiveInterestRate = RawField("punitiveInterestRate")
+    interest_rate = RawField("interest_rate")
+    punitive_interest_rate = RawField("punitive_interest_rate")
     frequency = RawField("frecuency")
     installments = RawField("installments")        
         

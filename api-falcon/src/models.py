@@ -19,14 +19,14 @@ class Commit(EmbeddedDocument):
     data = DictField(required=True)
 
 class Descriptor(EmbeddedDocument):
-    firstObligation = StringField(required=True, max_length=150)
-    totalObligation = StringField(required=True, max_length=150)
+    first_obligation = StringField(required=True, max_length=150)
+    total_obligation = StringField(required=True, max_length=150)
     duration = StringField(required=True, max_length=150)
-    interestRate = StringField(required=True, max_length=150)
-    punitiveInterestRate = StringField(required=True, max_length=150)
+    interest_rate = StringField(required=True, max_length=150)
+    punitive_interest_rate = StringField(required=True, max_length=150)
     frequency = StringField(required=True, max_length=150)
     installments = StringField(required=True, max_length=150) 
-    
+          
 
 class Schedule(Document):
     opcode = StringField(required=True, max_length=50)
