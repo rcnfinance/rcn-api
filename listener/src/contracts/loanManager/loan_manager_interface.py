@@ -60,21 +60,21 @@ class LoanManagerInterface():
         return self.fn.getStatus(_id).call()
 
     def get_descriptor(self, parsed_request_data):
-    
+
         contract_connectionModel = ContractConnection(eth_conn, MODEL_ADDRESS, ABI_PATH)
-        contractModel = contract_connectionModel.contract.functions   
+        contractModel = contract_connectionModel.contract.functions
         loanData = parsed_request_data["loanData"]
         print("abi-path",ABI_PATH)
         print("model=",MODEL_ADDRESS)
-        print("contractModel=",contractModel) 
+        print("contractModel=",contractModel)
         print("loanData=",loanData)
+
+        descriptor = {}
 
         if str(loanData) != "":
             validate = contractModel.validate(loanData).call()
             print("esDataLoanValida:",validate)
 
-            # descriptor = Descriptor()
-            descriptor = {}
 
             (firstObligationAmount, firstObligationTime) = contractModel.simFirstObligation(loanData).call()
 
@@ -91,16 +91,15 @@ class LoanManagerInterface():
             descriptor["punitive_interest_rate"] = str(contractModel.simPunitiveInterestRate(loanData).call())
             descriptor["frequency"] = str(contractModel.simFrequency(loanData).call())
             descriptor["installments"] = str(contractModel.simInstallments(loanData).call())
-    
 
-            # print("firstObligation=",descriptor.first_obligation)
-            # print("totalObligation=",descriptor.total_obligation)
-            # print("duration=",descriptor.duration)
-            # print("interestRate=",descriptor.interest_rate)
-            # print("punitiveInterestRate=",descriptor.punitive_interest_rate)
-            # print("frequency=",descriptor.frequency)
-            # print("installments=",descriptor.installments)
-
-            return descriptor
+        else:
+            descriptor["first_obligation"] = "0"
+            descriptor["total_obligation"] = "0"
+            descriptor["duration"] = "0"
+            descriptor["interest_rate"] = "0"
+            descriptor["punitive_interest_rate"] = "0"
+            descriptor["frequency"] = "0"
+            descriptor["installments"] = "0"
+        return descriptor
 
 
