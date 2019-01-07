@@ -53,7 +53,6 @@ class Config(Document):
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     error = BooleanField()
-    currency = StringField(required=True, max_length=150)
     balance = StringField(required=True, max_length=150)
     model = StringField(required=True, max_length=150)
     creator = StringField(required=True, max_length=150)

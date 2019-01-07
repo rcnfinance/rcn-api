@@ -18,8 +18,8 @@ class Paid(EventHandler):
         self._origin = splited_args[1]
         self._requested = splited_args[2]
         self._requested_tokens = splited_args[3]
-        self._paid = splited_args[4]
-        self._tokens = splited_args[5]
+        self._paid = int(splited_args[4])
+        self._tokens = int(splited_args[5])
 
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()

@@ -3,7 +3,7 @@
         "constant": true,
         "inputs": [
             {
-                "name": "_interfaceID",
+                "name": "interfaceId",
                 "type": "bytes4"
             }
         ],
@@ -24,63 +24,28 @@
         "name": "name",
         "outputs": [
             {
-                "name": "_name",
+                "name": "",
                 "type": "string"
             }
         ],
         "payable": false,
-        "stateMutability": "pure",
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "constant": false,
         "inputs": [
             {
-                "name": "operator",
+                "name": "_operator",
                 "type": "address"
             },
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
         "name": "approve",
         "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_owner",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_currency",
-                "type": "bytes8"
-            },
-            {
-                "name": "_data",
-                "type": "bytes"
-            }
-        ],
-        "name": "create",
-        "outputs": [
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
         "payable": false,
         "stateMutability": "nonpayable",
         "type": "function"
@@ -138,15 +103,38 @@
         "constant": false,
         "inputs": [
             {
-                "name": "from",
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "name": "_to",
+                "type": "address"
+            }
+        ],
+        "name": "withdraw",
+        "outputs": [
+            {
+                "name": "amount",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_from",
                 "type": "address"
             },
             {
-                "name": "to",
+                "name": "_to",
                 "type": "address"
             },
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
@@ -160,11 +148,11 @@
         "constant": true,
         "inputs": [
             {
-                "name": "operator",
+                "name": "_operator",
                 "type": "address"
             },
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
@@ -180,22 +168,53 @@
         "type": "function"
     },
     {
-        "constant": false,
+        "constant": true,
         "inputs": [
             {
-                "name": "_ids",
-                "type": "bytes32[]"
-            },
-            {
-                "name": "_to",
+                "name": "_owner",
                 "type": "address"
             }
         ],
-        "name": "withdrawalList",
+        "name": "assetsOf",
         "outputs": [
             {
-                "name": "amount",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
                 "type": "uint256"
+            },
+            {
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "create2",
+        "outputs": [
+            {
+                "name": "id",
+                "type": "bytes32"
             }
         ],
         "payable": false,
@@ -203,18 +222,41 @@
         "type": "function"
     },
     {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "name": "_index",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenOfOwnerByIndex",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "constant": false,
         "inputs": [
             {
-                "name": "from",
+                "name": "_from",
                 "type": "address"
             },
             {
-                "name": "to",
+                "name": "_to",
                 "type": "address"
             },
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
@@ -222,6 +264,87 @@
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_nonce",
+                "type": "uint256"
+            }
+        ],
+        "name": "buildId",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_ids",
+                "type": "bytes32[]"
+            },
+            {
+                "name": "_tokenAmounts",
+                "type": "uint256[]"
+            },
+            {
+                "name": "_origin",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_oracleData",
+                "type": "bytes"
+            }
+        ],
+        "name": "payTokenBatch",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256[]"
+            },
+            {
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_index",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenByIndex",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -247,7 +370,7 @@
         "constant": true,
         "inputs": [
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
@@ -263,10 +386,55 @@
         "type": "function"
     },
     {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_owner",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "create",
+        "outputs": [
+            {
+                "name": "id",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "allTokens",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256[]"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "constant": true,
         "inputs": [
             {
-                "name": "owner",
+                "name": "_owner",
                 "type": "address"
             }
         ],
@@ -279,33 +447,6 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_nonce",
-                "type": "uint256"
-            },
-            {
-                "name": "_method2",
-                "type": "bool"
-            }
-        ],
-        "name": "buildId",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -368,23 +509,23 @@
         "name": "symbol",
         "outputs": [
             {
-                "name": "_symbol",
+                "name": "",
                 "type": "string"
             }
         ],
         "payable": false,
-        "stateMutability": "pure",
+        "stateMutability": "view",
         "type": "function"
     },
     {
         "constant": false,
         "inputs": [
             {
-                "name": "operator",
+                "name": "_operator",
                 "type": "address"
             },
             {
-                "name": "authorized",
+                "name": "_authorized",
                 "type": "bool"
             }
         ],
@@ -407,10 +548,6 @@
             {
                 "name": "error",
                 "type": "bool"
-            },
-            {
-                "name": "currency",
-                "type": "bytes8"
             },
             {
                 "name": "balance",
@@ -449,11 +586,7 @@
                 "type": "address"
             },
             {
-                "name": "_currency",
-                "type": "bytes8"
-            },
-            {
-                "name": "_nonce",
+                "name": "_salt",
                 "type": "uint256"
             },
             {
@@ -461,7 +594,7 @@
                 "type": "bytes"
             }
         ],
-        "name": "create2",
+        "name": "create3",
         "outputs": [
             {
                 "name": "id",
@@ -476,19 +609,19 @@
         "constant": false,
         "inputs": [
             {
-                "name": "from",
+                "name": "_from",
                 "type": "address"
             },
             {
-                "name": "to",
+                "name": "_to",
                 "type": "address"
             },
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             },
             {
-                "name": "userData",
+                "name": "_userData",
                 "type": "bytes"
             }
         ],
@@ -499,22 +632,80 @@
         "type": "function"
     },
     {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            }
+        ],
+        "name": "buildId3",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_tokenId",
+                "type": "uint256"
+            }
+        ],
+        "name": "tokenURI",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "constant": false,
         "inputs": [
             {
-                "name": "_id",
-                "type": "bytes32"
+                "name": "_ids",
+                "type": "bytes32[]"
             },
             {
-                "name": "_to",
+                "name": "_amounts",
+                "type": "uint256[]"
+            },
+            {
+                "name": "_origin",
                 "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_oracleData",
+                "type": "bytes"
             }
         ],
-        "name": "withdrawal",
+        "name": "payBatch",
         "outputs": [
             {
-                "name": "amount",
-                "type": "uint256"
+                "name": "",
+                "type": "uint256[]"
+            },
+            {
+                "name": "",
+                "type": "uint256[]"
             }
         ],
         "payable": false,
@@ -525,11 +716,11 @@
         "constant": true,
         "inputs": [
             {
-                "name": "operator",
+                "name": "_operator",
                 "type": "address"
             },
             {
-                "name": "assetHolder",
+                "name": "_assetHolder",
                 "type": "address"
             }
         ],
@@ -548,7 +739,7 @@
         "constant": true,
         "inputs": [
             {
-                "name": "assetId",
+                "name": "_assetId",
                 "type": "uint256"
             }
         ],
@@ -580,6 +771,91 @@
         ],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "name": "_to",
+                "type": "address"
+            },
+            {
+                "name": "_amount",
+                "type": "uint256"
+            }
+        ],
+        "name": "withdrawPartial",
+        "outputs": [
+            {
+                "name": "success",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_ids",
+                "type": "bytes32[]"
+            },
+            {
+                "name": "_to",
+                "type": "address"
+            }
+        ],
+        "name": "withdrawBatch",
+        "outputs": [
+            {
+                "name": "total",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "buildId2",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -639,7 +915,7 @@
             },
             {
                 "indexed": false,
-                "name": "_nonce",
+                "name": "_salt",
                 "type": "uint256"
             },
             {
@@ -649,6 +925,28 @@
             }
         ],
         "name": "Created2",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "Created3",
         "type": "event"
     },
     {
@@ -697,22 +995,66 @@
         "anonymous": false,
         "inputs": [
             {
+                "indexed": false,
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_count",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_tokens",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_equivalent",
+                "type": "uint256"
+            }
+        ],
+        "name": "ReadedOracleBatch",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
                 "indexed": true,
                 "name": "_id",
                 "type": "bytes32"
             },
             {
                 "indexed": false,
-                "name": "_amount",
+                "name": "_tokens",
                 "type": "uint256"
             },
             {
                 "indexed": false,
-                "name": "_decimals",
+                "name": "_equivalent",
                 "type": "uint256"
             }
         ],
         "name": "ReadedOracle",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_targetOracle",
+                "type": "address"
+            }
+        ],
+        "name": "PayBatchError",
         "type": "event"
     },
     {
@@ -784,6 +1126,48 @@
         "inputs": [
             {
                 "indexed": true,
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_sender",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_value",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_gasLeft",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_gasLimit",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "name": "_result",
+                "type": "bytes32"
+            },
+            {
+                "indexed": false,
+                "name": "_callData",
+                "type": "bytes"
+            }
+        ],
+        "name": "ErrorRecover",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
                 "name": "_from",
                 "type": "address"
             },
@@ -843,6 +1227,18 @@
             }
         ],
         "name": "ApprovalForAll",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "_uriProvider",
+                "type": "address"
+            }
+        ],
+        "name": "SetURIProvider",
         "type": "event"
     }
 ]
