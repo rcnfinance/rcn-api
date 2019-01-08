@@ -9,10 +9,12 @@ from serializers import DebtSerializer
 from serializers import ConfigSerializer
 from serializers import LoanSerializer
 from serializers import OracleHistorySerializer
+from serializers import StateSerializer
 from models import Debt
 from models import Config
 from models import Loan
 from models import OracleHistory
+from models import State
 from clock import Clock
 
 
@@ -78,6 +80,36 @@ class ConfigItem(RetrieveAPI):
             raise falcon.HTTPNotFound(
                 title='Config does not exists',
                 description='Config with id={} does not exists'.format(id_config)
+            )
+
+
+class StateList(PaginatedListAPI):
+    serializer = StateSerializer()
+
+    status = StringParam("Status filter")
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        return State.objects.filter(**filter_params).skip(offset).limit(page_size)
+
+
+class StateItem(RetrieveAPI):
+    serializer = StateSerializer()
+
+    def retrieve(self, params, meta, id_state, **kwargs):
+        try:
+            return State.objects.get(id=id_state)
+        except State.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title='State does not exists',
+                description='State with id={} does not exists'.format(id_state)
             )
 
 

@@ -9,6 +9,8 @@ from resources import LoanList
 from resources import LoanItem
 from resources import OracleHistoryList
 from resources import OracleHistoryItem
+from resources import StateList
+from resources import StateItem
 from falcon_cors import CORS
 import db
 
@@ -29,3 +31,6 @@ api.add_route("/v4/loans/{id_loan}", LoanItem())
 
 api.add_route("/v4/oracle_history/", OracleHistoryList())
 api.add_route("/v4/oracle_history/{id_loan}", OracleHistoryItem())
+
+api.add_route("/v4/states/", StateList())
+api.add_route("/v4/states/{id_state}", StateItem())
