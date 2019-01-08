@@ -47,6 +47,16 @@ class Config(Document):
     data = DictField()
     commits = EmbeddedDocumentListField(Commit)
 
+class State(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    status = StringField(max_length=2, default="0")
+    clock = StringField(required=True, max_length=100)
+    last_payment = StringField(max_length=100, default="0")
+    paid = StringField(max_length=100, default="0")
+    paid_base = StringField(max_length=100, default="0")
+    interest = StringField(max_length=100, default="0")
+    commits = EmbeddedDocumentListField(Commit)
+
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)

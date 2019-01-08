@@ -2,9 +2,9 @@ from contracts.commit_processor import CommitProcessor
 from models import State
 
 
-class InstallmentsChangedStatus(CommitProcessor):
+class InstallmentsSetInterest(CommitProcessor):
     def __init__(self):
-        self.opcode = "changed_status_installments"
+        self.opcode = "set_interest_installments"
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
@@ -15,7 +15,7 @@ class InstallmentsChangedStatus(CommitProcessor):
             state = State()
             state.id = data.get("id")
         finally:
-            state.status = data.get("status")
+            state.interest = data.get("interest")
             state.commits.append(commit)
 
             state.save()

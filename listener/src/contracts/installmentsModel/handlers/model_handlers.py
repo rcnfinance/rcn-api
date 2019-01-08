@@ -10,7 +10,7 @@ from contracts.debtModel.handlers.created import Created
 from contracts.installmentsModel.installments import installments_model_interface
 
 from models import Commit
-
+from models import State
 
 class InstallmentsAddedDebt(AddedDebt):
     def handle(self):
@@ -25,9 +25,13 @@ class InstallmentsAddedPaid(AddedPaid):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
 
+        state = State.objects.get(id=self._id)
+
         data = {
             "id": self._id,
-            "real": self._real
+            "real": str(self._real),
+            "paid": str(state.paid + self._real),
+            "state_last_payment": state.clock,
         }
 
         commit.data = data
@@ -66,7 +70,7 @@ class InstallmentsChangedStatus(ChangedStatus):
         data = {
             "id": self._id,
             "timestamp": self._timestamp,
-            "status": self._status
+            "status": str(self._status)
         }
 
         commit.data = data

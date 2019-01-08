@@ -1,4 +1,5 @@
 from contracts.commit_processor import CommitProcessor
+from models import State
 
 
 class InstallmentsSetClock(CommitProcessor):
@@ -6,4 +7,15 @@ class InstallmentsSetClock(CommitProcessor):
         self.opcode = "set_clock_installments"
 
     def process(self, commit, *args, **kwargs):
-        pass
+        data = commit.data
+
+        try:
+            state = State.objects.get(id=data.get("id"))
+        except State.DoesNotExist:
+            state = State()
+            state.id = data.get("id")
+        finally:
+            state.clock = data.get("duration")
+            state.commits.append(commit)
+
+            state.save()
