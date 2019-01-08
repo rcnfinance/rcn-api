@@ -1,5 +1,6 @@
 import logging
 import time
+import json
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
@@ -14,10 +15,9 @@ from models import Config
 from models import Loan
 from models import OracleHistory
 from clock import Clock
-
+from utils import ModelAndDebtData
 
 logger = logging.getLogger(__name__)
-
 
 class DebtList(PaginatedListAPI):
     serializer = DebtSerializer()
@@ -92,6 +92,7 @@ class LoanList(PaginatedListAPI):
     oracle = StringParam("Oracle filter")
     borrower = StringParam("Borrower filter")
     canceled = StringParam("Canceled filter")
+    status = StringParam("Status Filter")
 
     def list(self, params, meta, **kwargs):
         # Filtering -> Ordering -> Limiting
@@ -157,3 +158,14 @@ class HealthStatusResource(object):
         is_sync = now - clock.time < lower_limit
         if is_sync:
             resp.status = falcon.HTTP_200
+
+class ModelAndDebtDataResource(object):
+    def on_get(self, req, resp, id_loan):
+
+        print(id_loan)
+        modelAndDebtData = ModelAndDebtData()
+        data = modelAndDebtData.getData(id_loan)
+        
+        print(data)    
+        resp.body = json.dumps(data)
+        resp.status = falcon.HTTP_200
