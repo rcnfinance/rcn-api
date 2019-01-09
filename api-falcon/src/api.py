@@ -11,6 +11,8 @@ from resources import OracleHistoryList
 from resources import OracleHistoryItem
 from resources import StateList
 from resources import StateItem
+
+from resources import ModelAndDebtDataResource
 from falcon_cors import CORS
 import db
 
@@ -34,3 +36,6 @@ api.add_route("/v4/oracle_history/{id_loan}", OracleHistoryItem())
 
 api.add_route("/v4/states/", StateList())
 api.add_route("/v4/states/{id_state}", StateItem())
+
+api.add_route("/v4/model_debt_info/{id_loan}", ModelAndDebtDataResource())
+
