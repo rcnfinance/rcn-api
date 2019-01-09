@@ -31,6 +31,8 @@ from .commit_processors.installments_added_paid import InstallmentsAddedPaid as 
 from .commit_processors.installments_changed_status import InstallmentsChangedStatus as InstallmentsChangedStatusCommitProcessor
 from .commit_processors.installments_created import InstallmentsCreated as InstallmentsCreatedCommitProcessor
 from .commit_processors.installments_set_clock import InstallmentsSetClock
+from .commit_processors.installments_set_interest import InstallmentsSetInterest as InstallmentsSetInterestCommitProcessor
+from .commit_processors.installments_set_paid_base import InstallmentsSetPaidBase as InstallmentsSetPaidBaseCommitProcessor
 
 CUSTOM_EVENT_HANDLERS = [
     SetClock,
@@ -47,7 +49,9 @@ commit_processors = [
     InstallmentsAddedPaidCommitProcessor(),
     InstallmentsChangedStatusCommitProcessor(),
     InstallmentsCreatedCommitProcessor(),
-    InstallmentsSetClock()
+    InstallmentsSetClock(),
+    InstallmentsSetPaidBaseCommitProcessor(),
+    InstallmentsSetInterestCommitProcessor()
 ]
 schedule_processors = []
 
