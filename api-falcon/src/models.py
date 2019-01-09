@@ -59,6 +59,12 @@ class State(Document):
     interest = StringField(max_length=100, default="0")
     commits = EmbeddedDocumentListField(Commit)
 
+    meta = {
+        "indexes": [
+            "status"
+        ]
+    }
+
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     error = BooleanField()
@@ -68,6 +74,16 @@ class Debt(Document):
     oracle = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
     commits = EmbeddedDocumentListField(Commit)
+
+    meta = {
+        "indexes": [
+            "error",
+            "model",
+            "creator",
+            "oracle"
+        ]
+    }
+
 
 class Loan(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -89,6 +105,17 @@ class Loan(Document):
     status = StringField(required=True, max_length=150)
     commits = EmbeddedDocumentListField(Commit)
 
+    meta = {
+        "indexes": [
+            "open",
+            "approved",
+            "cosigner",
+            "model",
+            "creator",
+            "oracle",
+            "borrower",
+        ]
+    }
 
 class OracleHistory(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
