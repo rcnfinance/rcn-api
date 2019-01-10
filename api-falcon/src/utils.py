@@ -32,20 +32,16 @@ class ModelAndDebtData:
     def getData(self, id_loan):
 
         block = loan_manager_connection.w3.eth.getBlock('latest')
+        debt = Debt.objects.get(id=id_loan)
+
         paid = modelContract.getPaid(id_loan).call()
         dueTime = modelContract.getDueTime(id_loan).call()
         estimatedObligation = modelContract.getEstimateObligation(id_loan).call()
         nextObligation = modelContract.getObligation(id_loan, dueTime).call()[0]
         currentObligation = modelContract.getObligation(id_loan, block.timestamp).call()[0]
-        try:    
-             debt = Debt.objects.get(id=id_loan)
-        except Debt.DoesNotExist:
-            raise falcon.HTTPNotFound(
-                title='Debt does not exists',
-                description='Debt with id={} does not exists'.format(id_loan)
-            )
-        debtBalance = debt.balance   
-        print(debtBalance)  
+
+
+        debtBalance = debt.balance
         owner = loanManagerContract.ownerOf(int(id_loan, 16)).call()
 
         data = {
