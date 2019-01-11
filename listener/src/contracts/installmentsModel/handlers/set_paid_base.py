@@ -25,7 +25,7 @@ class SetPaidBase(EventHandler):
 
         data = {
             "id": self._id,
-            "paid_base": self._paid_base
+            "paid_base": str(self._paid_base)
         }
 
         commit.data = data

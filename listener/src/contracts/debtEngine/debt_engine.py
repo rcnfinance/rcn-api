@@ -6,7 +6,7 @@ from ethereum_connection import ContractConnection
 from .debt_engine_interface import DebtEngineInterface
 
 
-ADDRESS = "0x2a878750a122EC3D6a193A4C6003Ecd8E98feB17"
+ADDRESS = "0x9da08B739f520beD976566864e55D96Fe2AA8f2D"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),

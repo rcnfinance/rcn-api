@@ -1,7 +1,6 @@
 import json
 import web3
 
-
 class EthereumConnection():
     def __init__(self, url_node):
         self._url_node = url_node

@@ -5,7 +5,7 @@ from ethereum_connection import ContractConnection
 
 from .installments_model_interface import InstallmentsModelInterface
 
-ADDRESS = "0x25E9746E5E76A75C90E895d1ed4Ad39355bdf9ad"
+ADDRESS = "0xE3633E63Da6154D9450e34F0d4c64c6A51f6918e"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
@@ -31,6 +31,8 @@ from .commit_processors.installments_added_paid import InstallmentsAddedPaid as 
 from .commit_processors.installments_changed_status import InstallmentsChangedStatus as InstallmentsChangedStatusCommitProcessor
 from .commit_processors.installments_created import InstallmentsCreated as InstallmentsCreatedCommitProcessor
 from .commit_processors.installments_set_clock import InstallmentsSetClock
+from .commit_processors.installments_set_interest import InstallmentsSetInterest as InstallmentsSetInterestCommitProcessor
+from .commit_processors.installments_set_paid_base import InstallmentsSetPaidBase as InstallmentsSetPaidBaseCommitProcessor
 
 CUSTOM_EVENT_HANDLERS = [
     SetClock,
@@ -47,7 +49,9 @@ commit_processors = [
     InstallmentsAddedPaidCommitProcessor(),
     InstallmentsChangedStatusCommitProcessor(),
     InstallmentsCreatedCommitProcessor(),
-    InstallmentsSetClock()
+    InstallmentsSetClock(),
+    InstallmentsSetPaidBaseCommitProcessor(),
+    InstallmentsSetInterestCommitProcessor()
 ]
 schedule_processors = []
 

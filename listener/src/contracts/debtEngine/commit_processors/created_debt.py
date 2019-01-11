@@ -11,7 +11,6 @@ class CreatedDebt(CommitProcessor):
         debt = Debt()
         debt.id = data.get("id")
         debt.error = data.get("error")
-        debt.currency = data.get("currency")
         debt.balance = data.get("balance")
         debt.model = data.get("model")
         debt.creator = data.get("creator")

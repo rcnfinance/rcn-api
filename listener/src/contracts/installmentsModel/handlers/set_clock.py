@@ -12,7 +12,7 @@ class SetClock(EventHandler):
         data = self._event.get("data")[2:]
         splited_args = utils.split_every(64, data)
 
-        self._id = splited_args[0]
+        self._id = "0x" + splited_args[0]
         self._duration = splited_args[1]
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
@@ -26,7 +26,7 @@ class SetClock(EventHandler):
 
         data = {
             "id": self._id,
-            "duration": self._duration
+            "duration": str(int("0x" + self._duration, 16))
         }
 
         commit.data = data

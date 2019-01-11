@@ -1,5 +1,6 @@
 import logging
 import time
+import json
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
@@ -7,23 +8,23 @@ from graceful.parameters import BoolParam
 import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
-from serializers import RequestSerializer
+from serializers import LoanSerializer
 from serializers import OracleHistorySerializer
+from serializers import StateSerializer
 from models import Debt
 from models import Config
-from models import Request
+from models import Loan
 from models import OracleHistory
+from models import State
 from clock import Clock
-
+from utils import ModelAndDebtData
 
 logger = logging.getLogger(__name__)
-
 
 class DebtList(PaginatedListAPI):
     serializer = DebtSerializer()
 
     error = BoolParam("Error filter")
-    currency = StringParam("Currency filter")
     model = StringParam("Model filter")
     creator = StringParam("Creator filter")
     oracle = StringParam("Oracle filter")
@@ -82,8 +83,38 @@ class ConfigItem(RetrieveAPI):
             )
 
 
-class RequestList(PaginatedListAPI):
-    serializer = RequestSerializer()
+class StateList(PaginatedListAPI):
+    serializer = StateSerializer()
+
+    status = StringParam("Status filter")
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        return State.objects.filter(**filter_params).skip(offset).limit(page_size)
+
+
+class StateItem(RetrieveAPI):
+    serializer = StateSerializer()
+
+    def retrieve(self, params, meta, id_state, **kwargs):
+        try:
+            return State.objects.get(id=id_state)
+        except State.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title='State does not exists',
+                description='State with id={} does not exists'.format(id_state)
+            )
+
+
+class LoanList(PaginatedListAPI):
+    serializer = LoanSerializer()
 
     open = BoolParam("Open filter")
     approved = BoolParam("Approved filter")
@@ -93,6 +124,7 @@ class RequestList(PaginatedListAPI):
     oracle = StringParam("Oracle filter")
     borrower = StringParam("Borrower filter")
     canceled = StringParam("Canceled filter")
+    status = StringParam("Status Filter")
 
     def list(self, params, meta, **kwargs):
         # Filtering -> Ordering -> Limiting
@@ -104,19 +136,19 @@ class RequestList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Request.objects.filter(**filter_params).skip(offset).limit(page_size)
+        return Loan.objects.filter(**filter_params).skip(offset).limit(page_size)
 
 
-class RequestItem(RetrieveAPI):
-    serializer = RequestSerializer()
+class LoanItem(RetrieveAPI):
+    serializer = LoanSerializer()
 
-    def retrieve(self, params, meta, id_request, **kwargs):
+    def retrieve(self, params, meta, id_loan, **kwargs):
         try:
-            return Request.objects.get(id=id_request)
-        except Request.DoesNotExist:
+            return Loan.objects.get(id=id_loan)
+        except Loan.DoesNotExist:
             raise falcon.HTTPNotFound(
-                title="Request does not exists",
-                description="Request with id={} does not exists".format(id_request)
+                title="Loan does not exists",
+                description="Loan with id={} does not exists".format(id_loan)
             )
 
 
@@ -139,13 +171,13 @@ class OracleHistoryList(PaginatedListAPI):
 class OracleHistoryItem(RetrieveAPI):
     serializer = OracleHistorySerializer()
 
-    def retrieve(self, params, meta, id_request, **kwargs):
+    def retrieve(self, params, meta, id_loan, **kwargs):
         try:
-            return OracleHistory.objects.get(id=id_request)
+            return OracleHistory.objects.get(id=id_loan)
         except OracleHistory.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title="History does not exists",
-                description="History with id={} does not exists".format(id_request)
+                description="History with id={} does not exists".format(id_loan)
             )
 
 
@@ -158,3 +190,24 @@ class HealthStatusResource(object):
         is_sync = now - clock.time < lower_limit
         if is_sync:
             resp.status = falcon.HTTP_200
+
+class ModelAndDebtDataResource(object):
+    def on_get(self, req, resp, id_loan):
+
+        modelAndDebtData = ModelAndDebtData()
+
+        try:
+            data = modelAndDebtData.getData(id_loan)
+            resp.body = json.dumps(data)
+            resp.status = falcon.HTTP_200
+        except Debt.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title="Debt does not exist",
+                description="Debt with id={} does not exist".format(id_loan)
+            )
+        except Exception:
+            raise falcon.HTTPNotFound(
+                title="Error",
+                description="An error ocurred :(".format(id_loan)
+            )
+

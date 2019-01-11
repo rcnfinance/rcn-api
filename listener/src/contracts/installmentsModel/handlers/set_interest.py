@@ -25,7 +25,7 @@ class SetInterest(EventHandler):
 
         data = {
             "id": self._id,
-            "interest": self._interest
+            "interest": str(self._interest)
         }
 
         commit.data = data

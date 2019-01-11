@@ -24,7 +24,8 @@ class Processor:
             if event.position > self.last_seen:
                 handler = self._contract_manager.handle_event(event.data)
                 self.last_seen = event.position
-                commits = handler.handle()
+                if handler != None:
+                    commits = handler.handle()
                 if commits:
                     self.execute(commits)
 

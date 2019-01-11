@@ -1,4 +1,4 @@
-from models import Request
+from models import Loan
 from contracts.commit_processor import CommitProcessor
 
 
@@ -9,8 +9,8 @@ class Cosigned(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        request = Request.objects.get(id=data.get("id"))
+        loan = Loan.objects.get(id=data.get("id"))
 
-        request.cosigner = data.get("cosigner")
-        request.commits.append(commit)
-        request.save()
+        loan.cosigner = data.get("cosigner")
+        loan.commits.append(commit)
+        loan.save()

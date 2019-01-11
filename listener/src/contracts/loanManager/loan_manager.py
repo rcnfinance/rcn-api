@@ -6,7 +6,7 @@ from ethereum_connection import ContractConnection
 from .loan_manager_interface import LoanManagerInterface
 
 
-ADDRESS = "0xA6E4B95A0D1be10E886317Fe711a4515544c578a"
+ADDRESS = "0xbF77a4061eB243d38BaCBD684f0c3124eefE6E91"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
