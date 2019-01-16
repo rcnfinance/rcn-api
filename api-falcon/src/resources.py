@@ -17,7 +17,8 @@ from models import Loan
 from models import OracleHistory
 from models import State
 from clock import Clock
-from utils import ModelAndDebtData
+from utils import get_data
+
 
 logger = logging.getLogger(__name__)
 
@@ -193,11 +194,8 @@ class HealthStatusResource(object):
 
 class ModelAndDebtDataResource(object):
     def on_get(self, req, resp, id_loan):
-
-        modelAndDebtData = ModelAndDebtData()
-
         try:
-            data = modelAndDebtData.getData(id_loan)
+            data = get_data(id_loan)
             resp.body = json.dumps(data)
             resp.status = falcon.HTTP_200
         except Debt.DoesNotExist:
