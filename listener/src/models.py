@@ -106,6 +106,7 @@ class Loan(Document):
     descriptor = EmbeddedDocumentField(Descriptor)
     currency = StringField(required=True, max_length=150)
     status = StringField(required=True, max_length=150)
+    canceled = BooleanField(default=False)
     commits = EmbeddedDocumentListField(Commit)
 
     meta = {
