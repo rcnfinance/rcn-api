@@ -9,13 +9,8 @@ class InstallmentsSetPaidBase(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        try:
-            state = State.objects.get(id=data.get("id"))
-        except State.DoesNotExist:
-            state = State()
-            state.id = data.get("id")
-        finally:
-            state.paid_base = data.get("paid_base")
-            state.commits.append(commit)
+        state = State.objects.get(id=data.get("id"))
+        state.paid_base = data.get("paid_base")
+        state.commits.append(commit)
 
-            state.save()
+        state.save()

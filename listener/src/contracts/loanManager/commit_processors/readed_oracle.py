@@ -1,4 +1,5 @@
 from contracts.commit_processor import CommitProcessor
+from models import OracleHistory
 
 
 class ReadedOracle(CommitProcessor):
@@ -6,4 +7,12 @@ class ReadedOracle(CommitProcessor):
         self.opcode = "readed_oracle_loan_manager"
 
     def process(self, commit, *args, **kwargs):
-        pass
+        data = commit.data
+
+        oh = OracleHistory()
+        oh.id = data.get("id")
+        oh.tokens = data.get("tokens")
+        oh.equivalent = data.get("equivalent")
+        oh.timestamp = data.get("timestamp")
+
+        oh.save()

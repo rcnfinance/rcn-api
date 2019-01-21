@@ -4,7 +4,7 @@ from models import State
 
 class InstallmentsAddedPaid(CommitProcessor):
     def __init__(self):
-        self.opcode = " added_paid_installments"
+        self.opcode = "added_paid_installments"
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
