@@ -22,6 +22,7 @@ from utils import get_data
 
 logger = logging.getLogger(__name__)
 
+
 class DebtList(PaginatedListAPI):
     serializer = DebtSerializer()
 
@@ -29,6 +30,16 @@ class DebtList(PaginatedListAPI):
     model = StringParam("Model filter")
     creator = StringParam("Creator filter")
     oracle = StringParam("Oracle filter")
+
+    balance__lt = StringParam("Balance lt")
+    balance__lte = StringParam("Balance lte")
+    balance__gt = StringParam("Balance gt")
+    balance__gte = StringParam("Balance gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lt")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
 
     def list(self, params, meta, **kwargs):
         # Filtering -> Ordering -> Limiting
@@ -126,6 +137,22 @@ class LoanList(PaginatedListAPI):
     borrower = StringParam("Borrower filter")
     canceled = StringParam("Canceled filter")
     status = StringParam("Status Filter")
+
+    expiration__lt = StringParam("Expiration lt")
+    expiration__lte = StringParam("Expiration lte")
+    expiration__gt = StringParam("Expiration gt")
+    expiration__gte = StringParam("Expiration gte")
+
+    amount__lt = StringParam("Amount lt")
+    amount__lte = StringParam("Amount lte")
+    amount__gt = StringParam("Amount gt")
+    amount__gte = StringParam("Amount gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lte")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
+
 
     def list(self, params, meta, **kwargs):
         # Filtering -> Ordering -> Limiting

@@ -83,7 +83,9 @@ class Debt(Document):
             "error",
             "model",
             "creator",
-            "oracle"
+            "oracle",
+            "balance",
+            "created"
         ]
     }
 
@@ -118,6 +120,8 @@ class Loan(Document):
             "creator",
             "oracle",
             "borrower",
+            "expiration",
+            "amount"
         ]
     }
 
