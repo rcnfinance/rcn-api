@@ -30,7 +30,7 @@ class InstallmentsAddedPaid(AddedPaid):
         data = {
             "id": self._id,
             "real": str(self._real),
-            "paid": str(state.paid + self._real),
+            "paid": str(int(state.paid) + self._real),
             "state_last_payment": state.clock,
         }
 

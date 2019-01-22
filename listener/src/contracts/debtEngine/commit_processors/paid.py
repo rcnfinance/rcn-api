@@ -10,8 +10,8 @@ class Paid(CommitProcessor):
         data = commit.data
         debt = Debt.objects(id=data["id"]).first()
 
-        new_balance = debt.balance + data.get("tokens")
-        debt.balance = new_balance
+        new_balance = int(debt.balance) + int(data.get("tokens"))
+        debt.balance = str(new_balance)
         debt.commits.append(commit)
 
         debt.save()
