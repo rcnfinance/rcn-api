@@ -2,6 +2,7 @@ import web3
 from contracts.event import EventHandler
 from utils import split_every
 from models import Commit
+import utils
 
 
 class Lent(EventHandler):
@@ -10,10 +11,10 @@ class Lent(EventHandler):
 
     def _parse(self):
         self._id = self._event.get("topics")[1].hex()
-        data = self._event.get("data")
+        data = self._event.get("data")[2:]
         splited_data = split_every(64, data)
-        self._lender = splited_data[0]
-        self._tokens = splited_data[1]
+        self._lender = utils.to_address(splited_data[0])
+        self._tokens = int(splited_data[1], 16)
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
 
@@ -27,7 +28,7 @@ class Lent(EventHandler):
         data = {
             "id": self._id,
             "lender": self._lender,
-            "tokens": self._tokens,
+            "tokens": str(self._tokens),
             "open": False
         }
 
