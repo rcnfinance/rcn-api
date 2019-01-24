@@ -83,8 +83,6 @@ class InstallmentsCreated(Created):
 
         config = installments_model_interface.get_config_by_id(self._id)
 
-        print(config)
-
         data = {
             "installments": config[0],
             "timeUnit": config[1],

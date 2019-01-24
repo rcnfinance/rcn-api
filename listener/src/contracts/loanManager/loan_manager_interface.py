@@ -21,8 +21,8 @@ class LoanManagerInterface():
 
     def get_request_data(self, _id):
         request_data = self.fn.requests(_id).call()
-        print(request_data);
-        print("loanID=",_id)
+        # print(request_data);
+        # print("loanID=",_id)
         parsed_request_data = self.__parse_data(request_data)
         parsed_request_data["currency"] = self.get_currency(int(_id, 16))
         parsed_request_data["status"] = str(self.get_status(int(_id, 16)))
@@ -64,17 +64,11 @@ class LoanManagerInterface():
         contract_connectionModel = ContractConnection(eth_conn, MODEL_ADDRESS, ABI_PATH)
         contractModel = contract_connectionModel.contract.functions
         loanData = parsed_request_data["loanData"]
-        print("abi-path",ABI_PATH)
-        print("model=",MODEL_ADDRESS)
-        print("contractModel=",contractModel)
-        print("loanData=",loanData)
 
         descriptor = {}
 
         if str(loanData) != "":
             validate = contractModel.validate(loanData).call()
-            print("esDataLoanValida:",validate)
-
 
             (firstObligationAmount, firstObligationTime) = contractModel.simFirstObligation(loanData).call()
 
