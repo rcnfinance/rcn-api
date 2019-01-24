@@ -106,6 +106,7 @@ class Loan(Document):
     currency = StringField(required=True, max_length=150) 
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
+    lender = StringField(required=False, max_length=150)
     commits = EmbeddedDocumentListField(Commit)
 
     meta = {

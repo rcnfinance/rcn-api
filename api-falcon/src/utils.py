@@ -1,27 +1,13 @@
-import os
 import logging
 from datetime import datetime as dt
 
 from models import Debt
 from models import State
 from models import Config
+from models import Loan
 
-from ethereum_connection import EthereumConnection
-from ethereum_connection import ContractConnection
 
 U_128_OVERFLOW = 2**128
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
-eth_conn = EthereumConnection(URL_NODE)
-
-LOAN_MANAGER_ADDRESS = "0xbF77a4061eB243d38BaCBD684f0c3124eefE6E91"
-
-LOAN_MANAGER_ABI_PATH = os.path.join(
- os.path.dirname(os.path.realpath(__file__)),
-    "loanManagerABI.json"
-)
-
-loan_manager_connection = ContractConnection(eth_conn, LOAN_MANAGER_ADDRESS, LOAN_MANAGER_ABI_PATH)
-loanManagerContract = loan_manager_connection.contract.functions
 
 
 def get_data(id_loan):
@@ -34,7 +20,7 @@ def get_data(id_loan):
     next_obligation = get_obligation(id_loan, due_time)[0]
     current_obligation = get_obligation(id_loan, now)[0]
     debt_balance = int(debt.balance)
-    owner = loanManagerContract.ownerOf(int(id_loan, 16)).call()
+    owner = get_owner(id_loan)
 
     data = {
         "paid": paid,
@@ -46,6 +32,13 @@ def get_data(id_loan):
         "owner": owner
     }
     return data
+
+
+def get_owner(id_loan):
+    loan = Loan.objects.get(id=id_loan)
+    owner = loan.lender
+
+    return owner
 
 
 def base_debt(clock, duration, installments, cuota):

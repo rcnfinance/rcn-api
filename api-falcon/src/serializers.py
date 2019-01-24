@@ -65,6 +65,7 @@ class LoanSerializer(BaseSerializer):
     created = RawField("created")
     descriptor = ObjectField("descriptor", serializer=DescriptorSerializer())
     currency = RawField("currency")
+    lender = RawField("Lender")
     status = RawField("status")
     canceled = RawField("canceled")
     commits = ListField("list of commits", serializer=CommitSerializer())
