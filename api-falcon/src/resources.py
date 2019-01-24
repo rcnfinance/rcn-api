@@ -137,6 +137,7 @@ class LoanList(PaginatedListAPI):
     borrower = StringParam("Borrower filter")
     canceled = StringParam("Canceled filter")
     status = StringParam("Status Filter")
+    lender = StringParam("Lender filter")
 
     expiration__lt = StringParam("Expiration lt")
     expiration__lte = StringParam("Expiration lte")
