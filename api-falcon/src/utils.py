@@ -34,7 +34,7 @@ def get_data(id_loan):
     return data
 
 
-def get_owner(id_loan): s
+def get_owner(id_loan):
     loan = Loan.objects.get(id=id_loan)
     owner = loan.lender
 
