@@ -1,6 +1,5 @@
 from functools import total_ordering
 from models import ClockModel
-from db import connection
 
 
 @total_ordering

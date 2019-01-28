@@ -3,12 +3,13 @@ from mongoengine import LongField
 from mongoengine import DictField
 from mongoengine import BooleanField
 from mongoengine import IntField
-from mongoengine import DateTimeField
 from mongoengine import Document
 from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
+
+from .db import connection
 
 
 class Commit(EmbeddedDocument):
@@ -18,6 +19,7 @@ class Commit(EmbeddedDocument):
     proof = StringField(max_length=150)
     data = DictField(required=True)
 
+
 class Descriptor(EmbeddedDocument):
     first_obligation = StringField(required=True, max_length=150)
     total_obligation = StringField(required=True, max_length=150)
@@ -25,8 +27,8 @@ class Descriptor(EmbeddedDocument):
     interest_rate = StringField(required=True, max_length=150)
     punitive_interest_rate = StringField(required=True, max_length=150)
     frequency = StringField(required=True, max_length=150)
-    installments = StringField(required=True, max_length=150) 
-          
+    installments = StringField(required=True, max_length=150)
+
 
 class Schedule(Document):
     opcode = StringField(required=True, max_length=50)
@@ -49,6 +51,7 @@ class Config(Document):
     data = DictField()
     commits = EmbeddedDocumentListField(Commit)
 
+
 class State(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     status = StringField(max_length=2, default="0")
@@ -64,6 +67,7 @@ class State(Document):
             "status"
         ]
     }
+
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -103,7 +107,7 @@ class Loan(Document):
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
     descriptor = EmbeddedDocumentField(Descriptor)
-    currency = StringField(required=True, max_length=150) 
+    currency = StringField(required=True, max_length=150)
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
     lender = StringField(required=False, max_length=150)
@@ -122,6 +126,7 @@ class Loan(Document):
             "amount"
         ]
     }
+
 
 class OracleHistory(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
