@@ -24,17 +24,17 @@ def get_data(id_loan):
 
     data = {
         "paid": paid,
-        "dueTime": due_time,
-        "estimatedObligation": estimated_obligation,
-        "nextObligation": next_obligation,
-        "currentObligation": current_obligation,
-        "debtBalance": debt_balance,
+        "due_time": due_time,
+        "estimated_obligation": estimated_obligation,
+        "next_obligation": next_obligation,
+        "current_obligation": current_obligation,
+        "debt_balance": debt_balance,
         "owner": owner
     }
     return data
 
 
-def get_owner(id_loan):
+def get_owner(id_loan): s
     loan = Loan.objects.get(id=id_loan)
     owner = loan.lender
 

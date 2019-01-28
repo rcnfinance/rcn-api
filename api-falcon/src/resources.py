@@ -43,6 +43,7 @@ class DebtList(PaginatedListAPI):
 
     def list(self, params, meta, **kwargs):
         # Filtering -> Ordering -> Limiting
+
         filter_params = params.copy()
         filter_params.pop("indent")
 
@@ -51,7 +52,11 @@ class DebtList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Debt.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = Debt.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class DebtItem(RetrieveAPI):
@@ -79,7 +84,11 @@ class ConfigList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Config.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = Config.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class ConfigItem(RetrieveAPI):
@@ -109,7 +118,11 @@ class StateList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return State.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = State.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class StateItem(RetrieveAPI):
@@ -165,7 +178,11 @@ class LoanList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Loan.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = Loan.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class LoanItem(RetrieveAPI):
@@ -194,7 +211,11 @@ class OracleHistoryList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return OracleHistory.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = OracleHistory.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class OracleHistoryItem(RetrieveAPI):
@@ -220,6 +241,7 @@ class HealthStatusResource(object):
         if is_sync:
             resp.status = falcon.HTTP_200
 
+
 class ModelAndDebtDataResource(object):
     def on_get(self, req, resp, id_loan):
         try:
@@ -236,4 +258,3 @@ class ModelAndDebtDataResource(object):
                 title="Error",
                 description="An error ocurred :(".format(id_loan)
             )
-
