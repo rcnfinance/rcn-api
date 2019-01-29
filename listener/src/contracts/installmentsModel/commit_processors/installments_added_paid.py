@@ -14,9 +14,9 @@ class InstallmentsAddedPaid(CommitProcessor):
         except State.DoesNotExist:
             state = State()
             state.id = data.get("id")
-        finally:
-            state.last_payment = data.get("last_payment")
-            state.paid = data.get("paid")
-            state.commits.append(commit)
 
-            state.save()
+        state.last_payment = data.get("last_payment")
+        state.paid = data.get("paid")
+        state.commits.append(commit)
+
+        state.save()

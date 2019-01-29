@@ -14,8 +14,8 @@ class InstallmentsChangedStatus(CommitProcessor):
         except State.DoesNotExist:
             state = State()
             state.id = data.get("id")
-        finally:
-            state.status = data.get("status")
-            state.commits.append(commit)
 
-            state.save()
+        state.status = data.get("status")
+        state.commits.append(commit)
+
+        state.save()

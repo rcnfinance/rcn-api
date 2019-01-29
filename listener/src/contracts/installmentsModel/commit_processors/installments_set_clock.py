@@ -14,8 +14,8 @@ class InstallmentsSetClock(CommitProcessor):
         except State.DoesNotExist:
             state = State()
             state.id = data.get("id")
-        finally:
-            state.clock = data.get("duration")
-            state.commits.append(commit)
 
-            state.save()
+        state.clock = data.get("duration")
+        state.commits.append(commit)
+
+        state.save()
