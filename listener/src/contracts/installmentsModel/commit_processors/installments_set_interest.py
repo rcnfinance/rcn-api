@@ -14,8 +14,8 @@ class InstallmentsSetInterest(CommitProcessor):
         except State.DoesNotExist:
             state = State()
             state.id = data.get("id")
-        finally:
-            state.interest = data.get("interest")
-            state.commits.append(commit)
 
-            state.save()
+        state.interest = data.get("interest")
+        state.commits.append(commit)
+
+        state.save()
