@@ -10,7 +10,7 @@ class InstallmentsChangedStatus(CommitProcessor):
         data = commit.data
 
         try:
-            state = State.object.get(id=data.get("id"))
+            state = State.objects.get(id=data.get("id"))
         except State.DoesNotExist:
             state = State()
             state.id = data.get("id")
