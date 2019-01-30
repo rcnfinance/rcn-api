@@ -78,7 +78,5 @@ class Listener:
         self.current_block = self.start_sync
         self.safe_block = self.start_sync
 
-        logger.info('Creating filter from block {}'.format(0))
-
         # self.w3 = SafeWeb3(w3)
         self.listen()

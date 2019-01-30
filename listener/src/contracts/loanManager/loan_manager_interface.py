@@ -3,7 +3,7 @@ import os
 from ethereum_connection import EthereumConnection
 from ethereum_connection import ContractConnection
 
-MODEL_ADDRESS = "0xE3633E63Da6154D9450e34F0d4c64c6A51f6918e"
+MODEL_ADDRESS = "0x2B1d585520634b4c7aAbD54D73D34333FfFe5c53"
 
 ABI_PATH = os.path.join(
     "/project/contracts/installmentsModel",
@@ -42,7 +42,7 @@ class LoanManagerInterface():
         parsed_data["creator"] = request_data[7]
         parsed_data["oracle"] = request_data[8]
         parsed_data["borrower"] = request_data[9]
-        parsed_data["nonce"] = request_data[10]
+        parsed_data["salt"] = request_data[10]
         parsed_data["loanData"] = request_data[11].hex()
 
         return parsed_data

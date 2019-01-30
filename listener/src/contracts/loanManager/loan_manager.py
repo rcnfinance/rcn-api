@@ -6,7 +6,7 @@ from ethereum_connection import ContractConnection
 from .loan_manager_interface import LoanManagerInterface
 
 
-ADDRESS = "0xbF77a4061eB243d38BaCBD684f0c3124eefE6E91"
+ADDRESS = "0x978ef6D2bd7559181e6Ac82fFa5C875364d9071b"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
@@ -29,6 +29,12 @@ from .handlers.readed_oracle import ReadedOracle
 from .handlers.requested import Requested
 from .handlers.settled_cancel import SettledCancel
 from .handlers.settled_lend import SettledLend
+from .handlers.approved_by_callback import ApprovedByCallback
+from .handlers.approved_by_signature import ApprovedBySignature
+from .handlers.borrower_by_callback import BorrowerByCallback
+from .handlers.borrower_by_signature import BorrowerBySignature
+from .handlers.creator_by_callback import CreatorByCallback
+from .handlers.creator_by_signature import CreatorBySignature
 
 from .commit_processors.approved import Approved as ApprovedCommitProcessor
 from .commit_processors.canceled import Canceled as CanceledCommitProcessor
@@ -67,7 +73,13 @@ event_handlers = [
     ReadedOracle,
     Requested,
     SettledCancel,
-    SettledLend
+    SettledLend,
+    ApprovedByCallback,
+    ApprovedBySignature,
+    BorrowerByCallback,
+    BorrowerBySignature,
+    CreatorByCallback,
+    CreatorBySignature
 ]
 
 loan_manager = Contract(

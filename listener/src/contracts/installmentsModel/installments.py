@@ -5,7 +5,7 @@ from ethereum_connection import ContractConnection
 
 from .installments_model_interface import InstallmentsModelInterface
 
-ADDRESS = "0xE3633E63Da6154D9450e34F0d4c64c6A51f6918e"
+ADDRESS = "0x2B1d585520634b4c7aAbD54D73D34333FfFe5c53"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),

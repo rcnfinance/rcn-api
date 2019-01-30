@@ -6,7 +6,7 @@ from ethereum_connection import ContractConnection
 from .debt_engine_interface import DebtEngineInterface
 
 
-ADDRESS = "0x9da08B739f520beD976566864e55D96Fe2AA8f2D"
+ADDRESS = "0xe4BfBBB04844cdEbd6b7814183f92E0703257d48"
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
@@ -32,6 +32,7 @@ from .handlers.readed_oracle import ReadedOracle
 from .handlers.readed_oracle_batch import ReadedOracleBatch
 from .handlers.withdrawn import Withdrawn
 from .handlers.transfer import Transfer
+from .handlers.set_uri_provider import SetURIProvider
 
 from .commit_processors.created_debt import CreatedDebt
 from .commit_processors.error import Error as ErrorCommitProcessor
@@ -61,7 +62,8 @@ EVENTS_HANDLERS = [
     ReadedOracle,
     ReadedOracleBatch,
     Withdrawn,
-    Transfer
+    Transfer,
+    SetURIProvider
 ]
 
 

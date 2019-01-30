@@ -2,15 +2,27 @@ import web3
 from contracts.event import EventHandler
 from models import Loan, Commit
 from contracts.loanManager.loan_manager import loan_manager_interface
+from utils import to_address
 
 
 class Requested(EventHandler):
-    signature = "Requested(bytes32,uint256)"
+    signature = "Requested(bytes32,uint128,address,address,address,address,uint256,bytes,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _parse(self):
+        print(self._event)
+        data = self._event.get("data")[2:]
         self._id = self._event.get("topics")[1].hex()
-        self._salt = int(self._event.get("data"), 16)
+
+        self._amount = int(data[:64], 16)
+        self._model = to_address(data[65:128])
+        self._creator = to_address(data[129:192])
+        self._oracle = to_address(data[193:256])
+        self._borrower = to_address(data[257:320])
+        self._salt = int(data[321:384], 16)
+        # self._loanData =
+        # self._expiration =
+
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
 
