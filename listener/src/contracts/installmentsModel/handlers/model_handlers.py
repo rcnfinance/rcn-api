@@ -69,7 +69,7 @@ class InstallmentsChangedStatus(ChangedStatus):
 
         data = {
             "id": self._id,
-            "timestamp": self._timestamp,
+            "timestamp": str(self._timestamp),
             "status": str(self._status)
         }
 

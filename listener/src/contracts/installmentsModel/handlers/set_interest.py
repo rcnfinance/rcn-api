@@ -11,8 +11,8 @@ class SetInterest(EventHandler):
     def _parse(self):
         data = self._event.get("data")[2:]
         splited_args = utils.split_every(64, data)
-        self._id = splited_args[0]
-        self._interest = splited_args[1]
+        self._id = "0x" + splited_args[0]
+        self._interest = int(splited_args[1], 16)
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
 
