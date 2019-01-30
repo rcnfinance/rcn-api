@@ -8,7 +8,7 @@ class ChangedStatus(EventHandler):
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _parse(self):
-        self._id = self._event.get("topics")[1].hex()1
+        self._id = self._event.get("topics")[1].hex()
 
         data = self._event.get("data")[2:]
         splited_args = utils.split_every(64, data)
