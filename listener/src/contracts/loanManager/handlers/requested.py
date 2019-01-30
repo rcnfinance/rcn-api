@@ -10,7 +10,6 @@ class Requested(EventHandler):
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _parse(self):
-        print(self._event)
         data = self._event.get("data")[2:]
         self._id = self._event.get("topics")[1].hex()
 
@@ -20,8 +19,6 @@ class Requested(EventHandler):
         self._oracle = to_address(data[193:256])
         self._borrower = to_address(data[257:320])
         self._salt = int(data[321:384], 16)
-        # self._loanData =
-        # self._expiration =
 
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
