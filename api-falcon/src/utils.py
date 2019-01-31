@@ -63,7 +63,7 @@ def new_interest(clock, time_unit, duration, installments, cuota, paid_base, del
     logger.debug("clock: {}, time_unit: {}, duration: {}, installments: {}, cuota: {}, paid_base: {}, delta: {}, interest_rate: {}".format(
         clock, time_unit, duration, installments, cuota, paid_base, delta, interest_rate)
     )
-    running_debt = base_debt(clock, duration, installments, cuota)
+    running_debt = base_debt(clock, duration, installments, cuota) - paid_base
     new_interest = (100000 * (delta // time_unit) * running_debt) // (interest_rate // time_unit)
 
     assert new_interest < U_128_OVERFLOW
@@ -136,7 +136,7 @@ def get_closing_obligation(_id, now=None):
     logger.debug("id: {}, now: {}".format(_id, now))
 
     if now is None:
-        now = int(dt.now().timestamp())
+        now = int(dt.utcnow().timestamp())
         logger.debug("now: {}".format(now))
 
     state = State.objects.get(id=_id)

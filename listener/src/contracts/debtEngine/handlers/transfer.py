@@ -13,6 +13,9 @@ class Transfer(EventHandler):
         self._from = utils.to_address(web3.Web3.toHex(self._event.get("topics")[1]))
         self._to = utils.to_address(web3.Web3.toHex(self._event.get("topics")[2]))
         self._token_id = "0x" + data
+        self._block_number = self._event.get('blockNumber')
+        self._transaction = self._event.get('transactionHash').hex()
+
 
     def handle(self):
         if self._from != "0x0000000000000000000000000000000000000000":
