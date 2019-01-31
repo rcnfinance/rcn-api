@@ -23,8 +23,8 @@ class Created3(EventHandler):
 
         debt = debt_engine_interface.get_debt_by_id(self._id)
 
-        error = debt[0]
-        balance = debt[1]
+        error = False
+        balance = 0
         model = debt[2]
         creator = debt[3]
         oracle = debt[4]
