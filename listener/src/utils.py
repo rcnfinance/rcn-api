@@ -16,3 +16,7 @@ def to_int(hex_string):
 def to_bool(hex_string):
     # TODO: fix this
     return hex_string
+
+
+def add_0x_prefix(string):
+    return web3.utils.contracts.add_0x_prefix(string)
