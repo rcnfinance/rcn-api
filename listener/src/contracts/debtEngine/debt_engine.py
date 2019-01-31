@@ -38,13 +38,15 @@ from .commit_processors.error import Error as ErrorCommitProcessor
 from .commit_processors.error_recover import ErrorRecover as ErrorRecoverCommitProcessor
 from .commit_processors.paid import Paid as PaidCommitProcessor
 from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
+from .commit_processors.transfer import Transfer as TransferCommitProcessor
 
 commit_processors = [
     CreatedDebt(),
     ErrorCommitProcessor(),
     ErrorRecoverCommitProcessor(),
     PaidCommitProcessor(),
-    ReadedOracleCommitProcessor()
+    ReadedOracleCommitProcessor(),
+    TransferCommitProcessor()
 ]
 schedule_processors = []
 
