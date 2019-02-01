@@ -8,7 +8,8 @@ class Paid(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-        debt = Debt.objects(id=data["id"]).first()
+        print(data)
+        debt = Debt.objects.get(id=data["id"])
 
         new_balance = int(debt.balance) + int(data.get("tokens"))
         debt.balance = str(new_balance)

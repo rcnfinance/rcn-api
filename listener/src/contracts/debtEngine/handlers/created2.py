@@ -2,17 +2,21 @@ import web3
 from contracts.event import EventHandler
 from models import Commit
 from contracts.debtEngine.debt_engine import debt_engine_interface
+import utils
 
 
 class Created2(EventHandler):
     signature = "Created2(bytes32,uint256,bytes)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
-    def _parse(self):
-        self._data = self._event.get("data")
-        self._id = self._event.get("topics")[1].hex()
-        self._block_number = self._event.get('blockNumber')
-        self._transaction = self._event.get('transactionHash').hex()
+    # def _parse(self):
+    #     self._data = self._event.get("data")
+    #     self._id = self._event.get("topics")[1].hex()
+    #     self._block_number = self._event.get('blockNumber')
+    #     self._transaction = self._event.get('transactionHash').hex()
+
+    def _normalize(self):
+        self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
     def handle(self):
         commit = Commit()
@@ -25,20 +29,20 @@ class Created2(EventHandler):
 
         error = False
         balance = 0
-        model = debt[2]
-        creator = debt[3]
-        oracle = debt[4]
+        model = debt.get("model")
+        creator = debt.get("creator")
+        oracle = debt.get("oracle")
         created = str(self._block_timestamp())
 
         data = {
-            "_data": self._data,
+            "_data": self._args.get("data"),
             "error": error,
             "balance": str(balance),
             "model": model,
             "creator": creator,
             "oracle": oracle,
             "created": created,
-            "id": self._id
+            "id": self._args.get("_id")
         }
 
         commit.data = data
