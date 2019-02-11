@@ -25,7 +25,7 @@ class Created2(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
 
-        debt = debt_engine_interface.get_debt_by_id(self._id)
+        debt = debt_engine_interface.get_debt_by_id(self._args.get("_id"))
 
         error = False
         balance = 0

@@ -32,7 +32,8 @@ class Lent(EventHandler):
             "id": self._args.get("_id"),
             "lender": self._args.get("_lender"),
             "tokens": str(self._args.get("_tokens")),
-            "open": False
+            "open": False,
+            "status": "1",
         }
 
         commit.data = data
