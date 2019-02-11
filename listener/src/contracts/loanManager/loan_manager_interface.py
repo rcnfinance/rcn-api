@@ -76,7 +76,7 @@ class LoanManagerInterface():
             duration = contractModel.simDuration(loanData).call()
 
             durationPercentage = ((totalObligation / int(parsed_request_data["amount"])) - 1) * 100
-            interestRate = (durationPercentage * 360 * 86000) / duration 
+            interestRate = (durationPercentage * 360 * 86400) / duration 
 
             descriptor["first_obligation"] = str(firstObligationAmount)
             descriptor["total_obligation"] = str(totalObligation)
