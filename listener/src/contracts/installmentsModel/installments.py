@@ -11,7 +11,7 @@ ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     "abi.json"
 )
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
+URL_NODE = os.environ.get("URL_NODE")
 
 eth_conn = EthereumConnection(URL_NODE)
 contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)

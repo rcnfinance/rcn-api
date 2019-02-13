@@ -1,6 +1,7 @@
 from models import Descriptor
 import os
 from ethereum_connection import EthereumConnection
+import os
 from ethereum_connection import ContractConnection
 
 MODEL_ADDRESS = "0x2B1d585520634b4c7aAbD54D73D34333FfFe5c53"
@@ -9,7 +10,7 @@ ABI_PATH = os.path.join(
     "/project/contracts/installmentsModel",
     "abi.json"
 )
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
+URL_NODE = os.environ.get("URL_NODE")
 
 eth_conn = EthereumConnection(URL_NODE)
 
