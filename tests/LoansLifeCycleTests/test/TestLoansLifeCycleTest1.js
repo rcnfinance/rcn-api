@@ -9,6 +9,8 @@ const expect = require('chai')
     .use(require('bn-chai')(BN))
     .expect;
 
+const api = require("./api.js");
+
 function bn (number) {
     return new BN(number);
 } 
@@ -42,6 +44,9 @@ contract("Loans Life Cycle Tests", async accounts => {
   const lenderPrivateKey = '0xda06412214b4901dc170f99a3b51cc36b485bb92d688a449de94638117978c56';
   const lenderAddress = '0xa4D49A5e03c6cEEa80eCC48fBF92835AFd4C37e1';
 
+  function sleep(millis) {
+    return new Promise(resolve => setTimeout(resolve, millis));
+  }
 
   // Function to calculate the id of a Loan
   async function calcId(_amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
@@ -150,6 +155,10 @@ contract("Loans Life Cycle Tests", async accounts => {
       console.log(id);
 
       const getBorrower = await loanManager.getBorrower(request.logs[0].args[0]);
+
+      await sleep(5000);
+      loan = await api.get_loan(id);
+      console.log(loan);
 
       assert.equal(borrower, getBorrower);
       assert.equal(loanId, id);
