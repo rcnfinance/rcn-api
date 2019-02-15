@@ -6,14 +6,14 @@ const InstallmentsModel = artifacts.require('./diaspore/model/InstallmentsModel'
 
 const BN = web3.utils.BN;
 const expect = require('chai')
-    .use(require('bn-chai')(BN))
-    .expect;
+  .use(require('bn-chai')(BN))
+  .expect;
 
 const api = require("./api.js");
 
-function bn (number) {
-    return new BN(number);
-} 
+function bn(number) {
+  return new BN(number);
+}
 
 contract("Loans Life Cycle Tests", async accounts => {
 
@@ -143,25 +143,60 @@ contract("Loans Life Cycle Tests", async accounts => {
       console.log('salt');
       console.log(salt);
 
-      // Request Loan 
+      // Brodcast transaction to the network -  Request Loan 
       request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
-      
+
+      // Obtains loanId from logs of the transaction receipt
       const loanId = request.logs[0].args[0];
-      console.log('Loan id from result');
-      console.log(loanId);
 
+      // Calculate the Id of the loan with helper function
       const id = await calcId(amount, borrower, creatorAddress, installmentModel, oracle, salt, expiration, loanData);
-      console.log('CALC ID');
       console.log(id);
-
-      const getBorrower = await loanManager.getBorrower(request.logs[0].args[0]);
-
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
       await sleep(5000);
-      loan = await api.get_loan(id);
+
+      // Query the API for Loan data
+      loanJson = await api.get_loan(id);
+      loan = loanJson.content;
       console.log(loan);
 
-      assert.equal(borrower, getBorrower);
-      assert.equal(loanId, id);
+      // Query blockchain for loan data 
+      getRequestId = await loanManager.requests(id);
+      console.log(getRequestId);
+      getBorrower = await loanManager.getBorrower(id);
+      getCreator = await loanManager.getCreator(id);
+      getOracle = await loanManager.getOracle(id);
+      getCosigner = await loanManager.getCosigner(id);
+      getCurrency = await loanManager.getCurrency(id);
+      getAmount = await loanManager.getAmount(id);
+      getExpirationRequest = await loanManager.getExpirationRequest(id);
+      getApproved = await loanManager.getApproved(id);
+      // getDueTime = await loanManager.getDueTime(id);
+      // getLoanData = await loanManager.getLoanData(id);
+      // getStatus = await loanManager.getStatus(id);
+
+
+      // Compare both results and validate consistency
+      
+      assert.equal(loan.id, id);
+      assert.equal(loan.open, getRequestId.open);
+      assert.equal(loan.approved, getApproved);
+      assert.equal(loan.position, getRequestId.position);
+      assert.equal(loan.expiration, getExpirationRequest);
+      assert.equal(loan.amount, getAmount);
+     // assert.equal(loan.cosigner, getCosigner);
+      assert.equal(loan.model, getRequestId.model);
+      assert.equal(loan.creator, getCreator);
+      assert.equal(loan.oracle, getOracle);
+      assert.equal(loan.borrower, getBorrower);
+      assert.equal(loan.salt, getRequestId.salt)
+      assert.equal(loan.loanData, getLoanData);
+      //assert.equal(loan.created, )
+      // descriptor check values
+      //assert.equal(loan.currency, getCurrency);
+      assert.equal(loan.lender, null);
+      assert.equal(loan.status, getStatus);
+      //assert.equal(loan.canceled, );
     });
   });
 
@@ -170,7 +205,7 @@ contract("Loans Life Cycle Tests", async accounts => {
 
   describe('Flujo 2: REQUEST AND APPROVE LOAN', function () {
 
-    it("should create a new loan Request and approve the  ", async () => {
+    it("should create a new loan Request and approve the request by the borrower ", async () => {
 
       // Set loan data parameters
       const cuota = '10000000000000000000';
@@ -193,7 +228,7 @@ contract("Loans Life Cycle Tests", async accounts => {
 
       // Request Loan 
       request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
-      
+
       const loanId = request.logs[0].args[0];
       console.log('Loan id from result');
       console.log(loanId);
@@ -202,7 +237,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       console.log('CALC ID');
       console.log(id);
 
-      const approved = await loanManager.approveRequest(id ,{from: borrowerAddress });
+      const approved = await loanManager.approveRequest(id, { from: borrowerAddress });
 
       const getBorrower = await loanManager.getBorrower(id);
       const getApproved = await loanManager.getApproved(id);
