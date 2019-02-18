@@ -14,6 +14,7 @@ async function get_loan(id_loan) {
 async function get_debt(id_debt) {
     const endpoint_resource = "debts/"
     const url = base_url + endpoint_resource + id_debt;
+    console.log(url);
 
     response = await axios.get(url);
 
