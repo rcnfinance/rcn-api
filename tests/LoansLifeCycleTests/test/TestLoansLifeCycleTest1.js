@@ -95,6 +95,36 @@ contract("Loans Life Cycle Tests", async accounts => {
     return id;
   }
 
+  // Function creates a new loan request
+  async function requestLoan(_cuota, _interestRate, _installments, _duration, _timeUnit, _amount, _oracle, _expiration) {
+    // Set loan data parameters
+    const cuota = _cuota;
+    const interestRate = _interestRate;  //punitive interest rate 
+    const installments = _installments;
+    const duration = _duration;
+    const timeUnit = _timeUnit;
+
+    // Endode Loan data
+    const loanData = await installmentModel.encodeData(cuota, interestRate, installments, duration, timeUnit);
+
+    // Set other parameters to request a Loan
+    const amount = _amount;        //amount in RCN 
+    const modelAddress = installmentModel.address;
+    let oracle = _oracle;
+    let borrower = borrowerAddress;
+    let salt = saltValue++;
+    let expiration = _expiration;
+
+    request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
+
+    id = await calcId(amount, borrower, creatorAddress, installmentModel, oracle, salt, expiration, loanData);
+
+    // Obtains loanId from logs of the transaction receipt
+    const loanId = request.logs[0].args[0];
+
+    return [id, loanData];
+  }
+
 
   before('Create Token, Debt Engine , Loan Manager and Model instances', async function () {
 
@@ -122,47 +152,27 @@ contract("Loans Life Cycle Tests", async accounts => {
 
     it("should create a new loan Request ", async () => {
 
-      // Set loan data parameters
-      const cuota = '10000000000000000000';
-      const interestRate = '1555200000000';  //punitive interest rate 
-      const installments = '12';
-      const duration = '2592000';
-      const timeUnit = '2592000';
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      loanIdandData = await requestLoan('10000000000000000000', '1555200000000', '12', '2592000', '2592000', '100000000000000000000',
+        '0x0000000000000000000000000000000000000000', '1578571215');
+      id = loanIdandData[0];
+      loanData = loanIdandData[1];
 
-      // Endode Loan data
-      const loanData = await installmentModel.encodeData(cuota, interestRate, installments, duration, timeUnit);
-
-      // Set other parameters to request a Loan
-      const amount = '100000000000000000000';        //amount in RCN 
-      const modelAddress = installmentModel.address;
-      let oracle = '0x0000000000000000000000000000000000000000';
-      let borrower = borrowerAddress;
-      let salt = saltValue++;
-      let expiration = '1578571215';
-
-      console.log('salt');
-      console.log(salt);
-
-      // Brodcast transaction to the network -  Request Loan 
-      request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
-
-      // Obtains loanId from logs of the transaction receipt
-      const loanId = request.logs[0].args[0];
-
-      // Calculate the Id of the loan with helper function
-      const id = await calcId(amount, borrower, creatorAddress, installmentModel, oracle, salt, expiration, loanData);
-      console.log(id);
       // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
       await sleep(5000);
-
       // Query the API for Loan data
       loanJson = await api.get_loan(id);
       loan = loanJson.content;
       console.log(loan);
 
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);      
+      console.log('simFirtObligation Amount');
+      console.log(simFirstObligation.amount);
+      console.log('sim FirstObligation time');
+      console.log(simFirstObligation.time);
+
       // Query blockchain for loan data 
       getRequestId = await loanManager.requests(id);
-      console.log(getRequestId);
       getBorrower = await loanManager.getBorrower(id);
       getCreator = await loanManager.getCreator(id);
       getOracle = await loanManager.getOracle(id);
@@ -172,19 +182,17 @@ contract("Loans Life Cycle Tests", async accounts => {
       getExpirationRequest = await loanManager.getExpirationRequest(id);
       getApproved = await loanManager.getApproved(id);
       // getDueTime = await loanManager.getDueTime(id);
-      // getLoanData = await loanManager.getLoanData(id);
-      // getStatus = await loanManager.getStatus(id);
+      getLoanData = await loanManager.getLoanData(id);
+      getStatus = await loanManager.getStatus(id);
 
-
-      // Compare both results and validate consistency
-      
+      // Compare both results (API and blockchain) and validate consistency
       assert.equal(loan.id, id);
       assert.equal(loan.open, getRequestId.open);
       assert.equal(loan.approved, getApproved);
       assert.equal(loan.position, getRequestId.position);
       assert.equal(loan.expiration, getExpirationRequest);
       assert.equal(loan.amount, getAmount);
-     // assert.equal(loan.cosigner, getCosigner);
+      // assert.equal(loan.cosigner, getCosigner);
       assert.equal(loan.model, getRequestId.model);
       assert.equal(loan.creator, getCreator);
       assert.equal(loan.oracle, getOracle);
@@ -192,7 +200,8 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(loan.salt, getRequestId.salt)
       assert.equal(loan.loanData, getLoanData);
       //assert.equal(loan.created, )
-      // descriptor check values
+      //assert.equal(loan.descriptor.first_obligation, installmentModel.simFirstObligation(loanData));
+
       //assert.equal(loan.currency, getCurrency);
       assert.equal(loan.lender, null);
       assert.equal(loan.status, getStatus);
