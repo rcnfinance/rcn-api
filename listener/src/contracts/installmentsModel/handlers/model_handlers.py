@@ -11,6 +11,8 @@ from contracts.installmentsModel.installments import installments_model_interfac
 
 from models import Commit
 from models import State
+import utils
+
 
 class InstallmentsAddedDebt(AddedDebt):
     def handle(self):
@@ -18,6 +20,9 @@ class InstallmentsAddedDebt(AddedDebt):
 
 
 class InstallmentsAddedPaid(AddedPaid):
+    def _normalize(self):
+        self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
+
     def handle(self):
         commit = Commit()
 
@@ -60,6 +65,9 @@ class InstallmentsChangedObligation(ChangedObligation):
 
 
 class InstallmentsChangedStatus(ChangedStatus):
+    def _normalize(self):
+        self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
+
     def handle(self):
         commit = Commit()
 
@@ -78,6 +86,9 @@ class InstallmentsChangedStatus(ChangedStatus):
 
 
 class InstallmentsCreated(Created):
+    def _normalize(self):
+        self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
+
     def handle(self):
         commit = Commit()
 
