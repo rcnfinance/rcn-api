@@ -151,10 +151,17 @@ contract("Loans Life Cycle Tests", async accounts => {
   describe('Flujo 1: REQUEST LOAN', function () {
 
     it("should create a new loan Request ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      loanIdandData = await requestLoan('10000000000000000000', '1555200000000', '12', '2592000', '2592000', '100000000000000000000',
-        '0x0000000000000000000000000000000000000000', '1578571215');
+      loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = loanIdandData[0];
       loanData = loanIdandData[1];
 
@@ -165,11 +172,19 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan = loanJson.content;
       console.log(loan);
 
-      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);      
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);     
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+ 
       console.log('simFirtObligation Amount');
-      console.log(simFirstObligation.amount);
+      console.log(simFirstObligationTimeAndAmount.amount);
       console.log('sim FirstObligation time');
-      console.log(simFirstObligation.time);
+      console.log(simFirstObligationTimeAndAmount.time);
 
       // Query blockchain for loan data 
       getRequestId = await loanManager.requests(id);
@@ -200,7 +215,12 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(loan.salt, getRequestId.salt)
       assert.equal(loan.loanData, getLoanData);
       //assert.equal(loan.created, )
-      //assert.equal(loan.descriptor.first_obligation, installmentModel.simFirstObligation(loanData));
+      assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan.descriptor.total_obligation, totalObligation);
+      assert.equal(loan.descriptor.duration, duration);
+      assert.equal(loan.descriptor.interest_rate, interestRate);
+      assert.equal(loan.descriptor.frequency, frequency);
+      assert.equal(loan.descriptor.installments, installments);
 
       //assert.equal(loan.currency, getCurrency);
       assert.equal(loan.lender, null);
