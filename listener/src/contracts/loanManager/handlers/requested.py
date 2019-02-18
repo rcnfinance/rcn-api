@@ -27,7 +27,7 @@ class Requested(EventHandler):
             "position": "0",
             "expiration": str(self._args.get("_expiration")),
             "amount": str(self._args.get("_amount")),
-            "cosigner": "0x0",
+            "cosigner": "0x0000000000000000000000000000000000000000",
             "model": self._args.get("_model"),
             "creator": self._args.get("_creator"),
             "oracle": self._args.get("_oracle"),
@@ -35,7 +35,7 @@ class Requested(EventHandler):
             "salt": str(self._args.get("_salt")),
             "loanData": self._args.get("_loanData"),
             "created": str(self._block_timestamp()),
-            "currency": loan_manager_interface.get_currency(self._args.get("_id")),
+            "currency": utils.add_0x_prefix(loan_manager_interface.get_currency(self._args.get("_id"))),
             "status": "0"
         }
 
