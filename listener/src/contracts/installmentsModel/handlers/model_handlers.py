@@ -30,7 +30,7 @@ class InstallmentsAddedPaid(AddedPaid):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
 
-        state = State.objects.get(id=self._id)
+        state = State.objects.get(id=self._args.get("_id"))
 
         data = {
             "id": self._args.get("_id"),
@@ -69,6 +69,8 @@ class InstallmentsChangedStatus(ChangedStatus):
         self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
     def handle(self):
+        commits = []
+
         commit = Commit()
 
         commit.opcode = "changed_status_installments"
@@ -82,7 +84,23 @@ class InstallmentsChangedStatus(ChangedStatus):
         }
 
         commit.data = data
-        return [commit]
+        commits.append(commit)
+
+        # commit full payment loan manager
+        commit_full_payment = Commit()
+        commit_full_payment.opcode = "full_payment_loan_manager"
+        commit_full_payment.timestamp = commit.timestamp
+        commit_full_payment.proof = self._transaction
+
+        data = {
+            "id": self._args.get("_id"),
+            "status": str(self._args.get("_status"))
+        }
+        commit_full_payment.data = data
+
+        commits.append(commit_full_payment)
+
+        return commits
 
 
 class InstallmentsCreated(Created):

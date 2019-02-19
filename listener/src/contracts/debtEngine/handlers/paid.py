@@ -43,8 +43,6 @@ class Paid(EventHandler):
             "paid": str(self._args.get("_paid")),
             "tokens": str(self._args.get("_tokens"))
         }
-        print("data: ", data)
-        print("args: ", self._args)
 
         commit.data = data
 
