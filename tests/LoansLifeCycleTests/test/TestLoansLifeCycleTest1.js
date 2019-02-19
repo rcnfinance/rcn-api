@@ -378,12 +378,51 @@ contract("Loans Life Cycle Tests", async accounts => {
         );
   
         await sleep(5000);
-        // Query the API for Loan data
+        // Query the API for Debt data
         debtJson = await api.get_debt(id);
         debt = debtJson.content;
-//        console.log(debt); 
+        console.log('debt');
+        console.log(debt);
+
+        // Query the API for config data
+        configJson = await api.get_config(id);
+        config = configJson.content;
+        console.log('Config');
+        console.log(config);
+
+        // Query the API for Loan data
+        loanJsonAfterLend = await api.get_loan(id);
+        loanAfterLend = loanJsonAfterLend.content;
+        console.log('LOAN AFTER LEND');
+        console.log(loanAfterLend);
+
+        //Check Debt endpoint
+        loanDebt = await debtEngine.debts(id);
+        console.log('Loan Debt');
+        console.log(loanDebt);
+        assert.equal(debt.error, loanDebt.error);
+        assert.equal(debt.balance, loanDebt.balance);
+        assert.equal(debt.model, loanDebt.model);
+        assert.equal(debt.creator, loanDebt.creator);
+        assert.equal(debt.oracle, loanDebt.oracle);
+
+        //Check config endPoint
+        loanConfigs = await installmentModel.configs(id);
+        assert.equal(config.data.installments, loanConfigs.installments);
+        assert.equal(config.data.time_unit, loanConfigs.timeUnit);
+        assert.equal(config.data.duration, loanConfigs.duration);
+        assert.equal(config.data.lent_time, loanConfigs.lentTime); 
+        assert.equal(config.data.cuota, loanConfigs.cuota);    
+        assert.equal(config.data.interest_rate, loanConfigs.interestRate);
+
+        // Check loan endPoint
+        assert.equal(loanAfterLend.open, false);
+        assert.equal(loanAfterLend.approved, true);
+        assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
+        assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
+  
+  
       });
     });
-
 
 });
