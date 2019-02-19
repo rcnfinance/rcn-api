@@ -224,6 +224,60 @@ contract("Loans Life Cycle Tests", async accounts => {
     });
   });
 
+    describe('Flujo 2: REQUEST AND APPROVE LOAN', function () {
+
+    it("should create a new loan Request and approve the request by the borrower ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = loanIdandData[0];
+      loanData = loanIdandData[1];
+
+      let borrower = borrowerAddress;
+
+      const approved = await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loanJson = await api.get_loan(id);
+      loan = loanJson.content;
+
+      const getBorrower = await loanManager.getBorrower(id);
+      const getApproved = await loanManager.getApproved(id);
+
+      assert.equal(borrower, getBorrower);
+      assert.equal(true, getApproved);
+      // assert.equal(loanId, id);
+
+      getRequestId = await loanManager.requests(id);
+      assert.equal(loan.id, id);
+      assert.equal(loan.open, getRequestId.open);
+      assert.equal(loan.approved, getApproved);
+      assert.equal(loan.expiration, getExpirationRequest);
+      assert.equal(loan.amount, getAmount);
+      assert.equal(loan.cosigner, getCosigner);
+      assert.equal(loan.model, getRequestId.model);
+      assert.equal(loan.creator, getCreator);
+      assert.equal(loan.oracle, getOracle);
+      assert.equal(loan.borrower, getBorrower);
+      assert.equal(loan.salt, getRequestId.salt)
+      assert.equal(loan.loanData, getLoanData);
+
+      assert.equal(loan.currency, getCurrency);
+      assert.equal(loan.lender, null);
+      assert.equal(loan.status, getStatus);
+    });
+  });
+
     // FLUJO 3 - REQUEST  + APPROVE + LEND
 
     describe('Flujo 3: REQUEST  + APPROVE + LEND', function () {
@@ -248,7 +302,7 @@ contract("Loans Life Cycle Tests", async accounts => {
         // Query the API for Loan data
         loanJson = await api.get_loan(id);
         loan = loanJson.content;
-        console.log(loan);
+//        console.log(loan);
   
         // Query blockchain for loan data 
         getRequestId = await loanManager.requests(id);
@@ -309,8 +363,8 @@ contract("Loans Life Cycle Tests", async accounts => {
         await rcnToken.setBalance(lenderAddress, amount);
   
         balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-        console.log('BALANCE OF LENDER');
-        console.log(balanceOfLender.toString());
+//        console.log('BALANCE OF LENDER');
+//        console.log(balanceOfLender.toString());
   
         await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
   
@@ -323,14 +377,11 @@ contract("Loans Life Cycle Tests", async accounts => {
             { from: lenderAddress }    // Owner/Lender
         );
   
-        await sleep(10000);
+        await sleep(5000);
         // Query the API for Loan data
         debtJson = await api.get_debt(id);
         debt = debtJson.content;
-        console.log(debt);
-  
-      
-  
+//        console.log(debt); 
       });
     });
 
