@@ -47,6 +47,7 @@ from .commit_processors.approved_rejected import ApprovedRejected as ApprovedRej
 from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
 from .commit_processors.settled_cancel import SettledCancel as SettledCancelCommitProcessor
 from .commit_processors.settled_lend import SettledLend as SettledLendCommitProcessor
+from .commit_processors.full_payment import FullPayment as FullPaymentCommitProcessor
 
 
 commit_processors = [
@@ -59,7 +60,8 @@ commit_processors = [
     ReadedOracleCommitProcessor(),
     ApprovedRejectectCommitProcessor(),
     SettledCancelCommitProcessor(),
-    SettledLendCommitProcessor()
+    SettledLendCommitProcessor(),
+    FullPaymentCommitProcessor()
 ]
 
 schedule_processors = []
