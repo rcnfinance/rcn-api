@@ -4,7 +4,7 @@ const base_url = process.env.BASE_URL;
 async function get_loan(id_loan) {
     const endpoint_resource = "loans/";
     const url = base_url + endpoint_resource + id_loan;
-    console.log(url);
+    // console.log(url);
     
     response = await axios.get(url);
     
@@ -14,7 +14,7 @@ async function get_loan(id_loan) {
 async function get_debt(id_debt) {
     const endpoint_resource = "debts/"
     const url = base_url + endpoint_resource + id_debt;
-    console.log(url);
+    // console.log(url);
 
     response = await axios.get(url);
 
