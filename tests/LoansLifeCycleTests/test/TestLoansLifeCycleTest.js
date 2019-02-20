@@ -72,7 +72,7 @@ contract("Loans Life Cycle Tests", async accounts => {
   let debtEngine;
   let loanManager;
   let installmentModel;
-  let saltValue = 0;
+  let saltValue = 100;
 
   // Static Contract Addresses for backend
   const rcnTokenAddress = "0xe5EA9D03D391d86933277c69ce6d2c3f073c4819"
@@ -165,7 +165,8 @@ contract("Loans Life Cycle Tests", async accounts => {
     const modelAddress = installmentModel.address;
     let oracle = _oracle;
     let borrower = borrowerAddress;
-    let salt = saltValue++;
+    let salt = ++saltValue;
+    console.log(salt);
     let expiration = _expiration;
 
     request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
@@ -248,7 +249,9 @@ contract("Loans Life Cycle Tests", async accounts => {
 
 
       // Compare both results (API and blockchain) and validate consistency
+      console.log(loan);
       assert.equal(loan.id, id);
+
       assert.equal(loan.open, getRequestId.open);
       assert.equal(loan.approved, getApproved);
       assert.equal(loan.position, getRequestId.position);
@@ -304,6 +307,8 @@ contract("Loans Life Cycle Tests", async accounts => {
       // Query the API for Loan data
       loanJson = await api.get_loan(id);
       loan = loanJson.content;
+
+      console.log(loan);
 
       const getBorrower = await loanManager.getBorrower(id);
       const getApproved = await loanManager.getApproved(id);
@@ -1049,6 +1054,12 @@ contract("Loans Life Cycle Tests", async accounts => {
 
       assert.equal(newLenderAddress, await loanManager.ownerOf(id));
 
+      await sleep(5000);
+      loanJsonAfterTransfer = await api.get_loan(id);
+      loanAfterTransfer = loanJsonAfterTransfer.content;
+
+      assert.equal(newLenderAddress, loanAfterTransfer.lender);
+
       // Should not be able to transfer if the sender is not the owner of the debt
       try {
       error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, {from: lenderAddress });
@@ -1082,8 +1093,6 @@ contract("Loans Life Cycle Tests", async accounts => {
       // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
       await sleep(5000);
       // Query the API for Loan data
-      console.log('ID');
-      console.log(id);
       loanJson = await api.get_loan(id);
       loan = loanJson.content;
     

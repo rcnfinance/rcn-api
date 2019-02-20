@@ -5,4 +5,4 @@ FROM node:latest
 WORKDIR /tests
 
 # Install Truffle
-RUN npm install -g truffle axios chai bn-chai
+RUN npm install -g truffle axios chai bn-chai mocha-steps
