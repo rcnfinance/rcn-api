@@ -16,6 +16,8 @@ class Transfer(EventHandler):
     #     self._transaction = self._event.get('transactionHash').hex()
 
     def handle(self):
+        print(self._args)
+        print(self._event)
         if self._args.get("_from") != "0x0000000000000000000000000000000000000000":
 
             commit = Commit()
@@ -25,7 +27,7 @@ class Transfer(EventHandler):
             commit.proof = self._transaction
 
             data = {
-                "id": self._args.get("_token_id"),
+                "id": self._event.get("data"),
                 "from": self._args.get("_from"),
                 "to": self._args.get("_to")
             }
