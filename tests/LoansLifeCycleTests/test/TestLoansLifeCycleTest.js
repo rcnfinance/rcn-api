@@ -284,112 +284,236 @@ contract("Loans Life Cycle Tests", async accounts => {
 
   // FLUJO 1 - REQUEST  
 
-  // describe('Flujo 1: REQUEST LOAN', function () {
+  describe('Flujo 1: REQUEST LOAN', function () {
 
-  //   it("should create a new loan Request ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
+    it("should create a new loan Request ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
 
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = result.id;
-  //     loanData = result.loanData;
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
 
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loan_api = (await api.get_loan(id)).content;
-  //     loan_eth = await loanManager.requests(id);
-  //     //check loan data
-  //     keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-  //     check_loan(loan_eth, loan_api, keys_to_check)
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
 
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
 
-  //     assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan_api.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan_api.descriptor.duration, duration);
-  //     assert.equal(loan_api.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan_api.descriptor.frequency, frequency);
-  //     assert.equal(loan_api.descriptor.installments, installments);
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
 
-  //     assert.equal(loan_api.lender, null);
-  //   });
-  // });
+      assert.equal(loan_api.lender, null);
+    });
+  });
 
-  // // // FLUJO 2 - REQUEST + APPROVE
+  // FLUJO 2 - REQUEST + APPROVE
 
-  // describe('Flujo 2: REQUEST AND APPROVE LOAN', function () {
+  describe('Flujo 2: REQUEST AND APPROVE LOAN', function () {
 
-  //   it("should create a new loan Request and approve the request by the borrower ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
+    it("should create a new loan Request and approve the request by the borrower ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
 
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = result.id;
-  //     loanData = result.loanData;
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
 
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loan_api = (await api.get_loan(id)).content;
-  //     loan_eth = await loanManager.requests(id);
-  //     //check loan data
-  //     keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-  //     check_loan(loan_eth, loan_api, keys_to_check)
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
 
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
 
-  //     assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan_api.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan_api.descriptor.duration, duration);
-  //     assert.equal(loan_api.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan_api.descriptor.frequency, frequency);
-  //     assert.equal(loan_api.descriptor.installments, installments);
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
 
-  //     assert.equal(loan_api.lender, null);
+      assert.equal(loan_api.lender, null);
       
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
+      await loanManager.approveRequest(id, { from: borrowerAddress });
 
-  //     loan_api = (await api.get_loan(id)).content;
-  //     loan_eth = await loanManager.requests(id);
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
 
-  //     keys_to_check = ["approved"]
-  //     check_loan(loan_eth, loan_api, keys_to_check)
-  //   });
-  // });
+      keys_to_check = ["approved"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+    });
+  });
 
   // FLUJO 3 - REQUEST  + APPROVE + LEND
 
   describe('Flujo 3: REQUEST  + APPROVE + LEND', function () {
 
+    it("should create a new loan Request, approve and lend ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+      
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth_before_lend = await loanManager.requests(id);
+
+      keys_to_check = ["approved"]
+      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      balanceOfLender = await rcnToken.balanceOf(lenderAddress);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      await loanManager.lend(
+          id,                 // Index
+          [],                 // OracleData
+          '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+          '0', // Cosigner limit
+          [],                 // Cosigner data
+          { from: lenderAddress }    // Owner/Lender
+      );
+
+      await sleep(5000);
+      loan_api = (await api.get_loan(id)).content;
+
+      // Query the API for Debt data
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      model_info = await api.get_model_debt_info(id);
+
+      // Query the API for config data
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      // Query the API for state data
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      // call check_status functions
+      await check_state(state_eth, state_api);
+      await check_config(config_eth, config_api)
+      await check_debt(debt_eth, debt_api)
+      key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
+      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+
+      assert.equal(loan_api.open, false);
+      assert.equal(loan_api.approved, true);
+      assert.equal(loan_api.lender, await loanManager.ownerOf(id));
+      assert.equal(loan_api.status, await loanManager.getStatus(id));
+
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+      
+    });
+  });
+
+  // FLUJO 4 - REQUEST  + APPROVE + LEND + PAY
+
+  describe('Flujo 4: REQUEST  + APPROVE + LEND + PAY', function () {
     it("should create a new loan Request, approve and lend ", async () => {
       cuota = '10000000000000000000';
       punInterestRate = '1555200000000';
@@ -491,34 +615,872 @@ contract("Loans Life Cycle Tests", async accounts => {
       // estimated_obligation
       estimated_obligation_api = model_info.estimated_obligation
       estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
-      console.log("estimated_obligation_api", estimated_obligation_api)
-      console.log("estimated_obligation_eth", estimated_obligation_eth)
       assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
 
       // next_obligation
       next_obligation_api = model_info.next_obligation
       next_obligation_eth = await installmentModel.getObligation(id, due_time)
-      console.log("next_obligation_api", next_obligation_api)
-      console.log("next_obligation_eth", next_obligation_eth)
-      assert.equal(next_obligation_api, next_obligation_eth, "next_obligation")
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
 
-      assert.equal(false, true, "asd");
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
 
-      // console.log("due_time:", parseInt(due_time))
-      // console.log("next_obligation_api: ", next_obligation_api)
-      // console.log("state", stateETH);
-      // console.log("debt", debtETH);
-      // console.log("debt_api:", debt)
-      console.log("config", config_eth)
-      console.log()
 
-      console.log("config.lentTime:", parseInt(config_eth.lentTime));
-      console.log("timestamp < lenttime:", 1553948891 < parseInt(config_eth.lentTime))
-      console.log("next_obligation_eth: ", next_obligation_eth)
-      // console.log("config;", parseInt(config_eth[3]))
-      // console.log("timestamp:", 1553948891)
-      assert.equal(next_obligation_api, next_obligation_eth, "next_obligation eq?");
+      // Pay loan
+      await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
+      await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
 
+
+      await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
+      // Test pay
+      await sleep(5000);
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      model_info = await api.get_model_debt_info(id)
+
+      assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
+      assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
+
+      check_debt(debt_eth, debt_api)
+      check_state(state_eth, state_api)
+      check_config(config_eth, config_api)
+
+      //check model_info
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+    });
+  });
+
+  // FLUJO 5 - REQUEST  + APPROVE + CANCEL
+
+  describe('Flujo 5: REQUEST  + APPROVE + CANCEL', function () {
+
+    it("should create a new loan Request, approve and cancel ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+      
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      await sleep(5000)
+
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+
+      keys_to_check = ["approved"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      await loanManager.cancel(id, { from: creatorAddress });
+      
+      await sleep(5000);
+      
+      loan_api = (await api.get_loan(id)).content;
+      assert.isTrue(loan_api.approved, "loan approved");
+      assert.isTrue(loan_api.canceled, "loan canceled");
+
+      // let debt_exists;
+      try {
+        await api.get_debt(id);
+        debt_exists = true;
+      } catch (error) {
+        debt_exists = false;
+      } finally {
+        assert.isFalse(debt_exists, "debt dot exists :)");
+      }
+    });
+  });
+
+  // FLUJO 6 - REQUEST  + APPROVE + LEND + TOTALPAY
+
+  describe('Flujo 6: REQUEST  + APPROVE + LEND + TOTALPAY', function () {
+
+    it("should create a new loan Request, approve, lend, total pay ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+      
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth_before_lend = await loanManager.requests(id);
+
+      keys_to_check = ["approved"]
+      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      balanceOfLender = await rcnToken.balanceOf(lenderAddress);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      await loanManager.lend(
+          id,                 // Index
+          [],                 // OracleData
+          '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+          '0', // Cosigner limit
+          [],                 // Cosigner data
+          { from: lenderAddress }    // Owner/Lender
+      );
+
+      await sleep(5000);
+      loan_api = (await api.get_loan(id)).content;
+
+      // Query the API for Debt data
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      model_info = await api.get_model_debt_info(id);
+
+      // Query the API for config data
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      // Query the API for state data
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      // call check_status functions
+      await check_state(state_eth, state_api);
+      await check_config(config_eth, config_api)
+      await check_debt(debt_eth, debt_api)
+      key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
+      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+
+      // Pay loan
+      await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
+      await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
+
+
+      await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
+      // Test pay
+      await sleep(5000);
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      model_info = await api.get_model_debt_info(id)
+
+      assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
+      assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
+
+      check_debt(debt_eth, debt_api)
+      check_state(state_eth, state_api)
+      check_config(config_eth, config_api)
+
+      //check model_info
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+      // Test pay, test total pay
+      await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      debt_api = (await api.get_debt(id)).content;
+      state_api = (await api.get_state(id)).content;
+      debt_eth = await debtEngine.debts(id);
+      state_eth = await installmentModel.states(id);
+
+      assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
+      assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
+      assert.equal(loan_api.status, await loanManager.getStatus(id), "Status payed")
+      assert.isAtLeast(parseInt(debt_api.balance), parseInt(loan_api.amount), "balance >= amount");
+      assert.equal(parseInt(debt_api.balance), parseInt(loan_api.descriptor.total_obligation), "balance eq descriptor total_obligation");
+    });
+  });
+
+  // // FLUJO 7 - REQUEST  + APPROVE + LEND + TRANSFER
+
+  describe('Flujo 7: REQUEST  + APPROVE + LEND + TRANSFER', function () {
+
+    it("should create a new loan Request, approve, lend and transfer ", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+      
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth_before_lend = await loanManager.requests(id);
+
+      keys_to_check = ["approved"]
+      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      balanceOfLender = await rcnToken.balanceOf(lenderAddress);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      await loanManager.lend(
+          id,                 // Index
+          [],                 // OracleData
+          '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+          '0', // Cosigner limit
+          [],                 // Cosigner data
+          { from: lenderAddress }    // Owner/Lender
+      );
+
+      await sleep(5000);
+      loan_api = (await api.get_loan(id)).content;
+
+      // Query the API for Debt data
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      model_info = await api.get_model_debt_info(id);
+
+      // Query the API for config data
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      // Query the API for state data
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      // call check_status functions
+      await check_state(state_eth, state_api);
+      await check_config(config_eth, config_api)
+      await check_debt(debt_eth, debt_api)
+      key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
+      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+      // Transfer debt 
+      await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, {from: lenderAddress });
+
+      assert.equal(newLenderAddress, await loanManager.ownerOf(id));
+
+      await sleep(5000);
+      loanJsonAfterTransfer = await api.get_loan(id);
+      loanAfterTransfer = loanJsonAfterTransfer.content;
+
+      assert.equal(newLenderAddress, loanAfterTransfer.lender);
+
+      // Should not be able to transfer if the sender is not the owner of the debt
+      try {
+      error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, {from: lenderAddress });
+      } catch (e) {
+        error = 'Not the owner of the debt';
+      }
+      assert.equal(error, 'Not the owner of the debt');
+
+    });
+  });
+
+  // // FLUJO 8 - REQUEST  + APPROVE + LEND + TOTALPAY + WITHDRAW
+
+  describe('Flujo 8: REQUEST  + APPROVE + LEND + TOTALPAY + WITHDRAW', function () {
+
+    it("should create a new loan Request, approve, lend, total pay and withdraw", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+      
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth_before_lend = await loanManager.requests(id);
+
+      keys_to_check = ["approved"]
+      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      balanceOfLender = await rcnToken.balanceOf(lenderAddress);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      await loanManager.lend(
+          id,                 // Index
+          [],                 // OracleData
+          '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+          '0', // Cosigner limit
+          [],                 // Cosigner data
+          { from: lenderAddress }    // Owner/Lender
+      );
+
+      await sleep(5000);
+      loan_api = (await api.get_loan(id)).content;
+
+      // Query the API for Debt data
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      model_info = await api.get_model_debt_info(id);
+
+      // Query the API for config data
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      // Query the API for state data
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      // call check_status functions
+      await check_state(state_eth, state_api);
+      await check_config(config_eth, config_api)
+      await check_debt(debt_eth, debt_api)
+      key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
+      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+
+      // Pay loan
+      await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
+      await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
+
+
+      await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
+      // Test pay
+      await sleep(5000);
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      state_api = (await api.get_state(id)).content;
+      state_eth = await installmentModel.states(id);
+
+      config_api = (await api.get_config(id)).content;
+      config_eth = await installmentModel.configs(id);
+
+      model_info = await api.get_model_debt_info(id)
+
+      assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
+      assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
+
+      check_debt(debt_eth, debt_api)
+      check_state(state_eth, state_api)
+      check_config(config_eth, config_api)
+
+      //check model_info
+      // check model_info.due_time
+      due_time = await loanManager.getDueTime(id);
+      assert.equal(due_time, model_info.due_time, "installments_due_time eq model_info.due_time");
+
+      // check model_info.balance
+      assert.equal(parseInt(debt_eth.balance), model_info.debt_balance, "debtETH.balance eq model_info.balance");
+
+      // estimated_obligation
+      estimated_obligation_api = model_info.estimated_obligation
+      estimated_obligation_eth = await installmentModel.getEstimateObligation(id);
+      assert.equal(estimated_obligation_api, estimated_obligation_eth, "estimated obligation eq")
+
+      // next_obligation
+      next_obligation_api = model_info.next_obligation
+      next_obligation_eth = await installmentModel.getObligation(id, due_time)
+      assert.equal(next_obligation_api, next_obligation_eth[0], "next_obligation")
+
+      // current_obligation
+      now = parseInt(Date.now() / 1000)
+      current_obligation_api = model_info.current_obligation
+      current_obligation_eth = await installmentModel.getObligation(id, now)
+
+      // Test pay, test total pay
+      await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
+
+      await sleep(5000)
+      loan_api = (await api.get_loan(id)).content;
+      debt_api = (await api.get_debt(id)).content;
+      state_api = (await api.get_state(id)).content;
+      debt_eth = await debtEngine.debts(id);
+      state_eth = await installmentModel.states(id);
+
+      assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
+      assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
+      assert.equal(loan_api.status, await loanManager.getStatus(id), "Status payed")
+      assert.isAtLeast(parseInt(debt_api.balance), parseInt(loan_api.amount), "balance >= amount");
+      assert.equal(parseInt(debt_api.balance), parseInt(loan_api.descriptor.total_obligation), "balance eq descriptor total_obligation");
+
+      // withdraw
+      balance_lender_before_withdraw = await rcnToken.balanceOf(lenderAddress);
+      await debtEngine.withdrawPartial(id, lenderAddress, web3.utils.toWei("120", "ether"), { from: lenderAddress });
+      await sleep(5000);
+
+      debt_api = (await api.get_debt(id)).content;
+      debt_eth = await debtEngine.debts(id);
+
+      balance_lender_after_withdraw = parseInt(await rcnToken.balanceOf(lenderAddress));
+      total_balance = balance_lender_before_withdraw + parseInt(web3.utils.toWei("120", "ether"));
+      
+      assert.equal(parseInt(debt_api.balance), parseInt(debt_eth.balance), "balance eq");
+      assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
+    });
+  });
+
+  // FLUJO 9 - EXPIRED
+
+  describe('Flujo 9: REQUEST LOAN EXPIRED', function () {
+
+    it("should check if a loan is expired ", async () => {
+      delta = 2
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = (await getBlockTime()) + delta;
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = result.id;
+      loanData = result.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loan_api = (await api.get_loan(id)).content;
+      loan_eth = await loanManager.requests(id);
+      //check loan data
+      keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
+      check_loan(loan_eth, loan_api, keys_to_check)
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+      assert.equal(loan_api.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan_api.descriptor.total_obligation, totalObligation);
+      assert.equal(loan_api.descriptor.duration, duration);
+      assert.equal(loan_api.descriptor.interest_rate, interestRate);
+      assert.equal(loan_api.descriptor.frequency, frequency);
+      assert.equal(loan_api.descriptor.installments, installments);
+
+      assert.equal(loan_api.lender, null);
+
+      await increaseTime(5);
+
+
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      try {
+        await loanManager.lend(
+          id,
+          [],
+          '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+          '0', // Cosigner limit
+          [],                 // Cosigner data
+          { from: lenderAddress }
+        );
+        error = false;
+      } catch (e){
+        error = true;
+      }
+      console.log("Error is:", error);
+      assert.isTrue(error, "lend expired");
+
+    });
+  });
+
+  // E2E integration Test - REQUEST  + APPROVE + LEND + TRANSFER + TOTALPAY + WITHDRAW
+
+  describe(' E2E integration Test - REQUEST  + APPROVE + LEND + TRANSFER + TOTALPAY + WITHDRAW', function () {
+
+    // CREATE A REQUEST
+
+    step("should create a new loan Request", async () => {
+      cuota = '10000000000000000000';
+      punInterestRate = '1555200000000';
+      installments = '12';
+      duration = '2592000';
+      timeUnit = '2592000';
+      amount = '100000000000000000000';
+      oracle = '0x0000000000000000000000000000000000000000';
+      expiration = '1578571215';
+
+      // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+      loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      id = loanIdandData.id;
+      loanData = loanIdandData.loanData;
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loanJson = await api.get_loan(id);
+      loan = loanJson.content;
+
+      // Query blockchain for loan data 
+      getRequestId = await loanManager.requests(id);
+      getBorrower = await loanManager.getBorrower(id);
+      getCreator = await loanManager.getCreator(id);
+      getOracle = await loanManager.getOracle(id);
+      getCosigner = await loanManager.getCosigner(id);
+      getCurrency = await loanManager.getCurrency(id);
+      getAmount = await loanManager.getAmount(id);
+      getExpirationRequest = await loanManager.getExpirationRequest(id);
+      getApproved = await loanManager.getApproved(id);
+      // getDueTime = await loanManager.getDueTime(id);
+      getLoanData = await loanManager.getLoanData(id);
+      getStatus = await loanManager.getStatus(id);
+
+      // get descriptor Values from InstallmentModel
+      simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+      totalObligation = await installmentModel.simTotalObligation(loanData);
+      duration = await installmentModel.simDuration(loanData);
+      durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
+      interestRate = (durationPercentage * 360 * 86000) / duration;
+      frequency = await installmentModel.simFrequency(loanData);
+      installments = await installmentModel.simInstallments(loanData);
+
+
+      // Compare both results (API and blockchain) and validate consistency
+      assert.equal(loan.id, id);
+      assert.equal(loan.open, getRequestId.open);
+      assert.equal(loan.approved, getApproved);
+      assert.equal(loan.position, getRequestId.position);
+      assert.equal(loan.expiration, getExpirationRequest);
+      assert.equal(loan.amount, getAmount);
+      // assert.equal(loan.cosigner, getCosigner);
+      assert.equal(loan.model, getRequestId.model);
+      assert.equal(loan.creator, getCreator);
+      assert.equal(loan.oracle, getOracle);
+      assert.equal(loan.borrower, getBorrower);
+      assert.equal(loan.salt, getRequestId.salt)
+      assert.equal(loan.loanData, getLoanData);
+      //loan.created time value only in API
+      assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+      assert.equal(loan.descriptor.total_obligation, totalObligation);
+      assert.equal(loan.descriptor.duration, duration);
+      assert.equal(loan.descriptor.interest_rate, interestRate);
+      assert.equal(loan.descriptor.frequency, frequency);
+      assert.equal(loan.descriptor.installments, installments);
+
+      //assert.equal(loan.currency, getCurrency);
+      assert.equal(loan.lender, null);
+      assert.equal(loan.status, getStatus, 'status not equal');
+      //assert.equal(loan.canceled, )
+
+    });
+
+    // APPROVE 
+
+    step("should approve the loan request by the borrower", async () => {
+
+      await loanManager.approveRequest(id, { from: borrowerAddress });
+
+      // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+      await sleep(5000);
+      // Query the API for Loan data
+      loanJsonAfterRequest = await api.get_loan(id);
+      loanAfterRequest = loanJsonAfterRequest.content;
+
+      const getApproved = await loanManager.getApproved(id);
+
+      assert.equal(true, loanAfterRequest.approved);
+      assert.equal(true, getApproved);
+    });
+
+    // LEND
+
+    step("should lend", async () => {
+
+      // buy Rcn for lender address 
+      await rcnToken.setBalance(lenderAddress, amount);
+
+      balanceOfLender = await rcnToken.balanceOf(lenderAddress);
+
+      await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
+
+      await loanManager.lend(
+        id,                 // Index
+        [],                 // OracleData
+        '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
+        '0', // Cosigner limit
+        [],                 // Cosigner data
+        { from: lenderAddress }    // Owner/Lender
+      );
+
+      await sleep(5000);
+      // Query the API for Debt data
+      debtJson = await api.get_debt(id);
+      debt = debtJson.content;
+
+      // Query the API for config data
+      configJson = await api.get_config(id);
+      config = configJson.content;
 
       // Query the API for Loan data
       loanJsonAfterLend = await api.get_loan(id);
@@ -538,8 +1500,8 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(config.data.installments, loanConfigs.installments);
       assert.equal(config.data.time_unit, loanConfigs.timeUnit);
       assert.equal(config.data.duration, loanConfigs.duration);
-      assert.equal(config.data.lent_time, loanConfigs.lentTime); 
-      assert.equal(config.data.cuota, loanConfigs.cuota);    
+      assert.equal(config.data.lent_time, loanConfigs.lentTime);
+      assert.equal(config.data.cuota, loanConfigs.cuota);
       assert.equal(config.data.interest_rate, loanConfigs.interestRate);
 
       // Check loan endPoint
@@ -548,1108 +1510,91 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
       assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
     });
+
+    // TRANSFER DEBT 
+
+    step("should transfer the lender debt to another address", async () => {
+
+      // Transfer debt 
+      await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, { from: lenderAddress });
+
+      assert.equal(newLenderAddress, await loanManager.ownerOf(id));
+
+      await sleep(5000);
+      loanJsonAfterTransfer = await api.get_loan(id);
+      loanAfterTransfer = loanJsonAfterTransfer.content;
+
+      assert.equal(newLenderAddress, loanAfterTransfer.lender);
+
+      // Should not be able to transfer if the sender is not the owner of the debt
+      try {
+        error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, { from: lenderAddress });
+      } catch (e) {
+        error = 'Not the owner of the debt';
+      }
+      assert.equal(error, 'Not the owner of the debt');
+
+    });
+
+    // TOTAL PAY 
+
+    step("should pay the total of the debt", async () => {
+
+      // Pay loan
+      await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
+      await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
+
+
+      await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
+      // Test pay
+      await sleep(5000);
+      debtAPI = (await api.get_debt(id)).content;
+      stateAPI = (await api.get_state(id)).content;
+      debtETH = await debtEngine.debts(id);
+      stateETH = await installmentModel.states(id);
+
+      assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
+      assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
+
+      // Test pay, test total pay
+      await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
+
+      await sleep(5000)
+      loanAPI = (await api.get_loan(id)).content;
+      debtAPI = (await api.get_debt(id)).content;
+      stateAPI = (await api.get_state(id)).content;
+      debtETH = await debtEngine.debts(id);
+      stateETH = await installmentModel.states(id);
+
+      assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
+      assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
+      assert.equal(loanAPI.status, await loanManager.getStatus(id), "Status payed")
+      assert.isAtLeast(parseInt(debtAPI.balance), parseInt(loanAPI.amount), "balance >= amount");
+      assert.equal(parseInt(debtAPI.balance), parseInt(loan.descriptor.total_obligation), "balance eq descriptor total_obligation");
+    });
+
+    // WITHDRAW 
+
+    step("should withdraw funds for lender", async () => {
+
+      // withdraw
+      balance_lender_before_withdraw = await rcnToken.balanceOf(newLenderAddress);
+      await debtEngine.withdrawPartial(id, newLenderAddress, web3.utils.toWei("120", "ether"), { from: newLenderAddress });
+      await sleep(5000);
+
+      debtAPI = (await api.get_debt(id)).content;
+      debtETH = await debtEngine.debts(id);
+
+      balance_lender_after_withdraw = parseInt(await rcnToken.balanceOf(newLenderAddress));
+      total_balance = balance_lender_before_withdraw + parseInt(web3.utils.toWei("120", "ether"));
+
+      assert.equal(parseInt(debtAPI.balance), parseInt(debtETH.balance), "balance eq");
+      assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
+    });
+
+
+
   });
-
-  // FLUJO 4 - REQUEST  + APPROVE + LEND + PAY
-
-  // describe('Flujo 4: REQUEST  + APPROVE + LEND + PAY', function () {
-
-  //   it("should create a new loan Request, approve, lend and pay ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //     // Approve Loan by borower
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.lend(
-  //         id,                 // Index
-  //         [],                 // OracleData
-  //         '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //         '0', // Cosigner limit
-  //         [],                 // Cosigner data
-  //         { from: lenderAddress }    // Owner/Lender
-  //     );
-
-  //     await sleep(5000);
-  //     // Query the API for Debt data
-  //     debtJson = await api.get_debt(id);
-  //     debt = debtJson.content;
-
-  //     // Query the API for config data
-  //     configJson = await api.get_config(id);
-  //     config = configJson.content;
-
-  //     // Query the API for Loan data
-  //     loanJsonAfterLend = await api.get_loan(id);
-  //     loanAfterLend = loanJsonAfterLend.content;
-
-  //     //Check Debt endpoint
-  //     loanDebt = await debtEngine.debts(id);
-
-  //     assert.equal(debt.error, loanDebt.error);
-  //     assert.equal(debt.balance, loanDebt.balance);
-  //     assert.equal(debt.model, loanDebt.model);
-  //     assert.equal(debt.creator, loanDebt.creator);
-  //     assert.equal(debt.oracle, loanDebt.oracle);
-
-  //     //Check config endPoint
-  //     loanConfigs = await installmentModel.configs(id);
-  //     assert.equal(config.data.installments, loanConfigs.installments);
-  //     assert.equal(config.data.time_unit, loanConfigs.timeUnit);
-  //     assert.equal(config.data.duration, loanConfigs.duration);
-  //     assert.equal(config.data.lent_time, loanConfigs.lentTime); 
-  //     assert.equal(config.data.cuota, loanConfigs.cuota);    
-  //     assert.equal(config.data.interest_rate, loanConfigs.interestRate);
-
-  //     // Check loan endPoint
-  //     assert.equal(loanAfterLend.open, false);
-  //     assert.equal(loanAfterLend.approved, true);
-  //     assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
-  //     assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
-
-  //     // Pay loan
-  //     await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
-  //     await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
-
-
-  //     await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
-  //     // Test pay
-  //     await sleep(10000);
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-
-
-  //     // await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
-  //     // Test pay, test total pay
-
-
-  //   });
-  // });
-
-  // // FLUJO 5 - REQUEST  + APPROVE + CANCEL
-
-  // describe('Flujo 5: REQUEST  + APPROVE + CANCEL', function () {
-
-  //   it("should create a new loan Request, approve and cancel ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //     // Approve Loan by borower
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.cancel(id, { from: creatorAddress });
-      
-  //     await sleep(5000);
-      
-  //     loanAPI = (await api.get_loan(id)).content;
-  //     assert.isTrue(loanAPI.approved, "loan approved");
-  //     assert.isTrue(loanAPI.canceled, "loan canceled");
-
-  //     // let debt_exists;
-  //     try {
-  //       await api.get_debt(id);
-  //       debt_exists = true;
-  //     } catch (error) {
-  //       debt_exists = false;
-  //     } finally {
-  //       assert.isFalse(debt_exists, "debt dot exists :)");
-  //     }
-  //   });
-  // });
-
-  // // FLUJO 6 - REQUEST  + APPROVE + LEND + TOTALPAY
-
-  // describe('Flujo 6: REQUEST  + APPROVE + LEND + TOTALPAY', function () {
-
-  //   it("should create a new loan Request, approve, lend, total pay ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //     // Approve Loan by borower
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.lend(
-  //         id,                 // Index
-  //         [],                 // OracleData
-  //         '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //         '0', // Cosigner limit
-  //         [],                 // Cosigner data
-  //         { from: lenderAddress }    // Owner/Lender
-  //     );
-
-  //     await sleep(5000);
-  //     // Query the API for Debt data
-  //     debtJson = await api.get_debt(id);
-  //     debt = debtJson.content;
-
-  //     // Query the API for config data
-  //     configJson = await api.get_config(id);
-  //     config = configJson.content;
-
-  //     // Query the API for Loan data
-  //     loanJsonAfterLend = await api.get_loan(id);
-  //     loanAfterLend = loanJsonAfterLend.content;
-
-  //     //Check Debt endpoint
-  //     loanDebt = await debtEngine.debts(id);
-
-  //     assert.equal(debt.error, loanDebt.error);
-  //     assert.equal(debt.balance, loanDebt.balance);
-  //     assert.equal(debt.model, loanDebt.model);
-  //     assert.equal(debt.creator, loanDebt.creator);
-  //     assert.equal(debt.oracle, loanDebt.oracle);
-
-  //     //Check config endPoint
-  //     loanConfigs = await installmentModel.configs(id);
-  //     assert.equal(config.data.installments, loanConfigs.installments);
-  //     assert.equal(config.data.time_unit, loanConfigs.timeUnit);
-  //     assert.equal(config.data.duration, loanConfigs.duration);
-  //     assert.equal(config.data.lent_time, loanConfigs.lentTime); 
-  //     assert.equal(config.data.cuota, loanConfigs.cuota);    
-  //     assert.equal(config.data.interest_rate, loanConfigs.interestRate);
-
-  //     // Check loan endPoint
-  //     assert.equal(loanAfterLend.open, false);
-  //     assert.equal(loanAfterLend.approved, true);
-  //     assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
-  //     assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
-
-  //     // Pay loan
-  //     await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
-  //     await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
-
-
-  //     await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
-  //     // Test pay
-  //     await sleep(5000);
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-
-  //     // Test pay, test total pay
-  //     await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
-
-  //     await sleep(5000)
-  //     loanAPI = (await api.get_loan(id)).content;
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-  //     assert.equal(loanAPI.status, await loanManager.getStatus(id), "Status payed")
-  //     assert.isAtLeast(parseInt(debtAPI.balance), parseInt(loanAPI.amount), "balance >= amount");
-  //     assert.equal(parseInt(debtAPI.balance), parseInt(loan.descriptor.total_obligation), "balance eq descriptor total_obligation");
-  //   });
-  // });
-
-  // // FLUJO 7 - REQUEST  + APPROVE + LEND + TRANSFER
-
-  // describe('Flujo 7: REQUEST  + APPROVE + LEND + TRANSFER', function () {
-
-  //   it("should create a new loan Request, approve, lend and transfer ", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //     // Approve Loan by borower
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.lend(
-  //         id,                 // Index
-  //         [],                 // OracleData
-  //         '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //         '0', // Cosigner limit
-  //         [],                 // Cosigner data
-  //         { from: lenderAddress }    // Owner/Lender
-  //     );
-
-  //     await sleep(5000);
-  //     // Query the API for Debt data
-  //     debtJson = await api.get_debt(id);
-  //     debt = debtJson.content;
-
-  //     // Query the API for config data
-  //     configJson = await api.get_config(id);
-  //     config = configJson.content;
-
-  //     // Query the API for Loan data
-  //     loanJsonAfterLend = await api.get_loan(id);
-  //     loanAfterLend = loanJsonAfterLend.content;
-
-  //     //Check Debt endpoint
-  //     loanDebt = await debtEngine.debts(id);
-
-  //     assert.equal(debt.error, loanDebt.error);
-  //     assert.equal(debt.balance, loanDebt.balance);
-  //     assert.equal(debt.model, loanDebt.model);
-  //     assert.equal(debt.creator, loanDebt.creator);
-  //     assert.equal(debt.oracle, loanDebt.oracle);
-
-  //     //Check config endPoint
-  //     loanConfigs = await installmentModel.configs(id);
-  //     assert.equal(config.data.installments, loanConfigs.installments);
-  //     assert.equal(config.data.time_unit, loanConfigs.timeUnit);
-  //     assert.equal(config.data.duration, loanConfigs.duration);
-  //     assert.equal(config.data.lent_time, loanConfigs.lentTime); 
-  //     assert.equal(config.data.cuota, loanConfigs.cuota);    
-  //     assert.equal(config.data.interest_rate, loanConfigs.interestRate);
-
-  //     // Check loan endPoint
-  //     assert.equal(loanAfterLend.open, false);
-  //     assert.equal(loanAfterLend.approved, true);
-  //     assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
-  //     assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
-
-  //     // Transfer debt 
-  //     await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, {from: lenderAddress });
-
-  //     assert.equal(newLenderAddress, await loanManager.ownerOf(id));
-
-  //     await sleep(5000);
-  //     loanJsonAfterTransfer = await api.get_loan(id);
-  //     loanAfterTransfer = loanJsonAfterTransfer.content;
-
-  //     assert.equal(newLenderAddress, loanAfterTransfer.lender);
-
-  //     // Should not be able to transfer if the sender is not the owner of the debt
-  //     try {
-  //     error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, {from: lenderAddress });
-  //     } catch (e) {
-  //       error = 'Not the owner of the debt';
-  //     }
-  //     assert.equal(error, 'Not the owner of the debt');
-
-  //   });
-  // });
-
-  // // FLUJO 8 - REQUEST  + APPROVE + LEND + TOTALPAY + WITHDRAW
-
-  // describe('Flujo 8: REQUEST  + APPROVE + LEND + TOTALPAY + WITHDRAW', function () {
-
-  //   it("should create a new loan Request, approve, lend, total pay and withdraw", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-    
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //     // Approve Loan by borower
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.lend(
-  //         id,                 // Index
-  //         [],                 // OracleData
-  //         '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //         '0', // Cosigner limit
-  //         [],                 // Cosigner data
-  //         { from: lenderAddress }    // Owner/Lender
-  //     );
-
-  //     await sleep(5000);
-  //     // Query the API for Debt data
-  //     debtJson = await api.get_debt(id);
-  //     debt = debtJson.content;
-
-  //     // Query the API for config data
-  //     configJson = await api.get_config(id);
-  //     config = configJson.content;
-
-  //     // Query the API for Loan data
-  //     loanJsonAfterLend = await api.get_loan(id);
-  //     loanAfterLend = loanJsonAfterLend.content;
-
-  //     //Check Debt endpoint
-  //     loanDebt = await debtEngine.debts(id);
-  //     assert.equal(debt.error, loanDebt.error);
-  //     assert.equal(debt.balance, loanDebt.balance);
-  //     assert.equal(debt.model, loanDebt.model);
-  //     assert.equal(debt.creator, loanDebt.creator);
-  //     assert.equal(debt.oracle, loanDebt.oracle);
-
-  //     //Check config endPoint
-  //     loanConfigs = await installmentModel.configs(id);
-  //     assert.equal(config.data.installments, loanConfigs.installments);
-  //     assert.equal(config.data.time_unit, loanConfigs.timeUnit);
-  //     assert.equal(config.data.duration, loanConfigs.duration);
-  //     assert.equal(config.data.lent_time, loanConfigs.lentTime); 
-  //     assert.equal(config.data.cuota, loanConfigs.cuota);    
-  //     assert.equal(config.data.interest_rate, loanConfigs.interestRate);
-
-  //     // Check loan endPoint
-  //     assert.equal(loanAfterLend.open, false);
-  //     assert.equal(loanAfterLend.approved, true);
-  //     assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
-  //     assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
-
-  //     // Pay loan
-  //     await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
-  //     await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
-
-
-  //     await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
-  //     // Test pay
-  //     await sleep(5000);
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-
-  //     // Test pay, test total pay
-  //     await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
-
-  //     await sleep(5000)
-  //     loanAPI = (await api.get_loan(id)).content;
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-  //     assert.equal(loanAPI.status, await loanManager.getStatus(id), "Status payed")
-  //     assert.isAtLeast(parseInt(debtAPI.balance), parseInt(loanAPI.amount), "balance >= amount");
-  //     assert.equal(parseInt(debtAPI.balance), parseInt(loan.descriptor.total_obligation), "balance eq descriptor total_obligation");
-
-  //     // withdraw
-  //     balance_lender_before_withdraw = await rcnToken.balanceOf(lenderAddress);
-  //     await debtEngine.withdrawPartial(id, lenderAddress, web3.utils.toWei("120", "ether"), { from: lenderAddress });
-  //     await sleep(5000);
-
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-
-  //     balance_lender_after_withdraw = parseInt(await rcnToken.balanceOf(lenderAddress));
-  //     total_balance = balance_lender_before_withdraw + parseInt(web3.utils.toWei("120", "ether"));
-      
-  //     assert.equal(parseInt(debtAPI.balance), parseInt(debtETH.balance), "balance eq");
-  //     assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
-  //   });
-  // });
-
-  // // FLUJO 9 - EXPIRED
-
-  // describe('Flujo 9: REQUEST LOAN EXPIRED', function () {
-
-  //   it("should check if a loan is expired ", async () => {
-  //     delta = 2
-
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = (await getBlockTime()) + delta;
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus);
-      
-  //     await increaseTime(5);
-
-
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     try {
-  //       await loanManager.lend(
-  //         id,
-  //         [],
-  //         '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //         '0', // Cosigner limit
-  //         [],                 // Cosigner data
-  //         { from: lenderAddress }
-  //       );
-  //       error = false;
-  //     } catch (e){
-  //       error = true;
-  //     }
-  //     assert.isTrue(error, "lend expired");
-
-  //   });
-  // });
-
-  // E2E integration Test - REQUEST  + APPROVE + LEND + TRANSFER + TOTALPAY + WITHDRAW
-
-  // describe(' E2E integration Test - REQUEST  + APPROVE + LEND + TRANSFER + TOTALPAY + WITHDRAW', function () {
-
-  //   // CREATE A REQUEST
-
-  //   step("should create a new loan Request", async () => {
-  //     cuota = '10000000000000000000';
-  //     punInterestRate = '1555200000000';
-  //     installments = '12';
-  //     duration = '2592000';
-  //     timeUnit = '2592000';
-  //     amount = '100000000000000000000';
-  //     oracle = '0x0000000000000000000000000000000000000000';
-  //     expiration = '1578571215';
-
-  //     // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-  //     loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
-  //     id = loanIdandData[0];
-  //     loanData = loanIdandData[1];
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJson = await api.get_loan(id);
-  //     loan = loanJson.content;
-
-  //     // Query blockchain for loan data 
-  //     getRequestId = await loanManager.requests(id);
-  //     getBorrower = await loanManager.getBorrower(id);
-  //     getCreator = await loanManager.getCreator(id);
-  //     getOracle = await loanManager.getOracle(id);
-  //     getCosigner = await loanManager.getCosigner(id);
-  //     getCurrency = await loanManager.getCurrency(id);
-  //     getAmount = await loanManager.getAmount(id);
-  //     getExpirationRequest = await loanManager.getExpirationRequest(id);
-  //     getApproved = await loanManager.getApproved(id);
-  //     // getDueTime = await loanManager.getDueTime(id);
-  //     getLoanData = await loanManager.getLoanData(id);
-  //     getStatus = await loanManager.getStatus(id);
-
-  //     // get descriptor Values from InstallmentModel
-  //     simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
-  //     totalObligation = await installmentModel.simTotalObligation(loanData);
-  //     duration = await installmentModel.simDuration(loanData);
-  //     durationPercentage = ((totalObligation / parseInt(amount)) - 1) * 100
-  //     interestRate = (durationPercentage * 360 * 86000) / duration;
-  //     frequency = await installmentModel.simFrequency(loanData);
-  //     installments = await installmentModel.simInstallments(loanData);
-
-
-  //     // Compare both results (API and blockchain) and validate consistency
-  //     assert.equal(loan.id, id);
-  //     assert.equal(loan.open, getRequestId.open);
-  //     assert.equal(loan.approved, getApproved);
-  //     assert.equal(loan.position, getRequestId.position);
-  //     assert.equal(loan.expiration, getExpirationRequest);
-  //     assert.equal(loan.amount, getAmount);
-  //     // assert.equal(loan.cosigner, getCosigner);
-  //     assert.equal(loan.model, getRequestId.model);
-  //     assert.equal(loan.creator, getCreator);
-  //     assert.equal(loan.oracle, getOracle);
-  //     assert.equal(loan.borrower, getBorrower);
-  //     assert.equal(loan.salt, getRequestId.salt)
-  //     assert.equal(loan.loanData, getLoanData);
-  //     //loan.created time value only in API
-  //     assert.equal(loan.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
-  //     assert.equal(loan.descriptor.total_obligation, totalObligation);
-  //     assert.equal(loan.descriptor.duration, duration);
-  //     assert.equal(loan.descriptor.interest_rate, interestRate);
-  //     assert.equal(loan.descriptor.frequency, frequency);
-  //     assert.equal(loan.descriptor.installments, installments);
-
-  //     //assert.equal(loan.currency, getCurrency);
-  //     assert.equal(loan.lender, null);
-  //     assert.equal(loan.status, getStatus, 'status not equal');
-  //     //assert.equal(loan.canceled, )
-
-  //   });
-
-  //   // APPROVE 
-
-  //   step("should approve the loan request by the borrower", async () => {
-
-  //     await loanManager.approveRequest(id, { from: borrowerAddress });
-
-  //     // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
-  //     await sleep(5000);
-  //     // Query the API for Loan data
-  //     loanJsonAfterRequest = await api.get_loan(id);
-  //     loanAfterRequest = loanJsonAfterRequest.content;
-
-  //     const getApproved = await loanManager.getApproved(id);
-
-  //     assert.equal(true, loanAfterRequest.approved);
-  //     assert.equal(true, getApproved);
-  //   });
-
-  //   // LEND
-
-  //   step("should lend", async () => {
-
-  //     // buy Rcn for lender address 
-  //     await rcnToken.setBalance(lenderAddress, amount);
-
-  //     balanceOfLender = await rcnToken.balanceOf(lenderAddress);
-
-  //     await rcnToken.approve(loanManager.address, amount, { from: lenderAddress });
-
-  //     await loanManager.lend(
-  //       id,                 // Index
-  //       [],                 // OracleData
-  //       '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
-  //       '0', // Cosigner limit
-  //       [],                 // Cosigner data
-  //       { from: lenderAddress }    // Owner/Lender
-  //     );
-
-  //     await sleep(5000);
-  //     // Query the API for Debt data
-  //     debtJson = await api.get_debt(id);
-  //     debt = debtJson.content;
-
-  //     // Query the API for config data
-  //     configJson = await api.get_config(id);
-  //     config = configJson.content;
-
-  //     // Query the API for Loan data
-  //     loanJsonAfterLend = await api.get_loan(id);
-  //     loanAfterLend = loanJsonAfterLend.content;
-
-  //     //Check Debt endpoint
-  //     loanDebt = await debtEngine.debts(id);
-
-  //     assert.equal(debt.error, loanDebt.error);
-  //     assert.equal(debt.balance, loanDebt.balance);
-  //     assert.equal(debt.model, loanDebt.model);
-  //     assert.equal(debt.creator, loanDebt.creator);
-  //     assert.equal(debt.oracle, loanDebt.oracle);
-
-  //     //Check config endPoint
-  //     loanConfigs = await installmentModel.configs(id);
-  //     assert.equal(config.data.installments, loanConfigs.installments);
-  //     assert.equal(config.data.time_unit, loanConfigs.timeUnit);
-  //     assert.equal(config.data.duration, loanConfigs.duration);
-  //     assert.equal(config.data.lent_time, loanConfigs.lentTime);
-  //     assert.equal(config.data.cuota, loanConfigs.cuota);
-  //     assert.equal(config.data.interest_rate, loanConfigs.interestRate);
-
-  //     // Check loan endPoint
-  //     assert.equal(loanAfterLend.open, false);
-  //     assert.equal(loanAfterLend.approved, true);
-  //     assert.equal(loanAfterLend.lender, await loanManager.ownerOf(id));
-  //     assert.equal(loanAfterLend.status, await loanManager.getStatus(id));
-  //   });
-
-  //   // TRANSFER DEBT 
-
-  //   step("should transfer the lender debt to another address", async () => {
-
-  //     // Transfer debt 
-  //     await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, { from: lenderAddress });
-
-  //     assert.equal(newLenderAddress, await loanManager.ownerOf(id));
-
-  //     await sleep(5000);
-  //     loanJsonAfterTransfer = await api.get_loan(id);
-  //     loanAfterTransfer = loanJsonAfterTransfer.content;
-
-  //     assert.equal(newLenderAddress, loanAfterTransfer.lender);
-
-  //     // Should not be able to transfer if the sender is not the owner of the debt
-  //     try {
-  //       error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, { from: lenderAddress });
-  //     } catch (e) {
-  //       error = 'Not the owner of the debt';
-  //     }
-  //     assert.equal(error, 'Not the owner of the debt');
-
-  //   });
-
-  //   // TOTAL PAY 
-
-  //   step("should pay the total of the debt", async () => {
-
-  //     // Pay loan
-  //     await rcnToken.setBalance(borrowerAddress, web3.utils.toWei("120", "ether"));
-  //     await rcnToken.approve(debtEngine.address, web3.utils.toWei("120", "ether"), { from: borrowerAddress });
-
-
-  //     await debtEngine.pay(id, web3.utils.toWei("100", "ether"), borrowerAddress, [], { from: borrowerAddress });
-  //     // Test pay
-  //     await sleep(5000);
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-
-  //     // Test pay, test total pay
-  //     await debtEngine.pay(id, web3.utils.toWei("20", "ether"), borrowerAddress, [], { from: borrowerAddress });
-
-  //     await sleep(5000)
-  //     loanAPI = (await api.get_loan(id)).content;
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     stateAPI = (await api.get_state(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-  //     stateETH = await installmentModel.states(id);
-
-  //     assert.equal(debtETH.balance, debtAPI.balance, "DEBT Balance not eq :(");
-  //     assert.equal(stateETH.paid, stateAPI.paid, "State paid not eq :(");
-  //     assert.equal(loanAPI.status, await loanManager.getStatus(id), "Status payed")
-  //     assert.isAtLeast(parseInt(debtAPI.balance), parseInt(loanAPI.amount), "balance >= amount");
-  //     assert.equal(parseInt(debtAPI.balance), parseInt(loan.descriptor.total_obligation), "balance eq descriptor total_obligation");
-  //   });
-
-  //   // WITHDRAW 
-
-  //   step("should withdraw funds for lender", async () => {
-
-  //     // withdraw
-  //     balance_lender_before_withdraw = await rcnToken.balanceOf(newLenderAddress);
-  //     await debtEngine.withdrawPartial(id, newLenderAddress, web3.utils.toWei("120", "ether"), { from: newLenderAddress });
-  //     await sleep(5000);
-
-  //     debtAPI = (await api.get_debt(id)).content;
-  //     debtETH = await debtEngine.debts(id);
-
-  //     balance_lender_after_withdraw = parseInt(await rcnToken.balanceOf(newLenderAddress));
-  //     total_balance = balance_lender_before_withdraw + parseInt(web3.utils.toWei("120", "ether"));
-
-  //     assert.equal(parseInt(debtAPI.balance), parseInt(debtETH.balance), "balance eq");
-  //     assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
-  //   });
-
-
-
-  // });
 
 
 });
