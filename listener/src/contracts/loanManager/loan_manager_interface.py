@@ -1,10 +1,8 @@
-from models import Descriptor
 import os
 from ethereum_connection import EthereumConnection
-import os
 from ethereum_connection import ContractConnection
 
-MODEL_ADDRESS = "0x2B1d585520634b4c7aAbD54D73D34333FfFe5c53"
+MODEL_ADDRESS = os.environ.get("INSTALLMENTS_ADDRESS")
 
 ABI_PATH = os.path.join(
     "/project/contracts/installmentsModel",

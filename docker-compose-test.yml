@@ -1,0 +1,62 @@
+version: '2'
+services:
+  api-falcon:
+    restart: always
+    build: api-falcon
+    volumes:
+      - ./api-falcon/src/:/project/
+    command: gunicorn -b 0.0.0.0:8000 --access-logfile - --error-logfile - api
+    ports:
+      - 8000:8000
+    links:
+      - mongo:mongo
+    depends_on:
+      - mongo
+  
+  mongo:
+    image: mongo:rc-xenial
+    restart: always
+    ports:
+      - 27017:27017
+  
+  listener:
+    build: listener
+    restart: always
+    command: python3 main.py
+    volumes:
+      - ./listener/src/:/project
+    environment:
+     - PYTHONUNBUFFERED=1
+     - LOAN_MANAGER_ADDRESS=0x275b0DC17674e02a8a434689A638E98D9aCd417a
+     - DEBT_ENGINE_ADDRESS=0xdC8Dd86b3337A8EB4B1955DfF4B79676c9A40991
+     - INSTALLMENTS_ADDRESS=0xf1d88d1a22AD6D4A56137761e8df4aa68eDa3A11
+     - URL_NODE=http://ganachecli:8545
+     - START_SYNC=0
+     - SENTRY_DSN=
+    depends_on:
+      - mongo
+    links:
+      - mongo:mongo
+  
+  ganachecli:
+    image: trufflesuite/ganache-cli:latest
+    command: ganache-cli -h 0.0.0.0 -m "delay practice wall dismiss amount tackle energy annual wrap digital arrive since"
+    ports:
+      - 8545:8545
+  
+  test-truffle:
+    build:
+      context: ./tests/truffle
+    command: bash -c "npm install axios chai bn-chai mocha-steps && truffle test"
+    stdin_open: true
+    tty: true
+    environment:
+     - BASE_URL=http://api-falcon:8000/v4/
+    ports:
+      - 8080:8080
+    volumes:
+      - ./tests/LoansLifeCycleTests:/tests
+    working_dir: /tests
+    links:
+      - ganachecli:ganachecli
+      - api-falcon:api-falcon

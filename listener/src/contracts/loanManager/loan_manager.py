@@ -6,7 +6,7 @@ from ethereum_connection import ContractConnection
 from .loan_manager_interface import LoanManagerInterface
 
 
-ADDRESS = "0x978ef6D2bd7559181e6Ac82fFa5C875364d9071b"
+ADDRESS = os.environ.get("LOAN_MANAGER_ADDRESS")
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
@@ -47,6 +47,7 @@ from .commit_processors.approved_rejected import ApprovedRejected as ApprovedRej
 from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
 from .commit_processors.settled_cancel import SettledCancel as SettledCancelCommitProcessor
 from .commit_processors.settled_lend import SettledLend as SettledLendCommitProcessor
+from .commit_processors.full_payment import FullPayment as FullPaymentCommitProcessor
 
 
 commit_processors = [
@@ -59,7 +60,8 @@ commit_processors = [
     ReadedOracleCommitProcessor(),
     ApprovedRejectectCommitProcessor(),
     SettledCancelCommitProcessor(),
-    SettledLendCommitProcessor()
+    SettledLendCommitProcessor(),
+    FullPaymentCommitProcessor()
 ]
 
 schedule_processors = []
