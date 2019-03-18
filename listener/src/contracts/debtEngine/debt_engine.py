@@ -49,7 +49,7 @@ commit_processors = [
     PaidCommitProcessor(),
     ReadedOracleCommitProcessor(),
     TransferCommitProcessor(),
-    WithdrawnCommitProcessor()
+    WithdrawnCommitProcessor(),
     TransferCommitProcessor()
 
 ]
