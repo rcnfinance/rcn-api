@@ -37,6 +37,7 @@ class LoanManagerInterface():
         loan_data = data.get("loanData")
 
         descriptor = {}
+
         descriptor["first_obligation"] = "0"
         descriptor["total_obligation"] = "0"
         descriptor["duration"] = "0"
@@ -56,6 +57,7 @@ class LoanManagerInterface():
 
             descriptor["first_obligation"] = str(first_obligation_amount)
             descriptor["total_obligation"] = str(total_obligation)
+
             descriptor["duration"] = str(duration)
             descriptor["interest_rate"] = str(interest_rate)
             descriptor["punitive_interest_rate"] = str(contract_model.simPunitiveInterestRate(loan_data).call())

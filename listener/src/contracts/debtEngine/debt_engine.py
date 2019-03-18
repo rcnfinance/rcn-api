@@ -50,6 +50,8 @@ commit_processors = [
     ReadedOracleCommitProcessor(),
     TransferCommitProcessor(),
     WithdrawnCommitProcessor()
+    TransferCommitProcessor()
+
 ]
 schedule_processors = []
 

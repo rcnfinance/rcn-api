@@ -1,3 +1,4 @@
+import json
 from models import Debt, Config
 from contracts.commit_processor import CommitProcessor
 
@@ -13,7 +14,13 @@ class InstallmentsCreated(CommitProcessor):
 
         config.id = data["id"]
         del data["id"]
+        data["cuota"] = str(data["cuota"])
         config.data = data
+
+        print('INSTALLMENTS CREATED COMMIT', commit)
+        print('INSTALLMENTS CREATED DATA', config.data)
+
+        print('CONFIG IN JSON',json.dumps(config.data))
 
         config.commits.append(commit)
 

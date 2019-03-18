@@ -29,9 +29,11 @@ class Created2(EventHandler):
 
         error = False
         balance = 0
+
         model = debt.get("model")
         creator = debt.get("creator")
         oracle = debt.get("oracle")
+
         created = str(self._block_timestamp())
 
         data = {
