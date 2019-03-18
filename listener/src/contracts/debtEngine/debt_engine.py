@@ -6,13 +6,13 @@ from ethereum_connection import ContractConnection
 from .debt_engine_interface import DebtEngineInterface
 
 
-ADDRESS = "0x9da08B739f520beD976566864e55D96Fe2AA8f2D"
+ADDRESS = os.environ.get("DEBT_ENGINE_ADDRESS")
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     "abi.json"
 )
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
+URL_NODE = os.environ.get("URL_NODE")
 
 eth_conn = EthereumConnection(URL_NODE)
 contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)
@@ -32,6 +32,7 @@ from .handlers.readed_oracle import ReadedOracle
 from .handlers.readed_oracle_batch import ReadedOracleBatch
 from .handlers.withdrawn import Withdrawn
 from .handlers.transfer import Transfer
+from .handlers.set_uri_provider import SetURIProvider
 
 from .commit_processors.created_debt import CreatedDebt
 from .commit_processors.error import Error as ErrorCommitProcessor
@@ -39,6 +40,7 @@ from .commit_processors.error_recover import ErrorRecover as ErrorRecoverCommitP
 from .commit_processors.paid import Paid as PaidCommitProcessor
 from .commit_processors.readed_oracle import ReadedOracle as ReadedOracleCommitProcessor
 from .commit_processors.transfer import Transfer as TransferCommitProcessor
+from .commit_processors.withdrawn import Withdrawn as WithdrawnCommitProcessor
 
 commit_processors = [
     CreatedDebt(),
@@ -46,7 +48,10 @@ commit_processors = [
     ErrorRecoverCommitProcessor(),
     PaidCommitProcessor(),
     ReadedOracleCommitProcessor(),
+    TransferCommitProcessor(),
+    WithdrawnCommitProcessor(),
     TransferCommitProcessor()
+
 ]
 schedule_processors = []
 
@@ -63,7 +68,8 @@ EVENTS_HANDLERS = [
     ReadedOracle,
     ReadedOracleBatch,
     Withdrawn,
-    Transfer
+    Transfer,
+    SetURIProvider
 ]
 
 

@@ -3,7 +3,16 @@ class DebtEngineInterface():
         self.contract = contract_connection
 
     def get_debt_by_id(self, id_):
-        return self.contract.contract.functions.debts(id_).call()
+        debt_data = self.contract.contract.functions.debts(id_).call()
+
+        debt = {}
+        debt["error"] = debt_data[0]
+        debt["balance"] = debt_data[1]
+        debt["model"] = debt_data[2]
+        debt["creator"] = debt_data[3]
+        debt["oracle"] = debt_data[4]
+
+        return debt
 
     def get_model_by_id(self, id_):
         model = self.get_debt_by_id(id_)[4]

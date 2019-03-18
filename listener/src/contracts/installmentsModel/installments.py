@@ -5,13 +5,13 @@ from ethereum_connection import ContractConnection
 
 from .installments_model_interface import InstallmentsModelInterface
 
-ADDRESS = "0xE3633E63Da6154D9450e34F0d4c64c6A51f6918e"
+ADDRESS = os.environ.get("INSTALLMENTS_ADDRESS")
 
 ABI_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     "abi.json"
 )
-URL_NODE = "https://ropsten.node.rcn.loans:8545/"
+URL_NODE = os.environ.get("URL_NODE")
 
 eth_conn = EthereumConnection(URL_NODE)
 contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)

@@ -18,4 +18,4 @@ class CreatedDebt(CommitProcessor):
         debt.created = data.get("created")
         debt.commits.append(commit)
 
-        debt.save()
+        print(debt.save())

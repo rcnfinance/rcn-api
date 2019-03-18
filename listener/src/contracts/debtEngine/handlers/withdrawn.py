@@ -1,13 +1,32 @@
 import web3
 from contracts.event import EventHandler
+from models import Commit
+import utils
 
 
 class Withdrawn(EventHandler):
     signature = "Withdrawn(bytes32,address,address,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
-    def _parse(self):
-        pass
+    def _normalize(self):
+        self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
     def handle(self):
-        return []
+        commit = Commit()
+
+        commit.opcode = "withdrawn_debt_engine"
+        commit.timestamp = self._block_timestamp()
+        commit.proof = self._transaction
+
+        data = {
+            "id": self._args.get("_id"),
+            "sender": self._args.get("_sender"),
+            "to": self._args.get("_to"),
+            "amount": str(self._args.get("_amount"))
+        }
+        print("data: ", data)
+        print("args: ", self._args)
+
+        commit.data = data
+
+        return [commit]

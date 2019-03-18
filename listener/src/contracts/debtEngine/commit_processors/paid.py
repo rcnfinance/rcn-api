@@ -8,10 +8,15 @@ class Paid(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-        debt = Debt.objects(id=data["id"]).first()
+        print(data)
+        try:
+            debt = Debt.objects.get(id=data["id"])
 
-        new_balance = int(debt.balance) + int(data.get("tokens"))
-        debt.balance = str(new_balance)
-        debt.commits.append(commit)
+            new_balance = int(debt.balance) + int(data.get("tokens"))
+            debt.balance = str(new_balance)
+            debt.commits.append(commit)
 
-        debt.save()
+            debt.save()
+
+        except Debt.DoesNotExist:
+            print("FRULA GATO NO ANDA, EL DEBT NO ESISTE")

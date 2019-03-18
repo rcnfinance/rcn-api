@@ -33,6 +33,25 @@
         "type": "function"
     },
     {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_assetId",
+                "type": "uint256"
+            }
+        ],
+        "name": "getApproved",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "constant": false,
         "inputs": [
             {
@@ -316,11 +335,11 @@
         "name": "payTokenBatch",
         "outputs": [
             {
-                "name": "",
+                "name": "paid",
                 "type": "uint256[]"
             },
             {
-                "name": "",
+                "name": "paidTokens",
                 "type": "uint256[]"
             }
         ],
@@ -506,6 +525,20 @@
     {
         "constant": true,
         "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
         "name": "symbol",
         "outputs": [
             {
@@ -515,6 +548,25 @@
         ],
         "payable": false,
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_to",
+                "type": "address"
+            }
+        ],
+        "name": "transferTo",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -700,14 +752,28 @@
         "name": "payBatch",
         "outputs": [
             {
-                "name": "",
+                "name": "paid",
                 "type": "uint256[]"
             },
             {
-                "name": "",
+                "name": "paidTokens",
                 "type": "uint256[]"
             }
         ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_provider",
+                "type": "address"
+            }
+        ],
+        "name": "setURIProvider",
+        "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
         "type": "function"
@@ -729,25 +795,6 @@
             {
                 "name": "",
                 "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_assetId",
-                "type": "uint256"
-            }
-        ],
-        "name": "getApprovedAddress",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
             }
         ],
         "payable": false,

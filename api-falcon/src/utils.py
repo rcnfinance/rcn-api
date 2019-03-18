@@ -142,9 +142,9 @@ def get_closing_obligation(_id, now=None):
     state = State.objects.get(id=_id)
     config = Config.objects.get(id=_id)
 
-    installments = config.data.get("installments")
+    installments = int(config.data.get("installments"))
     cuota = int(config.data.get("cuota"))
-    lent_time = config.data.get("lentTime")
+    lent_time = int(config.data.get("lent_time"))
 
     current_clock = now - lent_time
     clock = int(state.clock)
@@ -154,13 +154,13 @@ def get_closing_obligation(_id, now=None):
     else:
         interest, _ = run_advance_clock(
             clock,
-            config.data.get("timeUnit"),
+            int(config.data.get("time_unit")),
             int(state.interest),
-            config.data.get("duration"),
+            int(config.data.get("duration")),
             cuota,
             installments,
             int(state.paid_base),
-            config.data.get("interestRate"),
+            int(config.data.get("interest_rate")),
             current_clock
         )
 
@@ -208,8 +208,8 @@ def get_due_time(_id):
     state = State.objects.get(id=_id)
 
     last_payment = int(state.last_payment)
-    duration = config.data.get("duration")
-    lent_time = config.data.get("lentTime")
+    duration = int(config.data.get("duration"))
+    lent_time = int(config.data.get("lent_time"))
 
     if last_payment != 0:
         last = last_payment
@@ -230,13 +230,13 @@ def sim_run_clock(clock, target_clock, prev_interest, config, state):
     )
     interest, clock = run_advance_clock(
         clock,
-        config.data.get("timeUnit"),
+        int(config.data.get("time_unit")),
         prev_interest,
-        config.data.get("duration"),
+        int(config.data.get("duration")),
         int(config.data.get("cuota")),
-        config.data.get("installments"),
+        int(config.data.get("installments")),
         int(state.paid_base),
-        config.data.get("interestRate"),
+        int(config.data.get("interest_rate")),
         target_clock
     )
 
@@ -252,9 +252,9 @@ def get_obligation(_id, timestamp):
     state = State.objects.get(id=_id)
     config = Config.objects.get(id=_id)
 
-    lent_time = config.data.get("lentTime")
-    duration = config.data.get("duration")
-    installments = config.data.get("installments")
+    lent_time = int(config.data.get("lent_time"))
+    duration = int(config.data.get("duration"))
+    installments = int(config.data.get("installments"))
     cuota = int(config.data.get("cuota"))
 
     if timestamp < lent_time:
