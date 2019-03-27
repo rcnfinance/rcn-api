@@ -1,5 +1,6 @@
 from graceful.serializers import BaseSerializer
 from graceful.fields import RawField
+from graceful.fields import IntField
 from custom_fields import ListField
 from custom_fields import ObjectField
 
@@ -11,6 +12,7 @@ class CommitSerializer(BaseSerializer):
     proof = RawField("proof")
     data = RawField("data")
 
+
 class DescriptorSerializer(BaseSerializer):
     first_obligation = RawField("first_obligation")
     total_obligation = RawField("total_obligation")
@@ -18,8 +20,8 @@ class DescriptorSerializer(BaseSerializer):
     interest_rate = RawField("interest_rate")
     punitive_interest_rate = RawField("punitive_interest_rate")
     frequency = RawField("frecuency")
-    installments = RawField("installments")        
-        
+    installments = RawField("installments")
+
 
 class DebtSerializer(BaseSerializer):
     id = RawField("id")
@@ -70,7 +72,23 @@ class LoanSerializer(BaseSerializer):
     canceled = RawField("canceled")
     commits = ListField("list of commits", serializer=CommitSerializer())
 
-   
+
+class LoanCountSerializer(BaseSerializer):
+    count = IntField("Loan count")
+
+
+class DebtCountSerializer(BaseSerializer):
+    count = IntField("Debt count")
+
+
+class ConfigCountSerializer(BaseSerializer):
+    count = IntField("Config count")
+
+
+class StateCountSerializer(BaseSerializer):
+    count = IntField("State count")
+
+
 class OracleHistorySerializer(BaseSerializer):
     id = RawField("id")
     tokens = RawField("discortokens")

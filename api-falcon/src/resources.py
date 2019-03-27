@@ -11,6 +11,10 @@ from serializers import ConfigSerializer
 from serializers import LoanSerializer
 from serializers import OracleHistorySerializer
 from serializers import StateSerializer
+from serializers import LoanCountSerializer
+from serializers import DebtCountSerializer
+from serializers import ConfigCountSerializer
+from serializers import StateCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
@@ -59,6 +63,36 @@ class DebtList(PaginatedListAPI):
         return all_objects.skip(offset).limit(page_size)
 
 
+class DebtListCount(RetrieveAPI):
+    serializer = DebtCountSerializer()
+
+    error = BoolParam("Error filter")
+    model = StringParam("Model filter")
+    creator = StringParam("Creator filter")
+    oracle = StringParam("Oracle filter")
+
+    balance__lt = StringParam("Balance lt")
+    balance__lte = StringParam("Balance lte")
+    balance__gt = StringParam("Balance gt")
+    balance__gte = StringParam("Balance gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lt")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
+
+    def retrieve(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Debt.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
+
+
 class DebtItem(RetrieveAPI):
     serializer = DebtSerializer()
 
@@ -89,6 +123,19 @@ class ConfigList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
+
+
+class ConfigListCount(RetrieveAPI):
+    serializer = ConfigCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Config.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
 
 
 class ConfigItem(RetrieveAPI):
@@ -123,6 +170,21 @@ class StateList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
+
+
+class StateListCount(RetrieveAPI):
+    serializer = StateCountSerializer()
+
+    status = StringParam("Status filter")
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = State.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
 
 
 class StateItem(RetrieveAPI):
@@ -183,6 +245,48 @@ class LoanList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
+
+
+class LoanListCount(RetrieveAPI):
+    serializer = LoanCountSerializer()
+
+    open = BoolParam("Open filter")
+    approved = BoolParam("Approved filter")
+    cosigner = StringParam("Cosigner filter")
+    model = StringParam("Model filter")
+    creator = StringParam("Creator filter")
+    oracle = StringParam("Oracle filter")
+    borrower = StringParam("Borrower filter")
+    canceled = StringParam("Canceled filter")
+    status = StringParam("Status Filter")
+    lender = StringParam("Lender filter")
+
+    expiration__lt = StringParam("Expiration lt")
+    expiration__lte = StringParam("Expiration lte")
+    expiration__gt = StringParam("Expiration gt")
+    expiration__gte = StringParam("Expiration gte")
+
+    amount__lt = StringParam("Amount lt")
+    amount__lte = StringParam("Amount lte")
+    amount__gt = StringParam("Amount gt")
+    amount__gte = StringParam("Amount gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lte")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
+
+
+    def retrieve(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Loan.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        print(count_objects)
+
+        return {"count": count_objects}
 
 
 class LoanItem(RetrieveAPI):
