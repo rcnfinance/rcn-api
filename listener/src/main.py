@@ -8,7 +8,6 @@ from contracts.loanManager.loan_manager import loan_manager
 from mongoengine import connect
 
 all_contracts = [debt_engine, installments, loan_manager]
-# all_contracts = [loan_manager,]
 
 contract_manager = ContractManager(all_contracts)
 

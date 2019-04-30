@@ -24,8 +24,6 @@ class Withdrawn(EventHandler):
             "to": self._args.get("_to"),
             "amount": str(self._args.get("_amount"))
         }
-        print("data: ", data)
-        print("args: ", self._args)
 
         commit.data = data
 

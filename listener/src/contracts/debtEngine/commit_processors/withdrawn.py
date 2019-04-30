@@ -8,7 +8,6 @@ class Withdrawn(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-        print(data)
         debt = Debt.objects.get(id=data["id"])
 
         debt.balance = str(int(debt.balance) - int(data.get("amount")))

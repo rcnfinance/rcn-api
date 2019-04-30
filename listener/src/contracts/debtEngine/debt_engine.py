@@ -33,6 +33,7 @@ from .handlers.readed_oracle_batch import ReadedOracleBatch
 from .handlers.withdrawn import Withdrawn
 from .handlers.transfer import Transfer
 from .handlers.set_uri_provider import SetURIProvider
+from .handlers.ownership_transferred import OwnershipTransferred
 
 from .commit_processors.created_debt import CreatedDebt
 from .commit_processors.error import Error as ErrorCommitProcessor
@@ -51,7 +52,6 @@ commit_processors = [
     TransferCommitProcessor(),
     WithdrawnCommitProcessor(),
     TransferCommitProcessor()
-
 ]
 schedule_processors = []
 
@@ -69,7 +69,8 @@ EVENTS_HANDLERS = [
     ReadedOracleBatch,
     Withdrawn,
     Transfer,
-    SetURIProvider
+    SetURIProvider,
+    OwnershipTransferred
 ]
 
 

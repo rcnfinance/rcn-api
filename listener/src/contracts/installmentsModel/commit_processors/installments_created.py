@@ -17,11 +17,6 @@ class InstallmentsCreated(CommitProcessor):
         data["cuota"] = str(data["cuota"])
         config.data = data
 
-        print('INSTALLMENTS CREATED COMMIT', commit)
-        print('INSTALLMENTS CREATED DATA', config.data)
-
-        print('CONFIG IN JSON',json.dumps(config.data))
-
         config.commits.append(commit)
 
         config.save()

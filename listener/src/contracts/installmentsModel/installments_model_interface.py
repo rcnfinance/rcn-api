@@ -15,6 +15,6 @@ class InstallmentsModelInterface():
         config_data["lent_time"] = str(config[3])
         config_data["cuota"] = str(config[4])
         config_data["interest_rate"] = str(config[5])
-        config_data["id"] = utils.add_0x_prefix(config[6].hex())
+        config_data["id"] = id_
 
         return config_data
