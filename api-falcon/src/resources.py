@@ -284,7 +284,6 @@ class LoanListCount(RetrieveAPI):
 
         all_objects = Loan.objects.filter(**filter_params)
         count_objects = all_objects.count()
-        print(count_objects)
 
         return {"count": count_objects}
 
