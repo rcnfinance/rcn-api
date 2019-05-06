@@ -5,6 +5,7 @@ from contracts.commit_processor import CommitProcessor
 class CreatedDebt(CommitProcessor):
     def __init__(self):
         self.opcode = "created_debt_engine"
+        super().__init__()
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
