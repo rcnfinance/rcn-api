@@ -1,8 +1,8 @@
+import os
 import logging
 from db import connection
 from models import Schedule
 from clock import Clock
-from mongoengine import connect
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +31,7 @@ class Processor:
         self._advance_time(timestamp)
 
     def integrity_error(self):
-        self.connection = connect(db='rcn', host='localhost')
-        self.connection.drop_database('rcn')
+        connection.drop_database(os.environ.get("MONGO_DB"))
         self.clock.reset()
         self.nonce = 0
         self.last_seen = 0
