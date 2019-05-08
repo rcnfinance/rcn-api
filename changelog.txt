@@ -4,7 +4,7 @@
 
 ### Fix
 - fix deployment error in deployed contract (debtEngine), apply patch for this version until new deploy (contracts) 
-
+- fix clock is zero on api (status)
 ## [0.1.1]
 
 ### Added
