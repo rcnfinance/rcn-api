@@ -9,9 +9,10 @@ class Clock():
         self._clock = self._get_or_create()
 
     def _get_or_create(self):
-        clock = ClockModel.objects.get_clock()
-        if not clock:
-            clock = self._create()
+        while True:
+            clock = ClockModel.objects.get_clock()
+            if clock:
+                break
         return clock
 
     def _create(self):
