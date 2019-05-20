@@ -377,6 +377,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(loan_api.lender, null);
       
       await loanManager.approveRequest(id, { from: borrowerAddress });
+      await sleep(5000);
 
       loan_api = (await api.get_loan(id)).content;
       loan_eth = await loanManager.requests(id);
@@ -1349,7 +1350,6 @@ contract("Loans Life Cycle Tests", async accounts => {
       } catch (e){
         error = true;
       }
-      console.log("Error is:", error);
       assert.isTrue(error, "lend expired");
 
     });
@@ -1591,10 +1591,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(parseInt(debtAPI.balance), parseInt(debtETH.balance), "balance eq");
       assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
     });
-
-
-
   });
-
+// */
 
 });

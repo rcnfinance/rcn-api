@@ -6,7 +6,6 @@ async function get_loan(id_loan) {
     const url = base_url + endpoint_resource + id_loan;
     
     response = await axios.get(url);
-    
     return response.data;
 };
 

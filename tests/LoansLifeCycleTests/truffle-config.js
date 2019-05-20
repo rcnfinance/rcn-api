@@ -1,10 +1,17 @@
 module.exports = {
-  solc: {
-      optimizer: {
-          enabled: true,
-          runs: 200,
-      },
-  },
+  compilers: {
+       solc: {
+           version: '0.5.6',
+           docker: false,
+           settings: {
+               optimizer: {
+                   enabled: true,
+                   runs: 200,
+               },
+               evmVersion: 'constantinople',
+           },
+       },
+   },
   networks: {
       development: {
           host: 'ganachecli',
@@ -17,7 +24,8 @@ module.exports = {
     "axios": "^0.18.0",
     "chai": "^4.2.0",
     "bn-chai": "^1.0.1",
-    "mocha-steps":"^1.3.0" 
+    "mocha-steps": "^1.3.0",
+    "solc": "0.5.8"
   }
 
 };

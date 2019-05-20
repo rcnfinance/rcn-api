@@ -10,18 +10,26 @@ services:
       - 8000:8000
     links:
       - mongo:mongo
+    env_file:
+      - config.env
     depends_on:
       - mongo
-  
   mongo:
     image: mongo:rc-xenial
     restart: always
     ports:
       - 27017:27017
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
   
   listener:
     build: listener
-    restart: always
+    # restart: always
     command: python3 main.py
     volumes:
       - ./listener/src/:/project
@@ -31,16 +39,21 @@ services:
      - DEBT_ENGINE_ADDRESS=0xdC8Dd86b3337A8EB4B1955DfF4B79676c9A40991
      - INSTALLMENTS_ADDRESS=0xf1d88d1a22AD6D4A56137761e8df4aa68eDa3A11
      - URL_NODE=http://ganachecli:8545
-     - START_SYNC=0
+     - START_SYNC=-1
      - SENTRY_DSN=
+     - MONGO_DB=rcn
+     - MONGO_HOST=mongo
     depends_on:
       - mongo
     links:
       - mongo:mongo
+      - ganachecli:ganachecli
   
   ganachecli:
     image: trufflesuite/ganache-cli:latest
     command: ganache-cli -h 0.0.0.0 -m "delay practice wall dismiss amount tackle energy annual wrap digital arrive since"
+    stdin_open: true
+    tty: true
     ports:
       - 8545:8545
   

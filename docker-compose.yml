@@ -10,6 +10,8 @@ services:
       - 8000:8000
     links:
       - mongo:mongo
+    env_file:
+      - config.env
     depends_on:
       - mongo
   mongo:
