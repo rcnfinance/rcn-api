@@ -6,6 +6,7 @@ from custom_fields import ObjectField
 
 
 class CommitSerializer(BaseSerializer):
+    id_loan = RawField("id_loan")
     opcode = RawField("opcode")
     timestamp = RawField("timestamp")
     order = RawField("order")
@@ -30,13 +31,13 @@ class DebtSerializer(BaseSerializer):
     model = RawField("model")
     creator = RawField("creator")
     oracle = RawField("oracle")
-    commits = ListField("list of commits", serializer=CommitSerializer())
+    # commits = ListField("list of commits", serializer=CommitSerializer())
 
 
 class ConfigSerializer(BaseSerializer):
     id = RawField("id")
     data = RawField("data")
-    commits = ListField("list of commits", serializer=CommitSerializer())
+    # commits = ListField("list of commits", serializer=CommitSerializer())
 
 
 class StateSerializer(BaseSerializer):
@@ -47,7 +48,7 @@ class StateSerializer(BaseSerializer):
     paid = RawField("paid")
     paid_base = RawField("paid base")
     interest = RawField("interest")
-    commits = ListField("List of commits", serializer=CommitSerializer())
+    # commits = ListField("List of commits", serializer=CommitSerializer())
 
 
 class LoanSerializer(BaseSerializer):
@@ -70,7 +71,7 @@ class LoanSerializer(BaseSerializer):
     lender = RawField("Lender")
     status = RawField("status")
     canceled = RawField("canceled")
-    commits = ListField("list of commits", serializer=CommitSerializer())
+    # commits = ListField("list of commits", serializer=CommitSerializer())
 
 
 class LoanCountSerializer(BaseSerializer):
@@ -86,6 +87,10 @@ class ConfigCountSerializer(BaseSerializer):
 
 
 class StateCountSerializer(BaseSerializer):
+    count = IntField("State count")
+
+
+class CommitCountSerializer(BaseSerializer):
     count = IntField("State count")
 
 

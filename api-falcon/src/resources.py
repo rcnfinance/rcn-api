@@ -15,11 +15,14 @@ from serializers import LoanCountSerializer
 from serializers import DebtCountSerializer
 from serializers import ConfigCountSerializer
 from serializers import StateCountSerializer
+from serializers import CommitSerializer
+from serializers import CommitCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
 from models import OracleHistory
 from models import State
+from models import Commit
 from clock import Clock
 from utils import get_data
 
@@ -299,6 +302,42 @@ class LoanItem(RetrieveAPI):
                 title="Loan does not exists",
                 description="Loan with id={} does not exists".format(id_loan)
             )
+
+
+class CommitList(PaginatedListAPI):
+    serializer = CommitSerializer()
+
+    id_loan = StringParam("id_loan filter")
+    opcode = StringParam("opcode filter")
+    proof = StringParam("proof filter")
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = Commit.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
+
+
+class CommitListCount(RetrieveAPI):
+    serializer = CommitCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Commit.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
 
 
 class OracleHistoryList(PaginatedListAPI):
