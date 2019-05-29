@@ -18,11 +18,13 @@ class Commit(Document):
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
+    address = StringField(required=True, max_length=150)
 
     meta = {
         "indexes": [
             "id_loan",
-            "proof"
+            "proof",
+            "address"
         ]
     }
 

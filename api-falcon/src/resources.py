@@ -310,6 +310,7 @@ class CommitList(PaginatedListAPI):
     id_loan = StringParam("id_loan filter")
     opcode = StringParam("opcode filter")
     proof = StringParam("proof filter")
+    address = StringParam("address filter")
 
     def list(self, params, meta, **kwargs):
         filter_params = params.copy()

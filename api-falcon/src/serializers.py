@@ -11,6 +11,7 @@ class CommitSerializer(BaseSerializer):
     timestamp = RawField("timestamp")
     order = RawField("order")
     proof = RawField("proof")
+    address = RawField("address")
     data = RawField("data")
 
 
