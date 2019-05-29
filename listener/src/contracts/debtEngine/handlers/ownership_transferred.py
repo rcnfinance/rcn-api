@@ -14,6 +14,7 @@ class OwnershipTransferred(EventHandler):
         commit.opcode = "ownership_transferred_debt_engine"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
             "previous_owner": self._args.get("_previousOwner"),

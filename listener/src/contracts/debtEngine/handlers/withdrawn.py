@@ -17,6 +17,7 @@ class Withdrawn(EventHandler):
         commit.opcode = "withdrawn_debt_engine"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
             "id": self._args.get("_id"),

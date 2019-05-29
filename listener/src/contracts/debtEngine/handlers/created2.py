@@ -18,6 +18,7 @@ class Created2(EventHandler):
         commit.opcode = "created_debt_engine"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         debt = debt_engine_interface.get_debt_by_id(self._args.get("_id"))
 

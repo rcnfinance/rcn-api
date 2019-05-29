@@ -15,6 +15,7 @@ class Transfer(EventHandler):
             commit.opcode = "transfer_debt_engine"
             commit.timestamp = self._block_timestamp()
             commit.proof = self._transaction
+            commit.address = self._tx.get("from")
 
             data = {
                 "id": self._event.get("data"),
