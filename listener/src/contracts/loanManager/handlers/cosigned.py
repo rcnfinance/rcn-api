@@ -24,6 +24,7 @@ class Cosigned(EventHandler):
             "cosigner": self._args.get("_cosigner")
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

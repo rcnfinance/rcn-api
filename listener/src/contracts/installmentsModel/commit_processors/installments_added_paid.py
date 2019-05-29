@@ -17,6 +17,6 @@ class InstallmentsAddedPaid(CommitProcessor):
 
         state.last_payment = data.get("state_last_payment")
         state.paid = data.get("paid")
-        state.commits.append(commit)
-
+        # state.commits.append(commit)
+        commit.save()
         state.save()

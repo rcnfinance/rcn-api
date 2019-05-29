@@ -14,8 +14,8 @@ class Paid(CommitProcessor):
             debt = Debt.objects.get(id=data["id"])
             new_balance = int(debt.balance) + int(data.get("tokens"))
             debt.balance = str(new_balance)
-            debt.commits.append(commit)
-
+            # debt.commits.append(commit)
+            commit.save()
             debt.save()
         except Debt.DoesNotExist:
             self.logger.warning("Debt with id {} does not exist".format(data["id"]))

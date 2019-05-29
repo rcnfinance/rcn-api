@@ -29,6 +29,6 @@ class Requested(CommitProcessor):
         loan.descriptor = Descriptor(**data.get("descriptor"))
         loan.currency = data.get("currency")
         loan.status = data.get("status")
-        loan.commits.append(commit)
-
+        # loan.commits.append(commit)
+        commit.save()
         loan.save()

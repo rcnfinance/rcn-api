@@ -11,6 +11,6 @@ class InstallmentsSetPaidBase(CommitProcessor):
 
         state = State.objects.get(id=data.get("id"))
         state.paid_base = data.get("paid_base")
-        state.commits.append(commit)
-
+        # state.commits.append(commit)
+        commit.save()
         state.save()

@@ -23,6 +23,7 @@ class ApprovedRejected(EventHandler):
             "response": self._args.get("_response")
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

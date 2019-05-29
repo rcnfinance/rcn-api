@@ -12,5 +12,6 @@ class Canceled(CommitProcessor):
         loan = Loan.objects.get(id=data.get("id"))
 
         loan.canceled = data.get("canceled")
-        loan.commits.append(commit)
+        # loan.commits.append(commit)
+        commit.save()
         loan.save()

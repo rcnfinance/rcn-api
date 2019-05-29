@@ -11,5 +11,6 @@ class Error(CommitProcessor):
         debt = Debt.objects(id=data["id"]).first()
 
         debt.error = data.get("error")
-        debt.commits.append(commit)
+        # debt.commits.append(commit)
+        commit.save()
         debt.save()

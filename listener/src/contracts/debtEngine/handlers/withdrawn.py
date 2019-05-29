@@ -25,6 +25,7 @@ class Withdrawn(EventHandler):
             "amount": str(self._args.get("_amount"))
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

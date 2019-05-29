@@ -22,6 +22,7 @@ class ApprovedError(EventHandler):
             "id": self._args.get("_id")
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

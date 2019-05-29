@@ -17,6 +17,6 @@ class InstallmentsCreated(CommitProcessor):
         data["cuota"] = str(data["cuota"])
         config.data = data
 
-        config.commits.append(commit)
-
+        # config.commits.append(commit)
+        commit.save()
         config.save()

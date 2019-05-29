@@ -11,12 +11,20 @@ from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
 
 
-class Commit(EmbeddedDocument):
+class Commit(Document):
+    id_loan = StringField(required=False, max_length=150)
     opcode = StringField(required=True, max_length=50)
     timestamp = LongField(required=True)
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
+
+    meta = {
+        "indexes": [
+            "id_loan",
+            "proof"
+        ]
+    }
 
 
 class Descriptor(EmbeddedDocument):
@@ -48,7 +56,7 @@ class ClockModel(Document):
 class Config(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     data = DictField()
-    commits = EmbeddedDocumentListField(Commit)
+    # commits = EmbeddedDocumentListField(Commit)
 
 
 class State(Document):
@@ -59,7 +67,7 @@ class State(Document):
     paid = StringField(max_length=100, default="0")
     paid_base = StringField(max_length=100, default="0")
     interest = StringField(max_length=100, default="0")
-    commits = EmbeddedDocumentListField(Commit)
+    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -76,7 +84,7 @@ class Debt(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
-    commits = EmbeddedDocumentListField(Commit)
+    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -110,7 +118,7 @@ class Loan(Document):
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
     lender = StringField(required=False, max_length=150)
-    commits = EmbeddedDocumentListField(Commit)
+    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [

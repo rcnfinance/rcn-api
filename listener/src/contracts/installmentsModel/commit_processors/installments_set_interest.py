@@ -16,6 +16,6 @@ class InstallmentsSetInterest(CommitProcessor):
             state.id = data.get("id")
 
         state.interest = data.get("interest")
-        state.commits.append(commit)
-
+        # state.commits.append(commit)
+        commit.save()
         state.save()

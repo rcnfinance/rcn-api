@@ -13,7 +13,8 @@ class Transfer(CommitProcessor):
         try:
             loan = Loan.objects.get(id=data.get("id"))
             loan.lender = data.get("to")
-            loan.commits.append(commit)
+            # loan.commits.append(commit)
+            commit.save()
             loan.save()
         except Loan.DoesNotExist:
             self.logger.warning("Loan with id {} does not exist".format(data["id"]))

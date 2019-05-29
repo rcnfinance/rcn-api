@@ -28,6 +28,7 @@ class Paid(EventHandler):
             "tokens": str(self._args.get("_tokens"))
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

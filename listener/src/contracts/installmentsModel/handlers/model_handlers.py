@@ -39,6 +39,7 @@ class InstallmentsAddedPaid(AddedPaid):
             "state_last_payment": state.clock,
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]
@@ -83,6 +84,7 @@ class InstallmentsChangedStatus(ChangedStatus):
             "status": str(self._args.get("_status"))
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
         commits.append(commit)
 
@@ -96,6 +98,8 @@ class InstallmentsChangedStatus(ChangedStatus):
             "id": self._args.get("_id"),
             "status": str(self._args.get("_status"))
         }
+
+        commit_full_payment.id_loan = self._args.get("_id")
         commit_full_payment.data = data
 
         commits.append(commit_full_payment)
@@ -116,5 +120,6 @@ class InstallmentsCreated(Created):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.data = config_data
+        commit.id_loan = self._args.get("_id")
 
         return [commit]

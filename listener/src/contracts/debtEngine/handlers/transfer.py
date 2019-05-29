@@ -22,6 +22,7 @@ class Transfer(EventHandler):
                 "to": self._args.get("_to")
             }
 
+            commit.id_loan = self._args.get("_id")
             commit.data = data
 
             return [commit]

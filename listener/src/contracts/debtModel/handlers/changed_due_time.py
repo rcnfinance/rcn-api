@@ -10,8 +10,5 @@ class ChangedDueTime(EventHandler):
     def _normalize(self):
         self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
-    # def _parse(self):
-    #     pass
-
     def handle(self):
         return []

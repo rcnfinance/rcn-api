@@ -12,6 +12,6 @@ class Withdrawn(CommitProcessor):
 
         debt.balance = str(int(debt.balance) - int(data.get("amount")))
 
-        debt.commits.append(commit)
-
+        # debt.commits.append(commit)
+        commit.save()
         debt.save()

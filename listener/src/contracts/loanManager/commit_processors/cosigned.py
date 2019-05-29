@@ -12,5 +12,6 @@ class Cosigned(CommitProcessor):
         loan = Loan.objects.get(id=data.get("id"))
 
         loan.cosigner = data.get("cosigner")
-        loan.commits.append(commit)
+        # loan.commits.append(commit)
+        commit.save()
         loan.save()

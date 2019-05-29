@@ -7,6 +7,7 @@ import utils
 
 class Created2(EventHandler):
     signature = "Created2(bytes32,uint256,bytes)"
+    signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
         self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
@@ -39,6 +40,7 @@ class Created2(EventHandler):
             "id": self._args.get("_id")
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

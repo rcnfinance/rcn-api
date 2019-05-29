@@ -12,5 +12,6 @@ class Approved(CommitProcessor):
         loan = Loan.objects.get(id=data.get("id"))
 
         loan.approved = data.get("approved")
-        loan.commits.append(commit)
+        # loan.commits.append(commit)
+        commit.save()
         loan.save()

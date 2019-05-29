@@ -16,6 +16,6 @@ class InstallmentsChangedStatus(CommitProcessor):
             state.id = data.get("id")
 
         state.status = data.get("status")
-        state.commits.append(commit)
-
+        # state.commits.append(commit)
+        commit.save()
         state.save()

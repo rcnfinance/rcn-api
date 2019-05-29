@@ -15,4 +15,5 @@ class ReadedOracle(CommitProcessor):
         oracle.tokens = data.get("tokens")
         oracle.equivalent = data.get("equivalent")
 
+        commit.save()
         oracle.save()

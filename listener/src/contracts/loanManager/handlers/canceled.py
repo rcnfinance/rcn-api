@@ -24,6 +24,7 @@ class Canceled(EventHandler):
             "canceled": True
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]

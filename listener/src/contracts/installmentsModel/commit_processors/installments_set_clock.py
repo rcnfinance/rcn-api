@@ -16,6 +16,6 @@ class InstallmentsSetClock(CommitProcessor):
             state.id = data.get("id")
 
         state.clock = data.get("duration")
-        state.commits.append(commit)
-
+        # state.commits.append(commit)
+        commit.save()
         state.save()

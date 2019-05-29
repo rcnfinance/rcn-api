@@ -29,6 +29,7 @@ class PayBatchError(EventHandler):
             "oracle": self._args.get("_oracle")
         }
 
+        commit.id_loan = self._args.get("_id")
         commit.data = data
 
         return [commit]
