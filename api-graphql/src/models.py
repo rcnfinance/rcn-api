@@ -6,8 +6,6 @@ from mongoengine import DictField
 from mongoengine import BooleanField
 from mongoengine import IntField
 from mongoengine import Document
-from mongoengine import QuerySet
-from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import connect
 

@@ -103,8 +103,19 @@ class Query(graphene.ObjectType):
         model=graphene.String(required=False),
         creator=graphene.String(required=False),
         oracle=graphene.String(required=False),
+
         first=graphene.Int(required=False),
-        skip=graphene.Int(required=False)
+        skip=graphene.Int(required=False),
+
+        balance__gt=graphene.String(required=False, name="balance__gt"),
+        balance__gte=graphene.String(required=False, name="balance__gte"),
+        balance__lt=graphene.String(required=False, name="balance__lt"),
+        balance__lte=graphene.String(required=False, name="balance__lte"),
+
+        created__gt=graphene.String(required=False, name="created__gt"),
+        created__gte=graphene.String(required=False, name="created__gte"),
+        created__lt=graphene.String(required=False, name="created__lt"),
+        created__lte=graphene.String(required=False, name="created__lte"),
     )
 
     config = graphene.List(Config, id=graphene.ID(required=False))
@@ -112,6 +123,7 @@ class Query(graphene.ObjectType):
     state = graphene.List(State, 
         id=graphene.ID(required=False),
         status=graphene.String(required=False),
+
         first=graphene.Int(required=False),
         skip=graphene.Int(required=False)
     )
@@ -129,8 +141,24 @@ class Query(graphene.ObjectType):
         status=graphene.String(required=False),
         canceled=graphene.Boolean(required=False),
         lender=graphene.String(required=False),
+
         first=graphene.Int(required=False),
-        skip=graphene.Int(required=False)
+        skip=graphene.Int(required=False),
+
+        expiration__gt=graphene.String(required=False, name="expiration__gt"),
+        expiration__gte=graphene.String(required=False, name="expiration__gte"),
+        expiration__t=graphene.String(required=False, name="expiration__lt"),
+        expiration__lte=graphene.String(required=False, name="expiration__lte"),
+
+        amount__gt=graphene.String(required=True, name="amount__gt"),
+        amount__gte=graphene.String(required=True, name="amount__gte"),
+        amount__lt=graphene.String(required=True, name="amount__lt"),
+        amount__lte=graphene.String(required=True, name="amount__lte"),
+
+        created__gt=graphene.String(required=True, name="created__gt"),
+        created__gte=graphene.String(required=True, name="created__gte"),
+        created__lt=graphene.String(required=True, name="created__lt"),
+        created__lte=graphene.String(required=True, name="created__lte"),
     )
 
     commit = graphene.List(Commit,
@@ -138,6 +166,7 @@ class Query(graphene.ObjectType):
         opcode=graphene.String(required=False),
         proof=graphene.String(required=False),
         address=graphene.String(required=False),
+
         first=graphene.Int(required=False),
         skip=graphene.Int(required=False)
     )

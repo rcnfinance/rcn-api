@@ -12,6 +12,8 @@ services:
       - mongo:mongo
     env_file:
       - config.env
+    environment:
+     - GRAPHIQL_MODE=True
     depends_on:
       - mongo
   api-falcon:
