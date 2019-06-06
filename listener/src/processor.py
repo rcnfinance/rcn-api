@@ -200,8 +200,8 @@ class Processor:
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
                 if opcode == "partial_payment":
-                    # DO MORE
                     loan = Loan.objects(index=data["loan"]).first()
+                    loan.paid = str(int(loan.paid) + int(commit.data.get("amount")))
                     loan.commits.append(commit)
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
