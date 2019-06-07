@@ -1,25 +1,23 @@
 from mongoengine import StringField
 from mongoengine import Document, EmbeddedDocument
+from mongoengine import ListField
 from mongoengine import IntField
 from mongoengine import LongField
 from mongoengine import DictField
-from mongoengine import ListField
 from mongoengine import EmbeddedDocumentListField
 from mongoengine import QuerySet
 
-
 class Commit(EmbeddedDocument):
     opcode = StringField(required=True, max_length=15)
-    timestamp = LongField(required=True)
+    timestamp = StringField(required=True)
     order = IntField(required=True)
-    proof = StringField(required=True, max_length=150)
+    proof = StringField(max_length=150)
     data = DictField(required=True)
-
 
 class Loan(Document):
     index = IntField(required=True, max_length=150, primary_key=True)
-    created = LongField(required=True)
-    status = IntField(default='0', max_length=150)
+    created = StringField(required=True)
+    status = IntField(default=0, max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
     lender = StringField(default='0x0000000000000000000000000000000000000000', max_length=150)
@@ -42,13 +40,12 @@ class Loan(Document):
     commits = EmbeddedDocumentListField(Commit)
     approbations = ListField(StringField())
 
-
 class Event(Document):
     uuid = StringField(required=True, max_length=150)
 
 class Schedule(Document):
     opcode = StringField(required=True, max_length=15)
-    timestamp = LongField(required=True)
+    timestamp = StringField(required=True)
     data = DictField(required=True)
 
 class ClockQuerySet(QuerySet):

@@ -10,9 +10,6 @@ class ApprovalHandler(EventHandler):
     def _parse(self):
         data = self._event.get('data')[2:]
         splited_args = utils.split_every(64, data)
-        # self._owner = utils.to_address(splited_args[0])
-        # self._approved = utils.to_address(splited_args[1])
-        # self._token_id = utils.to_int(splited_args[2])
 
     def do(self):
         return []

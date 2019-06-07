@@ -27,7 +27,7 @@ class PartialPaymentHandler(EventHandler):
         data['amount'] = self._amount
 
         commit.opcode = "partial_payment"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
 

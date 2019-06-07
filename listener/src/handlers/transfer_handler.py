@@ -24,7 +24,7 @@ class TransferHandler(EventHandler):
         data['from'] = self._from
 
         commit.opcode = "transfer"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
 

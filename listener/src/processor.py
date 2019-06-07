@@ -53,7 +53,7 @@ class Processor:
             op = Schedule.objects(timestamp__lte=target).order_by('timestamp').first()
             if op:
                 self.log('Handling schedule {} scheduled {}'.format(op.opcode, op.timestamp))
-                self.clock.advance_to(op.timestamp)
+                self.clock.advance_to(int(op.timestamp))
                 commits = self._evaluate_schedule(op)
                 if commits:
                     self.execute(commits)
@@ -101,12 +101,12 @@ class Processor:
 
     def execute(self, commits):
         for commit in commits:
-            if commit.timestamp < self.clock.time:
+            if int(commit.timestamp) < self.clock.time:
                 logger.info('Old commit loaded {} {} {} {}'.format(commit.timestamp, self.clock.time, commit.timestamp - self.clock.time, commit.opcode))
                 self.buffer.integrity_broken()
                 return
             else:
-                self._advance_time(commit.timestamp)
+                self._advance_time(int(commit.timestamp))
 
                 data = commit.data
                 opcode = commit.opcode

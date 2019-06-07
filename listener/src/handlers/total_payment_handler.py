@@ -21,7 +21,7 @@ class TotalPaymentHandler(EventHandler):
         data['loan'] = self._index
 
         commit.opcode = "total_payment"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
 

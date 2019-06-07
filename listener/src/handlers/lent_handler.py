@@ -29,7 +29,7 @@ class LentHandler(EventHandler):
         data["due_time"] = str(block_timestamp + int(loan.dues_in))
 
         commit.opcode = "lent"
-        commit.timestamp = block_timestamp
+        commit.timestamp = str(block_timestamp)
         commit.proof = self._transaction
         commit.data = data
         return [commit]

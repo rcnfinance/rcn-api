@@ -23,7 +23,7 @@ class DestroyedByHandler(EventHandler):
         data['destroyed_by'] = self._address
 
         commit.opcode = "destroyed_loan"
-        commit.timestamp = self._w3.eth.getBlock(self._block_number).timestamp
+        commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
 
