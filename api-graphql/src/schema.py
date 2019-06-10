@@ -150,15 +150,15 @@ class Query(graphene.ObjectType):
         expiration__t=graphene.String(required=False, name="expiration__lt"),
         expiration__lte=graphene.String(required=False, name="expiration__lte"),
 
-        amount__gt=graphene.String(required=True, name="amount__gt"),
-        amount__gte=graphene.String(required=True, name="amount__gte"),
-        amount__lt=graphene.String(required=True, name="amount__lt"),
-        amount__lte=graphene.String(required=True, name="amount__lte"),
+        amount__gt=graphene.String(required=False, name="amount__gt"),
+        amount__gte=graphene.String(required=False, name="amount__gte"),
+        amount__lt=graphene.String(required=False, name="amount__lt"),
+        amount__lte=graphene.String(required=False, name="amount__lte"),
 
-        created__gt=graphene.String(required=True, name="created__gt"),
-        created__gte=graphene.String(required=True, name="created__gte"),
-        created__lt=graphene.String(required=True, name="created__lt"),
-        created__lte=graphene.String(required=True, name="created__lte"),
+        created__gt=graphene.String(required=False, name="created__gt"),
+        created__gte=graphene.String(required=False, name="created__gte"),
+        created__lt=graphene.String(required=False, name="created__lt"),
+        created__lte=graphene.String(required=False, name="created__lte"),
     )
 
     commit = graphene.List(Commit,
