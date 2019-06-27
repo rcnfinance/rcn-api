@@ -27,18 +27,22 @@ cors = CORS(allow_all_origins=True)
 api = application = falcon.API(middleware=[cors.middleware])
 
 api.add_route("/health_status/", HealthStatusResource())
-
+# debts
 api.add_route("/v4/debts/", DebtList())
 api.add_route("/v4/count/debts/", DebtListCount())
 api.add_route("/v4/debts/{id_debt}/", DebtItem())
-
+# configs
 api.add_route("/v4/configs/", ConfigList())
 api.add_route("/v4/count/configs/", ConfigListCount())
 api.add_route("/v4/configs/{id_config}/", ConfigItem())
-
+# loans
 api.add_route("/v4/loans/", LoanList())
 api.add_route("/v4/count/loans/", LoanListCount())
 api.add_route("/v4/loans/{id_loan}/", LoanItem())
+# collateral
+api.add_route("/v4/entry/", EntryList())
+api.add_route("/v4/count/entry/", EntryListCount())
+api.add_route("/v4/entry/{id_collateral}/", EntryItem())
 
 api.add_route("/v4/oracle_history/", OracleHistoryList())
 api.add_route("/v4/oracle_history/{id_loan}", OracleHistoryItem())

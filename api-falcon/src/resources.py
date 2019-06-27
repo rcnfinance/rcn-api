@@ -304,6 +304,53 @@ class LoanItem(RetrieveAPI):
             )
 
 
+class EntryList(PaginatedListAPI):
+    serializer = EntrySerializer()
+
+    def list(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = Loan.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
+
+
+class EntryListCount(RetrieveAPI):
+    serializer = EntryCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Entry.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
+
+
+class EntryItem(RetrieveAPI):
+    serializer = EntrySerializer()
+
+    def retrieve(self, params, meta, id_loan, **kwargs):
+        try:
+            return Entry.objects.get(id=id_loan)
+        except Entry.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title="Entry does not exists",
+                description="Entry with id={} does not exists".format(id_loan)
+            )
+
+
 class CommitList(PaginatedListAPI):
     serializer = CommitSerializer()
 
