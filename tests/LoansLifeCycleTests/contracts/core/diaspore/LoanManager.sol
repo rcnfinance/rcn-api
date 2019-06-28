@@ -18,7 +18,6 @@ contract LoanManager is BytesUtils {
     DebtEngine public debtEngine;
     IERC20 public token;
 
-    bytes32[] public directory;
     mapping(bytes32 => Request) public requests;
     mapping(bytes32 => bool) public canceledSettles;
 
@@ -57,12 +56,7 @@ contract LoanManager is BytesUtils {
         debtEngine = _debtEngine;
         token = debtEngine.token();
         require(address(token) != address(0), "Error loading token");
-        directory.length++;
     }
-
-    function getDirectory() external view returns (bytes32[] memory) { return directory; }
-
-    function getDirectoryLength() external view returns (uint256) { return directory.length; }
 
     // uint256 getters(legacy)
     function getBorrower(uint256 _id) external view returns (address) { return requests[bytes32(_id)].borrower; }
@@ -76,6 +70,7 @@ contract LoanManager is BytesUtils {
     function getAmount(uint256 _id) external view returns (uint256) { return requests[bytes32(_id)].amount; }
     function getExpirationRequest(uint256 _id) external view returns (uint256) { return requests[bytes32(_id)].expiration; }
     function getApproved(uint256 _id) external view returns (bool) { return requests[bytes32(_id)].approved; }
+    function getModel(uint256 _id) external view returns (address) { return requests[bytes32(_id)].model; }
     function getDueTime(uint256 _id) external view returns (uint256) { return Model(requests[bytes32(_id)].model).getDueTime(bytes32(_id)); }
     function getClosingObligation(uint256 _id) external view returns (uint256) { return Model(requests[bytes32(_id)].model).getClosingObligation(bytes32(_id)); }
     function getLoanData(uint256 _id) external view returns (bytes memory) { return requests[bytes32(_id)].loanData; }
@@ -99,6 +94,7 @@ contract LoanManager is BytesUtils {
     function getAmount(bytes32 _id) external view returns (uint256) { return requests[_id].amount; }
     function getExpirationRequest(bytes32 _id) external view returns (uint256) { return requests[_id].expiration; }
     function getApproved(bytes32 _id) external view returns (bool) { return requests[_id].approved; }
+    function getModel(bytes32 _id) external view returns (address) { return requests[_id].model; }
     function getDueTime(bytes32 _id) external view returns (uint256) { return Model(requests[_id].model).getDueTime(bytes32(_id)); }
     function getClosingObligation(bytes32 _id) external view returns (uint256) { return Model(requests[_id].model).getClosingObligation(bytes32(_id)); }
     function getLoanData(bytes32 _id) external view returns (bytes memory) { return requests[_id].loanData; }
@@ -113,7 +109,6 @@ contract LoanManager is BytesUtils {
     struct Request {
         bool open;
         bool approved;
-        uint64 position;
         uint64 expiration;
         uint128 amount;
         address cosigner;
@@ -207,6 +202,8 @@ contract LoanManager is BytesUtils {
             )
         );
 
+        require(!canceledSettles[id], "The debt was canceled");
+
         require(requests[id].borrower == address(0), "Request already exist");
 
         bool approved = msg.sender == _borrower;
@@ -214,7 +211,6 @@ contract LoanManager is BytesUtils {
         requests[id] = Request({
             open: true,
             approved: approved,
-            position: 0,
             cosigner: address(0),
             amount: _amount,
             model: _model,
@@ -237,7 +233,6 @@ contract LoanManager is BytesUtils {
         }
 
         if (approved) {
-            requests[id].position = uint64(directory.push(id) - 1);
             emit Approved(id);
         }
     }
@@ -276,7 +271,6 @@ contract LoanManager is BytesUtils {
         Request storage request = requests[_id];
         require(msg.sender == request.borrower, "Only borrower can approve");
         if (!request.approved) {
-            request.position = uint64(directory.push(_id) - 1);
             request.approved = true;
             emit Approved(_id);
         }
@@ -294,7 +288,24 @@ contract LoanManager is BytesUtils {
             if (borrower.isContract() && borrower.implementsMethod(0x76ba6009)) {
                 approved = _requestContractApprove(_id, borrower);
             } else {
-                if (borrower == ecrecovery(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _id)), _signature)) {
+                bytes32 _hash = keccak256(
+                    abi.encodePacked(
+                        _id,
+                        "sign approve request"
+                    )
+                );
+
+                address signer = ecrecovery(
+                    keccak256(
+                        abi.encodePacked(
+                            "\x19Ethereum Signed Message:\n32",
+                            _hash
+                        )
+                    ),
+                    _signature
+                );
+
+                if (borrower == signer) {
                     emit ApprovedBySignature(_id);
                     approved = true;
                 }
@@ -303,7 +314,6 @@ contract LoanManager is BytesUtils {
 
         // Check request.approved again, protect against reentrancy
         if (approved && !request.approved) {
-            request.position = uint64(directory.push(_id) - 1);
             request.approved = true;
             emit Approved(_id);
         }
@@ -347,13 +357,6 @@ contract LoanManager is BytesUtils {
             "Error creating the debt"
         );
 
-        // Remove directory entry
-        bytes32 last = directory[directory.length - 1];
-        requests[last].position = request.position;
-        directory[request.position] = last;
-        request.position = 0;
-        directory.length--;
-
         // Call the cosigner
         if (_cosigner != address(0)) {
             uint256 auxSalt = request.salt;
@@ -384,16 +387,9 @@ contract LoanManager is BytesUtils {
             "Only borrower or creator can cancel a request"
         );
 
-        if (request.approved){
-            // Remove directory entry
-            bytes32 last = directory[directory.length - 1];
-            requests[last].position = request.position;
-            directory[request.position] = last;
-            directory.length--;
-        }
-
         delete request.loanData;
         delete requests[_id];
+        canceledSettles[_id] = true;
 
         emit Canceled(_id, msg.sender);
 
@@ -402,7 +398,6 @@ contract LoanManager is BytesUtils {
 
     function cosign(uint256 _id, uint256 _cost) external returns (bool) {
         Request storage request = requests[bytes32(_id)];
-        require(request.position == 0, "Request cosigned is invalid");
         require(request.cosigner != address(0), "Cosigner 0x0 is not valid");
         require(request.expiration > now, "Request is expired");
         require(request.cosigner == address(uint256(msg.sender) + 2), "Cosigner not valid");
@@ -490,9 +485,7 @@ contract LoanManager is BytesUtils {
         uint256 innerSalt;
         (id, innerSalt) = _buildSettleId(_requestData, _loanData);
 
-        // Validate signatures
         require(requests[id].borrower == address(0), "Request already exist");
-        _validateSettleSignatures(id, _requestData, _loanData, _creatorSig, _borrowerSig);
 
         // Transfer tokens to borrower
         uint256 tokens = _currencyToToken(_requestData, _oracleData);
@@ -529,11 +522,13 @@ contract LoanManager is BytesUtils {
             borrower: address(uint256(read(_requestData, O_BORROWER, L_BORROWER))),
             salt: _cosigner != address(0) ? _maxCosignerCost : uint256(read(_requestData, O_SALT, L_SALT)),
             loanData: _loanData,
-            position: 0,
             expiration: uint64(uint256(read(_requestData, O_EXPIRATION, L_EXPIRATION)))
         });
 
         Request storage request = requests[id];
+
+        // Validate signatures
+        _validateSettleSignatures(id, _requestData, _loanData, _creatorSig, _borrowerSig);
 
         // Call the cosigner
         if (_cosigner != address(0)) {
@@ -573,6 +568,7 @@ contract LoanManager is BytesUtils {
         bytes32 expected = _id ^ 0xdfcb15a077f54a681c23131eacdfd6e12b5e099685b492d382c3fd8bfc1e9a2a;
         address borrower = address(uint256(read(_requestData, O_BORROWER, L_BORROWER)));
         address creator = address(uint256(read(_requestData, O_CREATOR, L_CREATOR)));
+        bytes32 _hash;
 
         if (borrower.isContract()) {
             require(
@@ -582,8 +578,14 @@ contract LoanManager is BytesUtils {
 
             emit BorrowerByCallback(_id);
         } else {
+            _hash = keccak256(
+                abi.encodePacked(
+                    _id,
+                    "sign settle lend as borrower"
+                )
+            );
             require(
-                borrower == ecrecovery(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _id)), _borrowerSig),
+                borrower == ecrecovery(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash)), _borrowerSig),
                 "Invalid borrower signature"
             );
 
@@ -599,8 +601,14 @@ contract LoanManager is BytesUtils {
 
                 emit CreatorByCallback(_id);
             } else {
+                _hash = keccak256(
+                    abi.encodePacked(
+                        _id,
+                        "sign settle lend as creator"
+                    )
+                );
                 require(
-                    creator == ecrecovery(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _id)), _creatorSig),
+                    creator == ecrecovery(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash)), _creatorSig),
                     "Invalid creator signature"
                 );
 
