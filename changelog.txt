@@ -1,3 +1,11 @@
+## 2019.7.1 (01 July 2019)
+
+###Enhancements
+- add contract LoanDAO events structure
+
+###Code Health
+
+
 ## [0.1.2]
 ### Added
 - parametrize mongo connection

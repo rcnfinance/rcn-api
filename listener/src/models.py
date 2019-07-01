@@ -142,3 +142,16 @@ class OracleHistory(Document):
     tokens = StringField(required=True, max_length=150)
     equivalent = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=100)
+
+class Pool(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    manager = StringField(required=True, max_length=150)
+    loanId = StringField(required=True, max_length=150)
+    cosigner = StringField(required=True, max_length=150)
+    cosignerLimit = StringField(required=True, max_length=150)
+    cosignerData = StringField(required=True, max_length=150)
+    started = BooleanField(required=True)
+    tracker = StringField(required=True, max_length=150)
+    token = StringField(required=True, max_length=150)
+    raised = StringField(required=True, max_length=150)
+    collected = StringField(required=True, max_length=150)
