@@ -155,3 +155,14 @@ class Pool(Document):
     token = StringField(required=True, max_length=150)
     raised = StringField(required=True, max_length=150)
     collected = StringField(required=True, max_length=150)
+
+class Claim(Document):
+    lender = StringField(required=True, max_length=150, primary_key=True)
+    claimedAmount = StringField(required=True, max_length=150)
+    
+class ERC20D(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    token = StringField(required=True, max_length=150)
+    paid = StringField(required=True, max_length=150)
+    claimers = EmbeddedDocumentListField(Claim)
+
