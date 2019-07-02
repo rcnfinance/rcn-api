@@ -18,7 +18,7 @@ class Commit(Document):
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
-    address = StringField(required=True, max_length=150)
+    address = StringField(max_length=150)
 
     meta = {
         "indexes": [
