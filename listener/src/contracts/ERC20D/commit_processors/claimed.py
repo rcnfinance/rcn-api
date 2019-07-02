@@ -12,12 +12,20 @@ class Claimed(CommitProcessor):
         try:
             erc20d = ERC20D.objects.get(id=data["contractAddress"])
 
-            claim = erc20d.claimers.objects.get(id=data["from"])
+            claim = erc20d.claimers.get(id=data["from"])
 
             new_claimed = int(claim.claimedAmount) + int(data.get("value"))
             claim.claimedAmount = str(new_claimed)
-            
+
             commit.save()
             claim.save()
         except ERC20D.DoesNotExist:
             self.logger.warning("ERC20D with address {} does not exist".format(data["contractAddress"]))
+        except Claim.DoesNotExist:
+            claimer = Claim()
+            claimer.lender = data["from"]
+            claimer.claimed_amount = data["value"]
+            erc20d.claimers.append(claimer)
+            
+            commit.save()
+            erc20d.save()   

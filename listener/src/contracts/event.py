@@ -20,7 +20,7 @@ class EventHandler():
         self._args = dict(web3.utils.events.get_event_data(self._event_abi, self._event).args)
         self._block_number = self._event.get('blockNumber')
         self._transaction = self._event.get('transactionHash').hex()
-        self._address = self._event.get('address').hex()
+        self._address = self._event.get('address')
 
     def _normalize(self):
         pass

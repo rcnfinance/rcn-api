@@ -1,7 +1,8 @@
-## 2019.7.1 (01 July 2019)
+## 2019.7.1 (02 July 2019)
 
 ###Enhancements
 - add contract LoanDAO events structure
+- add contract ERC20D events structure
 
 ###Code Health
 

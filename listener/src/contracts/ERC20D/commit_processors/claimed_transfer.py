@@ -12,8 +12,8 @@ class ClaimedTransfer(CommitProcessor):
         try:
             erc20d = ERC20D.objects.get(id=data["contractAddress"])
 
-            claimFrom = erc20d.claimers.objects.get(id=data["from"])
-            claimTo = erc20d.claimers.objects.get(id=data["to"])
+            claimFrom = erc20d.claimers.get(id=data["from"])
+            claimTo = erc20d.claimers.get(id=data["to"])
 
             new_claimedFrom = int(claimFrom.claimedAmount) - int(data.get("value"))
             new_claimedTo = int(claimTo.claimedAmount) + int(data.get("value"))
@@ -23,7 +23,14 @@ class ClaimedTransfer(CommitProcessor):
             
             
             commit.save()
-            claimFrom.save()
-            claimTo.save()
+            erc20d.save() 
         except ERC20D.DoesNotExist:
             self.logger.warning("ERC20D with address {} does not exist".format(data["contractAddress"]))
+        except Claim.DoesNotExist:    
+            claimer = Claim()
+            claimer.lender = data["to"]
+            claimer.claimed_amount = data["value"]
+            erc20d.claimers.append(claimer)
+            
+            commit.save()
+            erc20d.save()   
