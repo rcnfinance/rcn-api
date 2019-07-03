@@ -102,5 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-/tests/LoansLifeCycleTests/node_modules/
-/tests/LoansLifeCycleTests/package-lock.json
+
+/node_modules/
+/package-lock.json
