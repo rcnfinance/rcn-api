@@ -33,6 +33,7 @@ class Requested(EventHandler):
             "creator": self._args.get("_creator"),
             "oracle": self._args.get("_oracle"),
             "borrower": self._args.get("_borrower"),
+            "callback": self._args.get("_callback"),
             "salt": str(self._args.get("_salt")),
             "loanData": self._args.get("_loanData"),
             "created": str(self._block_timestamp()),
