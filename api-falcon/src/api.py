@@ -10,6 +10,9 @@ from resources import HealthStatusResource
 from resources import LoanList
 from resources import LoanItem
 from resources import LoanListCount
+from resources import EntryList
+from resources import EntryItem
+from resources import EntryListCount
 from resources import OracleHistoryList
 from resources import OracleHistoryItem
 from resources import StateList
@@ -40,9 +43,9 @@ api.add_route("/v4/loans/", LoanList())
 api.add_route("/v4/count/loans/", LoanListCount())
 api.add_route("/v4/loans/{id_loan}/", LoanItem())
 # collateral
-api.add_route("/v4/entry/", EntryList())
-api.add_route("/v4/count/entry/", EntryListCount())
-api.add_route("/v4/entry/{id_collateral}/", EntryItem())
+api.add_route("/v4/entries/", EntryList())
+api.add_route("/v4/count/entries/", EntryListCount())
+api.add_route("/v4/entries/{id_entry}/", EntryItem())
 
 api.add_route("/v4/oracle_history/", OracleHistoryList())
 api.add_route("/v4/oracle_history/{id_loan}", OracleHistoryItem())

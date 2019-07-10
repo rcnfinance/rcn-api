@@ -137,6 +137,17 @@ class Loan(Document):
     }
 
 
+class Entry(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    token = StringField(required=True, max_length=150)
+    debtId = StringField(required=True, max_length=150)
+    amount = StringField(required=True, max_length=150)
+    liquidationRatio = StringField(required=True, max_length=150)
+    balanceRatio = StringField(required=True, max_length=150)
+    burnFee = StringField(required=True, max_length=150)
+    rewardFee = StringField(required=True, max_length=150)
+
+
 class OracleHistory(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     tokens = StringField(required=True, max_length=150)

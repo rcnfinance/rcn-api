@@ -9,9 +9,11 @@ import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
 from serializers import LoanSerializer
+from serializers import EntrySerializer
 from serializers import OracleHistorySerializer
 from serializers import StateSerializer
 from serializers import LoanCountSerializer
+from serializers import EntryCountSerializer
 from serializers import DebtCountSerializer
 from serializers import ConfigCountSerializer
 from serializers import StateCountSerializer
@@ -20,6 +22,7 @@ from serializers import CommitCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
+from models import Entry
 from models import OracleHistory
 from models import State
 from models import Commit
@@ -317,7 +320,7 @@ class EntryList(PaginatedListAPI):
 
         offset = page * page_size
 
-        all_objects = Loan.objects.filter(**filter_params)
+        all_objects = Entry.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
 
@@ -341,13 +344,13 @@ class EntryListCount(RetrieveAPI):
 class EntryItem(RetrieveAPI):
     serializer = EntrySerializer()
 
-    def retrieve(self, params, meta, id_loan, **kwargs):
+    def retrieve(self, params, meta, id_entry, **kwargs):
         try:
-            return Entry.objects.get(id=id_loan)
+            return Entry.objects.get(id=id_entry)
         except Entry.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title="Entry does not exists",
-                description="Entry with id={} does not exists".format(id_loan)
+                description="Entry with id={} does not exists".format(id_entry)
             )
 
 

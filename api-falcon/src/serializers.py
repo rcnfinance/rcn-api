@@ -75,8 +75,23 @@ class LoanSerializer(BaseSerializer):
     # commits = ListField("list of commits", serializer=CommitSerializer())
 
 
+class EntrySerializer(BaseSerializer):
+    id = RawField("id")
+    token = RawField("token")
+    debtId = RawField("debtId")
+    amount = RawField("amount")
+    liquidationRatio = RawField("liquidationRatio")
+    balanceRatio = RawField("balanceRatio")
+    burnFee = RawField("burnFee")
+    rewardFee = RawField("rewardFee")
+
+
 class LoanCountSerializer(BaseSerializer):
     count = IntField("Loan count")
+
+
+class EntryCountSerializer(BaseSerializer):
+    count = IntField("Entry count")
 
 
 class DebtCountSerializer(BaseSerializer):

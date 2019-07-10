@@ -26,6 +26,11 @@ module.exports.getModelDebtInfo = async (idLoan) => {
   return this.get(endpointResource + idLoan);
 };
 
+module.exports.getEntry = async (idEntry) => {
+  const endpointResource = 'entries/';
+  return this.get(endpointResource + idEntry);
+};
+
 module.exports.get = async (endpointResource) => {
   const response = await axios.get(baseUrl + endpointResource);
   return response.data;
