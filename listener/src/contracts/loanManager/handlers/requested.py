@@ -6,7 +6,7 @@ import utils
 
 
 class Requested(EventHandler):
-    signature = "Requested(bytes32,uint128,address,address,address,address,uint256,bytes,uint256)"
+    signature = "Requested(bytes32,uint128,address,address,address,address,address,uint256,bytes,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
