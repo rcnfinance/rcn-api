@@ -23,7 +23,7 @@ class Requested(CommitProcessor):
         loan.creator = data.get("creator")
         loan.oracle = data.get("oracle")
         loan.borrower = data.get("borrower")
-        loan.callback = data.get("callbacks")
+        loan.callback = data.get("callback")
         loan.salt = data.get("salt")
         loan.loanData = data.get("loanData")
         loan.created = data.get("created")
