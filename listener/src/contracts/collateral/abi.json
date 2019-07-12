@@ -3,6 +3,33 @@
     "constant": true,
     "inputs": [
       {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "canWithdraw",
+    "outputs": [
+      {
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
         "name": "interfaceId",
         "type": "bytes4"
       }
@@ -71,8 +98,54 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "valueTokensToCollateral",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "totalSupply",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "valueCollateralToTokens",
     "outputs": [
       {
         "name": "",
@@ -100,6 +173,20 @@
       }
     ],
     "name": "transferFrom",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_url",
+        "type": "string"
+      }
+    ],
+    "name": "setUrl",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -199,6 +286,33 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "balanceDeltaRatio",
+    "outputs": [
+      {
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -218,6 +332,37 @@
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "",
+        "type": "bytes"
+      },
+      {
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "cost",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -252,6 +397,20 @@
       {
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "url",
+    "outputs": [
+      {
+        "name": "",
+        "type": "string"
       }
     ],
     "payable": false,
@@ -312,6 +471,124 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralInTokens",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "tokensToPay",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralToPay",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_to",
+        "type": "address"
+      }
+    ],
+    "name": "emergencyRedeem",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "liquidationDeltaRatio",
+    "outputs": [
+      {
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "owner",
     "outputs": [
@@ -322,6 +599,33 @@
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_loanManager",
+        "type": "address"
+      },
+      {
+        "name": "_debtId",
+        "type": "uint256"
+      },
+      {
+        "name": "_oracleData",
+        "type": "bytes"
+      }
+    ],
+    "name": "claim",
+    "outputs": [
+      {
+        "name": "change",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -342,6 +646,63 @@
     "constant": false,
     "inputs": [
       {
+        "name": "_debtId",
+        "type": "bytes32"
+      },
+      {
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "name": "_liquidationRatio",
+        "type": "uint32"
+      },
+      {
+        "name": "_balanceRatio",
+        "type": "uint32"
+      },
+      {
+        "name": "_burnFee",
+        "type": "uint32"
+      },
+      {
+        "name": "_rewardFee",
+        "type": "uint32"
+      }
+    ],
+    "name": "create",
+    "outputs": [
+      {
+        "name": "entryId",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "getEntriesLength",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
         "name": "_operator",
         "type": "address"
       },
@@ -351,6 +712,34 @@
       }
     ],
     "name": "setApprovalForAll",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_burner",
+        "type": "address"
+      }
+    ],
+    "name": "setBurner",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_converter",
+        "type": "address"
+      }
+    ],
+    "name": "setConverter",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -441,6 +830,64 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralRatio",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      },
+      {
+        "name": "_debtId",
+        "type": "uint256"
+      },
+      {
+        "name": "_data",
+        "type": "bytes"
+      },
+      {
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "requestCosign",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "converter",
     "outputs": [
@@ -470,6 +917,64 @@
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      }
+    ],
+    "name": "redeem",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_to",
+        "type": "address"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "name": "_oracleData",
+        "type": "bytes"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -504,6 +1009,51 @@
       }
     ],
     "name": "transferOwnership",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateTokens",
+        "type": "uint256"
+      },
+      {
+        "name": "_rateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "debtInTokens",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
+        "name": "_oracleData",
+        "type": "bytes"
+      }
+    ],
+    "name": "payOffDebt",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
@@ -898,555 +1448,5 @@
     ],
     "name": "OwnershipTransferred",
     "type": "event"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "getEntriesLength",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_burner",
-        "type": "address"
-      }
-    ],
-    "name": "setBurner",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_converter",
-        "type": "address"
-      }
-    ],
-    "name": "setConverter",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_debtId",
-        "type": "bytes32"
-      },
-      {
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "name": "_liquidationRatio",
-        "type": "uint32"
-      },
-      {
-        "name": "_balanceRatio",
-        "type": "uint32"
-      },
-      {
-        "name": "_burnFee",
-        "type": "uint32"
-      },
-      {
-        "name": "_rewardFee",
-        "type": "uint32"
-      }
-    ],
-    "name": "create",
-    "outputs": [
-      {
-        "name": "entryId",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "deposit",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "name": "_oracleData",
-        "type": "bytes"
-      }
-    ],
-    "name": "withdraw",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "redeem",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_to",
-        "type": "address"
-      }
-    ],
-    "name": "emergencyRedeem",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_oracleData",
-        "type": "bytes"
-      }
-    ],
-    "name": "payOffDebt",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_url",
-        "type": "string"
-      }
-    ],
-    "name": "setUrl",
-    "outputs": [],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "bytes"
-      },
-      {
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "name": "cost",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [],
-    "name": "url",
-    "outputs": [
-      {
-        "name": "",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      },
-      {
-        "name": "_debtId",
-        "type": "uint256"
-      },
-      {
-        "name": "_data",
-        "type": "bytes"
-      },
-      {
-        "name": "",
-        "type": "bytes"
-      }
-    ],
-    "name": "requestCosign",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_loanManager",
-        "type": "address"
-      },
-      {
-        "name": "_debtId",
-        "type": "uint256"
-      },
-      {
-        "name": "_oracleData",
-        "type": "bytes"
-      }
-    ],
-    "name": "claim",
-    "outputs": [
-      {
-        "name": "change",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "tokensToPay",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralToPay",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "canWithdraw",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "liquidationDeltaRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "balanceDeltaRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralInTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "valueCollateralToTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "valueTokensToCollateral",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "debtInTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
   }
 ]
