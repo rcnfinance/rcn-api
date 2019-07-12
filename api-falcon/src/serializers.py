@@ -31,6 +31,7 @@ class DebtSerializer(BaseSerializer):
     balance = RawField("balance")
     model = RawField("model")
     creator = RawField("creator")
+    created = RawField("created")
     oracle = RawField("oracle")
     # commits = ListField("list of commits", serializer=CommitSerializer())
 

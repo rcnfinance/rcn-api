@@ -1,14 +1,17 @@
+import os
+
 from mongoengine import StringField
 from mongoengine import LongField
 from mongoengine import DictField
 from mongoengine import BooleanField
 from mongoengine import IntField
-from mongoengine import DateTimeField
 from mongoengine import Document
 from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
-from mongoengine import EmbeddedDocumentListField
+from mongoengine import connect
+
+connect(db=os.environ.get("MONGO_DB", "rcn"), host=os.environ.get("MONGO_HOST", "localhost"))
 
 
 class Commit(Document):
@@ -39,26 +42,9 @@ class Descriptor(EmbeddedDocument):
     installments = StringField(required=True, max_length=150)
 
 
-class Schedule(Document):
-    opcode = StringField(required=True, max_length=50)
-    timestamp = LongField(required=True)
-    data = DictField(required=True)
-
-
-class ClockQuerySet(QuerySet):
-    def get_clock(self):
-        return self.first()
-
-
-class ClockModel(Document):
-    time = StringField(required=True)
-    meta = {'queryset_class': ClockQuerySet}
-
-
 class Config(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     data = DictField()
-    # commits = EmbeddedDocumentListField(Commit)
 
 
 class State(Document):
@@ -69,7 +55,6 @@ class State(Document):
     paid = StringField(max_length=100, default="0")
     paid_base = StringField(max_length=100, default="0")
     interest = StringField(max_length=100, default="0")
-    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -86,7 +71,6 @@ class Debt(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
-    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -112,7 +96,6 @@ class Loan(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
-    callback = StringField(required=True, max_length=150)
     salt = StringField(required=True, max_length=150)
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
@@ -121,7 +104,6 @@ class Loan(Document):
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
     lender = StringField(required=False, max_length=150)
-    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -136,21 +118,3 @@ class Loan(Document):
             "amount"
         ]
     }
-
-
-class Entry(Document):
-    id = StringField(required=True, max_length=150, primary_key=True)
-    token = StringField(required=True, max_length=150)
-    debtId = StringField(required=True, max_length=150)
-    amount = StringField(required=True, max_length=150)
-    liquidationRatio = StringField(required=True, max_length=150)
-    balanceRatio = StringField(required=True, max_length=150)
-    burnFee = StringField(required=True, max_length=150)
-    rewardFee = StringField(required=True, max_length=150)
-
-
-class OracleHistory(Document):
-    id = StringField(required=True, max_length=150, primary_key=True)
-    tokens = StringField(required=True, max_length=150)
-    equivalent = StringField(required=True, max_length=150)
-    timestamp = StringField(required=True, max_length=100)
