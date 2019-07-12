@@ -6,7 +6,7 @@ import utils
 
 
 class Requested(EventHandler):
-    signature = "Requested(bytes32,uint128,address,address,address,address,uint256,bytes,uint256)"
+    signature = "Requested(bytes32,uint128,address,address,address,address,address,uint256,bytes,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
@@ -33,6 +33,7 @@ class Requested(EventHandler):
             "creator": self._args.get("_creator"),
             "oracle": self._args.get("_oracle"),
             "borrower": self._args.get("_borrower"),
+            "callback": self._args.get("_callback"),
             "salt": str(self._args.get("_salt")),
             "loanData": self._args.get("_loanData"),
             "created": str(self._block_timestamp()),

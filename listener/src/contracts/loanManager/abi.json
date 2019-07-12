@@ -1,627 +1,12 @@
 [
     {
         "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getCreator",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getAmount",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getOracle",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            },
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            }
-        ],
-        "name": "encodeRequest",
-        "outputs": [
-            {
-                "name": "requestData",
-                "type": "bytes"
-            },
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "isApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getClosingObligation",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_requestData",
-                "type": "bytes"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            }
-        ],
-        "name": "settleCancel",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getDueTime",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getStatus",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getStatus",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "internalSalt",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getLoanData",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "ownerOf",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            },
-            {
-                "name": "_cost",
-                "type": "uint256"
-            }
-        ],
-        "name": "cosign",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            },
-            {
-                "name": "_data",
-                "type": "bytes"
-            }
-        ],
-        "name": "calcId",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getBorrower",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            }
-        ],
-        "name": "buildInternalSalt",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getDirectory",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32[]"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "approveRequest",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "isApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
         "inputs": [],
         "name": "debtEngine",
         "outputs": [
             {
                 "name": "",
                 "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "directory",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "ownerOf",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getBorrower",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            },
-            {
-                "name": "_signature",
-                "type": "bytes"
-            }
-        ],
-        "name": "registerApproveRequest",
-        "outputs": [
-            {
-                "name": "approved",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCosigner",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getAmount",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getClosingObligation",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
             }
         ],
         "payable": false,
@@ -645,10 +30,6 @@
             {
                 "name": "approved",
                 "type": "bool"
-            },
-            {
-                "name": "position",
-                "type": "uint64"
             },
             {
                 "name": "expiration",
@@ -679,6 +60,10 @@
                 "type": "address"
             },
             {
+                "name": "callback",
+                "type": "address"
+            },
+            {
                 "name": "salt",
                 "type": "uint256"
             },
@@ -694,30 +79,11 @@
     {
         "constant": true,
         "inputs": [],
-        "name": "getDirectoryLength",
+        "name": "GAS_CALLBACK",
         "outputs": [
             {
                 "name": "",
                 "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getCosigner",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
             }
         ],
         "payable": false,
@@ -741,321 +107,6 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "cancel",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getLoanData",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getExpirationRequest",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getDueTime",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCurrency",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getCurrency",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getCreator",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getOracle",
-        "outputs": [
-            {
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            },
-            {
-                "name": "_oracleData",
-                "type": "bytes"
-            },
-            {
-                "name": "_cosigner",
-                "type": "address"
-            },
-            {
-                "name": "_cosignerLimit",
-                "type": "uint256"
-            },
-            {
-                "name": "_cosignerData",
-                "type": "bytes"
-            }
-        ],
-        "name": "lend",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "getExpirationRequest",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "bytes32"
-            }
-        ],
-        "name": "getApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_requestData",
-                "type": "bytes"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            },
-            {
-                "name": "_cosigner",
-                "type": "address"
-            },
-            {
-                "name": "_maxCosignerCost",
-                "type": "uint256"
-            },
-            {
-                "name": "_cosignerData",
-                "type": "bytes"
-            },
-            {
-                "name": "_oracleData",
-                "type": "bytes"
-            },
-            {
-                "name": "_creatorSig",
-                "type": "bytes"
-            },
-            {
-                "name": "_borrowerSig",
-                "type": "bytes"
-            }
-        ],
-        "name": "settleLend",
-        "outputs": [
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            }
-        ],
-        "name": "requestLoan",
-        "outputs": [
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -1114,6 +165,11 @@
             {
                 "indexed": false,
                 "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_callback",
                 "type": "address"
             },
             {
@@ -1374,5 +430,926 @@
         ],
         "name": "SettledCancel",
         "type": "event"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getBorrower",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getBorrower",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getCreator",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getCreator",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getOracle",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getOracle",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getCosigner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getCosigner",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getCurrency",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getCurrency",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getAmount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getAmount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getExpirationRequest",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getExpirationRequest",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getApproved",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getApproved",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getDueTime",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getDueTime",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getClosingObligation",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getClosingObligation",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getLoanData",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getLoanData",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "getStatus",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getStatus",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "name": "ownerOf",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "ownerOf",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getCallback",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            },
+            {
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "calcId",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            }
+        ],
+        "name": "buildInternalSalt",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "internalSalt",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            }
+        ],
+        "name": "requestLoan",
+        "outputs": [
+            {
+                "name": "id",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "approveRequest",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "name": "_signature",
+                "type": "bytes"
+            }
+        ],
+        "name": "registerApproveRequest",
+        "outputs": [
+            {
+                "name": "approved",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            },
+            {
+                "name": "_oracleData",
+                "type": "bytes"
+            },
+            {
+                "name": "_cosigner",
+                "type": "address"
+            },
+            {
+                "name": "_cosignerLimit",
+                "type": "uint256"
+            },
+            {
+                "name": "_cosignerData",
+                "type": "bytes"
+            },
+            {
+                "name": "_callbackData",
+                "type": "bytes"
+            }
+        ],
+        "name": "lend",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "cancel",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_id",
+                "type": "uint256"
+            },
+            {
+                "name": "_cost",
+                "type": "uint256"
+            }
+        ],
+        "name": "cosign",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            }
+        ],
+        "name": "encodeRequest",
+        "outputs": [
+            {
+                "name": "requestData",
+                "type": "bytes"
+            },
+            {
+                "name": "id",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_requestData",
+                "type": "bytes"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            },
+            {
+                "name": "_cosigner",
+                "type": "address"
+            },
+            {
+                "name": "_maxCosignerCost",
+                "type": "uint256"
+            },
+            {
+                "name": "_cosignerData",
+                "type": "bytes"
+            },
+            {
+                "name": "_oracleData",
+                "type": "bytes"
+            },
+            {
+                "name": "_creatorSig",
+                "type": "bytes"
+            },
+            {
+                "name": "_borrowerSig",
+                "type": "bytes"
+            },
+            {
+                "name": "_callbackData",
+                "type": "bytes"
+            }
+        ],
+        "name": "settleLend",
+        "outputs": [
+            {
+                "name": "id",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_requestData",
+                "type": "bytes"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            }
+        ],
+        "name": "settleCancel",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
     }
 ]
