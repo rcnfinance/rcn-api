@@ -112,6 +112,7 @@ class Loan(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
+    callback = StringField(required=True, max_length=150)
     salt = StringField(required=True, max_length=150)
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
@@ -131,6 +132,7 @@ class Loan(Document):
             "creator",
             "oracle",
             "borrower",
+            "callback",
             "expiration",
             "amount"
         ]
