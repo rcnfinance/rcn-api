@@ -11,137 +11,11 @@ const expect = require('chai')
   .expect;
 
 const api = require("./api.js");
+const helper = require("./Helper.js");
+const loanHelper = require("./LoanHelper.js");
 
 function bn(number) {
   return new BN(number);
-}
-
-function increaseTime(duration) {
-    const id = Date.now();
-
-    return new Promise((resolve, reject) => {
-        web3.currentProvider.send({
-            jsonrpc: "2.0",
-            method: "evm_increaseTime",
-            params: [duration],
-            id: id
-        },
-        err1 => {
-            if (err1) return reject(err1);
-
-            web3.currentProvider.send({
-                jsonrpc: "2.0",
-                method: "evm_mine",
-                id: id + 1
-            },
-            (err2, res) => {
-                return err2 ? reject(err2) : resolve(res);
-            });
-        });
-    });
-};
-
-async function getBlockTime() {
-  return (await web3.eth.getBlock(await web3.eth.getBlockNumber())).timestamp;
-};
-
-async function tryCatchRevert(promise, message) {
-    let headMsg = 'revert ';
-    if (message === '') {
-        headMsg = headMsg.slice(0, headMsg.length - 1);
-        console.warn('    \u001b[93m\u001b[2m\u001b[1m⬐ Warning:\u001b[0m\u001b[30m\u001b[1m There is an empty revert/require message');
-    }
-    try {
-        if (promise instanceof Function) {
-            await promise();
-        } else {
-            await promise;
-        }
-    } catch (error) {
-        assert(
-            error.message.search(headMsg + message) >= 0 || process.env.SOLIDITY_COVERAGE,
-            'Expected a revert \'' + headMsg + message + '\', got ' + error.message + '\' instead'
-        );
-        return;
-    }
-    assert.fail('Expected throw not received');
-};
-
-async function check_state(state_eth, state_api) {
-
-  assert.equal(state_eth.status, state_api.status, "state.status eq");
-  assert.equal(state_eth.clock, state_api.clock, "state.clock eq");
-  assert.equal(state_eth.lastPayment, state_api.last_payment, "state.last_payment eq");
-  assert.equal(state_eth.paid, state_api.paid, "state.paid eq");
-  assert.equal(state_eth.paidBase, state_api.paid_base, "state.paid_base eq");
-  assert.equal(state_eth.interest, state_api.interest, "state.interest eq");
-
-  return;
-}
-
-async function check_config(config_eth, config_api) {
-
-  assert.equal(config_eth.installments, config_api.data.installments, "config.installments eq")
-  assert.equal(config_eth.timeUnit, config_api.data.time_unit, "config.time_unit eq")
-  assert.equal(config_eth.duration, config_api.data.duration, "config.duration eq")
-  assert.equal(config_eth.lentTime, config_api.data.lent_time, "config.lent_time eq")
-  assert.equal(config_eth.cuota, config_api.data.cuota, "config.cuota eq")
-  assert.equal(config_eth.interestRate, config_api.data.interest_rate, "config.interest_rate eq")
-
-  return
-}
-
-async function check_debt(debt_eth, debt_api) {
-
-  assert.equal(debt_eth.error, debt_api.error, "debt.error eq");
-  assert.equal(debt_eth.balance, debt_api.balance, "debt.balance eq");
-  assert.equal(debt_eth.model, debt_api.model, "debt.model eq");
-  assert.equal(debt_eth.creator, debt_api.creator, "debt.creator eq");
-  assert.equal(debt_eth.oracle, debt_api.oracle, "debt.oracle eq");
-
-  return
-}
-
-async function check_loan(loan_eth, loan_api, check_keys) {
-
-  if (check_keys.includes("open") ) {
-    assert.equal(loan_eth.open, loan_api.open, "loan.open");
-  }
-  if (check_keys.includes("approved")) {
-    assert.equal(loan_eth.approved, loan_api.approved, "loan.approved");
-  }
-  if (check_keys.includes("position")) {
-    assert.equal(loan_eth.position, loan_api.position, "loan.position");
-  }
-  if (check_keys.includes("expiration")) {
-    assert.equal(loan_eth.expiration, loan_api.expiration, "loan.expiration");
-  }
-  if (check_keys.includes("amount")) {
-    assert.equal(loan_eth.amount, loan_api.amount, "loan.amount");
-  }  
-  if (check_keys.includes("cosigner")) {
-    assert.equal(loan_eth.cosigner, loan_api.cosigner, "loan.cosigner");
-  }
-  if (check_keys.includes("model")) {
-    assert.equal(loan_eth.model, loan_api.model, "loan.model");
-  }
-  if (check_keys.includes("creator")) {
-    assert.equal(loan_eth.creator, loan_api.creator, "loan.creator");
-  }
-  if (check_keys.includes("oracle")) {
-    assert.equal(loan_eth.oracle, loan_api.oracle, "loan.oracle");
-  }
-  if (check_keys.includes("borrower")) {
-    assert.equal(loan_eth.borrower, loan_api.borrower, "loan.borrower");
-  }
-  if (check_keys.includes("salt")) {
-    assert.equal(loan_eth.salt, loan_api.salt, "loan.salt");
-  }
-  if (check_keys.includes("loanData")) {
-    assert.equal(loan_eth.loanData, loan_api.loanData, "loan.loanData");
-  }
-
-  return
 }
 
 contract("Loans Life Cycle Tests", async accounts => {
@@ -180,88 +54,6 @@ contract("Loans Life Cycle Tests", async accounts => {
     return new Promise(resolve => setTimeout(resolve, millis));
   }
 
-  // Function to calculate the id of a Loan
-  async function calcId(_amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
-    const _two = '0x02';
-    const controlId = await loanManager.calcId(
-      _amount,
-      _borrower,
-      _creator,
-      _model.address,
-      _oracle,
-      _salt,
-      _expiration,
-      _data
-    );
-
-    const controlInternalSalt = await loanManager.buildInternalSalt(
-      _amount,
-      _borrower,
-      _creator,
-      _salt,
-      _expiration
-    );
-
-    const internalSalt = web3.utils.hexToNumberString(
-      web3.utils.soliditySha3(
-        { t: 'uint128', v: _amount },
-        { t: 'address', v: _borrower },
-        { t: 'address', v: _creator },
-        { t: 'uint256', v: _salt },
-        { t: 'uint64', v: _expiration }
-      )
-    );
-
-    const id = web3.utils.soliditySha3(
-      { t: 'uint8', v: _two },
-      { t: 'address', v: debtEngine.address },
-      { t: 'address', v: loanManager.address },
-      { t: 'address', v: _model.address },
-      { t: 'address', v: _oracle },
-      { t: 'uint256', v: internalSalt },
-      { t: 'bytes', v: _data }
-    );
-
-    expect(internalSalt).to.eq.BN(controlInternalSalt, 'bug internalSalt');
-    assert.equal(id, controlId, 'bug calcId');
-    return id;
-  }
-
-  // Function creates a new loan request
-  async function requestLoan(_cuota, _interestRate, _installments, _duration, _timeUnit, _amount, _oracle, _expiration) {
-    // Set loan data parameters
-    const cuota = _cuota;
-    const interestRate = _interestRate;  //punitive interest rate 
-    const installments = _installments;
-    const duration = _duration;
-    const timeUnit = _timeUnit;
-
-    // Endode Loan data
-    const loanData = await installmentModel.encodeData(cuota, interestRate, installments, duration, timeUnit);
-
-    // Set other parameters to request a Loan
-    const amount = _amount;        //amount in RCN 
-    const modelAddress = installmentModel.address;
-    let oracle = _oracle;
-    let borrower = borrowerAddress;
-    let salt = ++saltValue;
-    let expiration = _expiration;
-
-    request = await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
-
-    id = await calcId(amount, borrower, creatorAddress, installmentModel, oracle, salt, expiration, loanData);
-
-    // Obtains loanId from logs of the transaction receipt
-    const loanId = request.logs[0].args[0];
-
-    loan_data = {
-      id: id,
-      loanData: loanData
-    }
-
-    return loan_data;
-  }
-
   before('Create Token, Debt Engine , Loan Manager and Model instances', async function () {
 
     // Create contracts (Token RCN , Debt Engine, Loan Manager, Installments Model) and set engine in model
@@ -297,7 +89,8 @@ contract("Loans Life Cycle Tests", async accounts => {
       expiration = '1578571215';
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -308,7 +101,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -343,9 +136,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -356,7 +151,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -383,7 +178,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
     });
   });
 
@@ -400,9 +195,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -413,7 +210,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -440,7 +237,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth_before_lend = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+      helper.check_loan(loan_eth_before_lend, loan_api, keys_to_check)
 
       // buy Rcn for lender address 
       await rcnToken.setBalance(lenderAddress, amount);
@@ -476,11 +273,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       state_eth = await installmentModel.states(id);
 
       // call check_status functions
-      await check_state(state_eth, state_api);
-      await check_config(config_eth, config_api)
-      await check_debt(debt_eth, debt_api)
+      await helper.check_state(state_eth, state_api);
+      await helper.check_config(config_eth, config_api)
+      await helper.check_debt(debt_eth, debt_api)
       key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
-      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+      await helper.check_loan(loan_eth_before_lend, loan_api, key_to_check)
 
       assert.equal(loan_api.open, false);
       assert.equal(loan_api.approved, true);
@@ -524,9 +321,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -537,7 +336,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -564,7 +363,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth_before_lend = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+      helper.check_loan(loan_eth_before_lend, loan_api, keys_to_check)
 
       // buy Rcn for lender address 
       await rcnToken.setBalance(lenderAddress, amount);
@@ -600,11 +399,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       state_eth = await installmentModel.states(id);
 
       // call check_status functions
-      await check_state(state_eth, state_api);
-      await check_config(config_eth, config_api)
-      await check_debt(debt_eth, debt_api)
+      await helper.check_state(state_eth, state_api);
+      await helper.check_config(config_eth, config_api)
+      await helper.check_debt(debt_eth, debt_api)
       key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
-      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+      await helper.check_loan(loan_eth_before_lend, loan_api, key_to_check)
 
       // check model_info.due_time
       due_time = await loanManager.getDueTime(id);
@@ -651,9 +450,9 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
       assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
 
-      check_debt(debt_eth, debt_api)
-      check_state(state_eth, state_api)
-      check_config(config_eth, config_api)
+      helper.check_debt(debt_eth, debt_api)
+      helper.check_state(state_eth, state_api)
+      helper.check_config(config_eth, config_api)
 
       //check model_info
       // check model_info.due_time
@@ -694,9 +493,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -707,7 +508,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -735,7 +536,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       await loanManager.cancel(id, { from: creatorAddress });
       
@@ -770,9 +571,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -783,7 +586,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -810,7 +613,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth_before_lend = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+      helper.check_loan(loan_eth_before_lend, loan_api, keys_to_check)
 
       // buy Rcn for lender address 
       await rcnToken.setBalance(lenderAddress, amount);
@@ -846,11 +649,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       state_eth = await installmentModel.states(id);
 
       // call check_status functions
-      await check_state(state_eth, state_api);
-      await check_config(config_eth, config_api)
-      await check_debt(debt_eth, debt_api)
+      await helper.check_state(state_eth, state_api);
+      await helper.check_config(config_eth, config_api)
+      await helper.check_debt(debt_eth, debt_api)
       key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
-      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+      await helper.check_loan(loan_eth_before_lend, loan_api, key_to_check)
 
       // check model_info.due_time
       due_time = await loanManager.getDueTime(id);
@@ -897,9 +700,9 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
       assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
 
-      check_debt(debt_eth, debt_api)
-      check_state(state_eth, state_api)
-      check_config(config_eth, config_api)
+      helper.check_debt(debt_eth, debt_api)
+      helper.check_state(state_eth, state_api)
+      helper.check_config(config_eth, config_api)
 
       //check model_info
       // check model_info.due_time
@@ -955,9 +758,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -968,7 +773,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -995,7 +800,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth_before_lend = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+      helper.check_loan(loan_eth_before_lend, loan_api, keys_to_check)
 
       // buy Rcn for lender address 
       await rcnToken.setBalance(lenderAddress, amount);
@@ -1031,11 +836,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       state_eth = await installmentModel.states(id);
 
       // call check_status functions
-      await check_state(state_eth, state_api);
-      await check_config(config_eth, config_api)
-      await check_debt(debt_eth, debt_api)
+      await helper.check_state(state_eth, state_api);
+      await helper.check_config(config_eth, config_api)
+      await helper.check_debt(debt_eth, debt_api)
       key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
-      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+      await helper.check_loan(loan_eth_before_lend, loan_api, key_to_check)
 
       // check model_info.due_time
       due_time = await loanManager.getDueTime(id);
@@ -1094,9 +899,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -1107,7 +914,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -1134,7 +941,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth_before_lend = await loanManager.requests(id);
 
       keys_to_check = ["approved"]
-      check_loan(loan_eth_before_lend, loan_api, keys_to_check)
+      helper.check_loan(loan_eth_before_lend, loan_api, keys_to_check)
 
       // buy Rcn for lender address 
       await rcnToken.setBalance(lenderAddress, amount);
@@ -1170,11 +977,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       state_eth = await installmentModel.states(id);
 
       // call check_status functions
-      await check_state(state_eth, state_api);
-      await check_config(config_eth, config_api)
-      await check_debt(debt_eth, debt_api)
+      await helper.check_state(state_eth, state_api);
+      await helper.check_config(config_eth, config_api)
+      await helper.check_debt(debt_eth, debt_api)
       key_to_check = ["approved", "expiration", "amount", "cosigner", "model", "creator", "oracle", "borrower", "loanData"]
-      await check_loan(loan_eth_before_lend, loan_api, key_to_check)
+      await helper.check_loan(loan_eth_before_lend, loan_api, key_to_check)
 
       // check model_info.due_time
       due_time = await loanManager.getDueTime(id);
@@ -1221,9 +1028,9 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(debt_eth.balance, debt_api.balance, "DEBT Balance not eq :(");
       assert.equal(state_eth.paid, state_api.paid, "State paid not eq :(");
 
-      check_debt(debt_eth, debt_api)
-      check_state(state_eth, state_api)
-      check_config(config_eth, config_api)
+      helper.check_debt(debt_eth, debt_api)
+      helper.check_state(state_eth, state_api)
+      helper.check_config(config_eth, config_api)
 
       //check model_info
       // check model_info.due_time
@@ -1293,10 +1100,12 @@ contract("Loans Life Cycle Tests", async accounts => {
       timeUnit = '2592000';
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
-      expiration = (await getBlockTime()) + delta;
+      expiration = (await helper.getBlockTime()) + delta;
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      result = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = result.id;
       loanData = result.loanData;
 
@@ -1307,7 +1116,7 @@ contract("Loans Life Cycle Tests", async accounts => {
       loan_eth = await loanManager.requests(id);
       //check loan data
       keys_to_check = ["open", "model", "borrower", "creator", "oracle", "cosigner", "currency", "amount", "expiration", "approved", "loanData", "status"]
-      check_loan(loan_eth, loan_api, keys_to_check)
+      helper.check_loan(loan_eth, loan_api, keys_to_check)
 
       // get descriptor Values from InstallmentModel
       simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -1328,7 +1137,6 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(loan_api.lender, null);
 
       await increaseTime(5);
-
 
       await loanManager.approveRequest(id, { from: borrowerAddress });
 
@@ -1370,9 +1178,11 @@ contract("Loans Life Cycle Tests", async accounts => {
       amount = '100000000000000000000';
       oracle = '0x0000000000000000000000000000000000000000';
       expiration = '1578571215';
+      ++saltValue;
 
       // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
-      loanIdandData = await requestLoan(cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+      loanIdandData = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
+        cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
       id = loanIdandData.id;
       loanData = loanIdandData.loanData;
 
@@ -1592,6 +1402,5 @@ contract("Loans Life Cycle Tests", async accounts => {
       assert.equal(total_balance, balance_lender_after_withdraw, "balance lender eq");
     });
   });
-// */
 
 });
