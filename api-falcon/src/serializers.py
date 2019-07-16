@@ -65,6 +65,7 @@ class LoanSerializer(BaseSerializer):
     creator = RawField("creator")
     oracle = RawField("oracle")
     borrower = RawField("borrower")
+    callback = RawField("callback")
     salt = RawField("salt")
     loanData = RawField("loanData")
     created = RawField("created")
