@@ -137,6 +137,30 @@ jobs:
           name: Create Deploy
           command: |
             aws deploy create-deployment --file-exists-behavior=OVERWRITE --application-name rcn-api --deployment-group-name rcn-api-staging-ropsten --s3-location bucket=devops.rcn-api,key=staging/ropsten/deploy-${BUILD_NAME}.tgz,bundleType=tgz
+  # The lint-javascript job
+  lint-javascript:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:8.12
+    steps:
+      # Checkout the code from the branch into the working_directory
+      - checkout
+      # Log the current branch
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      # Log the current path
+      - run:
+          name: Show current path
+          command: echo $PWD
+      # Install project dependencies
+      - run:
+          name: Install local dependencies
+          command: npm install
+      # Run lint javascript
+      - run:
+          name: ESLint
+          command: ./node_modules/.bin/eslint ./tests     
 workflows:
   version: 2
   build-deploy:
@@ -154,3 +178,4 @@ workflows:
           filters:
             branches:
               only: development
+      - lint-javascript        

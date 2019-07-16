@@ -4,7 +4,7 @@ const expect = require('chai')
     .expect;
 
 // Function to calculate the id of a Loan
-async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
+async function calcId(loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
     const _two = '0x02';
     const controlId = await loanManager.calcId(
         _amount,

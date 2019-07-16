@@ -166,71 +166,71 @@ module.exports.check_state = async (state_eth, state_api) => {
     assert.equal(state_eth.paid, state_api.paid, "state.paid eq");
     assert.equal(state_eth.paidBase, state_api.paid_base, "state.paid_base eq");
     assert.equal(state_eth.interest, state_api.interest, "state.interest eq");
-  
+
     return;
-  }
-  
+}
+
 module.exports.check_config = async (config_eth, config_api) => {
-  
+
     assert.equal(config_eth.installments, config_api.data.installments, "config.installments eq")
     assert.equal(config_eth.timeUnit, config_api.data.time_unit, "config.time_unit eq")
     assert.equal(config_eth.duration, config_api.data.duration, "config.duration eq")
     assert.equal(config_eth.lentTime, config_api.data.lent_time, "config.lent_time eq")
     assert.equal(config_eth.cuota, config_api.data.cuota, "config.cuota eq")
     assert.equal(config_eth.interestRate, config_api.data.interest_rate, "config.interest_rate eq")
-  
+
     return
-  }
-  
-  module.exports.check_debt = async (debt_eth, debt_api) => {
-  
+}
+
+module.exports.check_debt = async (debt_eth, debt_api) => {
+
     assert.equal(debt_eth.error, debt_api.error, "debt.error eq");
     assert.equal(debt_eth.balance, debt_api.balance, "debt.balance eq");
     assert.equal(debt_eth.model, debt_api.model, "debt.model eq");
     assert.equal(debt_eth.creator, debt_api.creator, "debt.creator eq");
     assert.equal(debt_eth.oracle, debt_api.oracle, "debt.oracle eq");
-  
+
     return
-  }
-  
-  module.exports.check_loan = async (loan_eth, loan_api, check_keys) => {
-  
-    if (check_keys.includes("open") ) {
-      assert.equal(loan_eth.open, loan_api.open, "loan.open");
+}
+
+module.exports.check_loan = async (loan_eth, loan_api, check_keys) => {
+
+    if (check_keys.includes("open")) {
+        assert.equal(loan_eth.open, loan_api.open, "loan.open");
     }
     if (check_keys.includes("approved")) {
-      assert.equal(loan_eth.approved, loan_api.approved, "loan.approved");
+        assert.equal(loan_eth.approved, loan_api.approved, "loan.approved");
     }
     if (check_keys.includes("position")) {
-      assert.equal(loan_eth.position, loan_api.position, "loan.position");
+        assert.equal(loan_eth.position, loan_api.position, "loan.position");
     }
     if (check_keys.includes("expiration")) {
-      assert.equal(loan_eth.expiration, loan_api.expiration, "loan.expiration");
+        assert.equal(loan_eth.expiration, loan_api.expiration, "loan.expiration");
     }
     if (check_keys.includes("amount")) {
-      assert.equal(loan_eth.amount, loan_api.amount, "loan.amount");
-    }  
+        assert.equal(loan_eth.amount, loan_api.amount, "loan.amount");
+    }
     if (check_keys.includes("cosigner")) {
-      assert.equal(loan_eth.cosigner, loan_api.cosigner, "loan.cosigner");
+        assert.equal(loan_eth.cosigner, loan_api.cosigner, "loan.cosigner");
     }
     if (check_keys.includes("model")) {
-      assert.equal(loan_eth.model, loan_api.model, "loan.model");
+        assert.equal(loan_eth.model, loan_api.model, "loan.model");
     }
     if (check_keys.includes("creator")) {
-      assert.equal(loan_eth.creator, loan_api.creator, "loan.creator");
+        assert.equal(loan_eth.creator, loan_api.creator, "loan.creator");
     }
     if (check_keys.includes("oracle")) {
-      assert.equal(loan_eth.oracle, loan_api.oracle, "loan.oracle");
+        assert.equal(loan_eth.oracle, loan_api.oracle, "loan.oracle");
     }
     if (check_keys.includes("borrower")) {
-      assert.equal(loan_eth.borrower, loan_api.borrower, "loan.borrower");
+        assert.equal(loan_eth.borrower, loan_api.borrower, "loan.borrower");
     }
     if (check_keys.includes("salt")) {
-      assert.equal(loan_eth.salt, loan_api.salt, "loan.salt");
+        assert.equal(loan_eth.salt, loan_api.salt, "loan.salt");
     }
     if (check_keys.includes("loanData")) {
-      assert.equal(loan_eth.loanData, loan_api.loanData, "loan.loanData");
+        assert.equal(loan_eth.loanData, loan_api.loanData, "loan.loanData");
     }
-  
+
     return
-  }
+}
