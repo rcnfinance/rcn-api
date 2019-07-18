@@ -24,7 +24,6 @@ module.exports = {
         'axios': '^0.18.0',
         'chai': '^4.2.0',
         'bn-chai': '^1.0.1',
-        'mocha-steps': '^1.3.0',
         'solc': '0.5.8',
     },
 
