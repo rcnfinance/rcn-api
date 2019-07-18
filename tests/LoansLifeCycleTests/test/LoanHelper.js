@@ -1,3 +1,5 @@
+const api = require('./api.js');
+const helper = require('./Helper.js');
 const BN = web3.utils.BN;
 const expect = require('chai')
     .use(require('bn-chai')(BN))
@@ -85,6 +87,143 @@ const requestLoan = async function (installmentsModel, borrowerAddress, saltValu
     return _loanData;
 };
 
+// Function which checks requestLoan consistency Api and Eth
+const checkRequestLoan = async function (loanManager, installmentModel, id, loanData) {
+    // Query the API for Loan data
+    const loanApi = (await api.get_loan(id)).content;
+    const loanEth = await loanManager.requests(id);
+    // check loan data
+    const keysToCheck = ['open', 'model', 'borrower', 'creator', 'oracle', 'cosigner', 'currency', 'amount', 'expiration', 'approved', 'loanData', 'status'];
+    helper.check_loan(loanEth, loanApi, keysToCheck);
+
+    // get descriptor Values from InstallmentModel
+    const simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
+    const totalObligation = await installmentModel.simTotalObligation(loanData);
+    const loanDuration = await installmentModel.simDuration(loanData);
+    const durationPercentage = ((totalObligation / parseInt(loanEth.amount)) - 1) * 100;
+    const interestRate = (durationPercentage * 360 * 86000) / loanDuration;
+    const frequency = await installmentModel.simFrequency(loanData);
+    const loanInstallments = await installmentModel.simInstallments(loanData);
+
+    assert.equal(loanApi.descriptor.first_obligation, simFirstObligationTimeAndAmount.amount);
+    assert.equal(loanApi.descriptor.total_obligation, totalObligation);
+    assert.equal(loanApi.descriptor.duration, loanDuration);
+    assert.equal(loanApi.descriptor.interest_rate, interestRate);
+    assert.equal(loanApi.descriptor.frequency, frequency);
+    assert.equal(loanApi.descriptor.installments, loanInstallments);
+
+    assert.equal(loanApi.lender, null);
+};
+
+const checkApprove = async function (loanManager, id) {
+    const loanApiAfter = (await api.get_loan(id)).content;
+    const loanEthAfter = await loanManager.requests(id);
+
+    const keysToCheckAfter = ['approved'];
+    helper.check_loan(loanEthAfter, loanApiAfter, keysToCheckAfter);
+};
+
+const checkLend = async function (loanManager, debtEngine, installmentModel, loanEthBeforeLend, id) {
+    const loanApi = (await api.get_loan(id)).content;
+
+    // Query the API for Debt data
+    const debtApi = (await api.get_debt(id)).content;
+    const debtEth = await debtEngine.debts(id);
+
+    const modelInfo = await api.get_model_debt_info(id);
+
+    // Query the API for config data
+    const configApi = (await api.get_config(id)).content;
+    const configEth = await installmentModel.configs(id);
+
+    // Query the API for state data
+    const stateApi = (await api.get_state(id)).content;
+    const stateEth = await installmentModel.states(id);
+
+    // call check_status functions
+    await helper.check_state(stateEth, stateApi);
+    await helper.check_config(configEth, configApi);
+    await helper.check_debt(debtEth, debtApi);
+    const keyToCheck3 = ['approved', 'expiration', 'amount', 'cosigner', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
+    await helper.check_loan(loanEthBeforeLend, loanApi, keyToCheck3);
+
+    assert.equal(loanApi.open, false);
+    assert.equal(loanApi.approved, true);
+    assert.equal(loanApi.lender, await loanManager.ownerOf(id));
+    assert.equal(loanApi.status, await loanManager.getStatus(id));
+
+    // check model_info.due_time
+    const dueTime = await loanManager.getDueTime(id);
+    assert.equal(dueTime, modelInfo.due_time, 'installments_due_time eq model_info.due_time');
+
+    // check model_info.balance
+    assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, 'debtETH.balance eq model_info.balance');
+
+    // estimated_obligation
+    const estimatedObligationApi = modelInfo.estimated_obligation;
+    const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
+    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
+
+    // next_obligation
+    const nextObligationApi = modelInfo.next_obligation;
+    const nextObligationEth = await installmentModel.getObligation(id, dueTime);
+    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
+
+    // current_obligation
+    const now = parseInt(Date.now() / 1000);
+    const currentObligationApi = modelInfo.current_obligation;
+    const currentObligationEth = await installmentModel.getObligation(id, now);
+    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+};
+
+const checkPay = async function (loanManager, debtEngine, installmentModel, id) {
+    const debtApi = (await api.get_debt(id)).content;
+    const debtEth = await debtEngine.debts(id);
+
+    const stateApi = (await api.get_state(id)).content;
+    const stateEth = await installmentModel.states(id);
+
+    const configApi = (await api.get_config(id)).content;
+    const configEth = await installmentModel.configs(id);
+
+    const modelInfo = await api.get_model_debt_info(id);
+
+    assert.equal(debtEth.balance, debtApi.balance, "DEBT Balance not eq :(");
+    assert.equal(stateEth.paid, stateApi.paid, "State paid not eq :(");
+
+    helper.check_debt(debtEth, debtApi);
+    helper.check_state(stateEth, stateApi);
+    helper.check_config(configEth, configApi);
+
+    //check model_info
+    // check model_info.due_time
+    const dueTime = await loanManager.getDueTime(id);
+    assert.equal(dueTime, modelInfo.due_time, "installments_due_time eq model_info.due_time");
+
+    // check model_info.balance
+    assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, "debtETH.balance eq model_info.balance");
+
+    // estimated_obligation
+    const estimatedObligationApi = modelInfo.estimated_obligation;
+    const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
+    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
+
+    // next_obligation
+    const nextObligationApi = modelInfo.next_obligation;
+    const nextObligationEth = await installmentModel.getObligation(id, dueTime);
+    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
+
+    // current_obligation
+    const now = parseInt(Date.now() / 1000);
+    const currentObligationApi = modelInfo.current_obligation;
+    const currentObligationEth = await installmentModel.getObligation(id, now);
+    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+};
+
 module.exports = {
     requestLoan: requestLoan,
+    checkRequestLoan: checkRequestLoan,
+    checkApprove: checkApprove,
+    checkLend: checkLend,
+    checkPay: checkPay,
 };
