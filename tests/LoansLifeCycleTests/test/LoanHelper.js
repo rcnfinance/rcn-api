@@ -6,7 +6,7 @@ const expect = require('chai')
     .expect;
 
 // Function to calculate the id of a Loan
-async function calcId(loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
+async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
     const _two = '0x02';
     const controlId = await loanManager.calcId(
         _amount,
@@ -188,20 +188,20 @@ const checkPay = async function (loanManager, debtEngine, installmentModel, id) 
 
     const modelInfo = await api.get_model_debt_info(id);
 
-    assert.equal(debtEth.balance, debtApi.balance, "DEBT Balance not eq :(");
-    assert.equal(stateEth.paid, stateApi.paid, "State paid not eq :(");
+    assert.equal(debtEth.balance, debtApi.balance, 'DEBT Balance not eq :(');
+    assert.equal(stateEth.paid, stateApi.paid, 'State paid not eq :(');
 
     helper.check_debt(debtEth, debtApi);
     helper.check_state(stateEth, stateApi);
     helper.check_config(configEth, configApi);
 
-    //check model_info
+    // check model_info
     // check model_info.due_time
     const dueTime = await loanManager.getDueTime(id);
-    assert.equal(dueTime, modelInfo.due_time, "installments_due_time eq model_info.due_time");
+    assert.equal(dueTime, modelInfo.due_time, 'installments_due_time eq model_info.due_time');
 
     // check model_info.balance
-    assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, "debtETH.balance eq model_info.balance");
+    assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, 'debtETH.balance eq model_info.balance');
 
     // estimated_obligation
     const estimatedObligationApi = modelInfo.estimated_obligation;
@@ -220,10 +220,58 @@ const checkPay = async function (loanManager, debtEngine, installmentModel, id) 
     assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
 };
 
+const checkCancel = async function (id) {
+    const loanApi = (await api.get_loan(id)).content;
+    assert.isTrue(loanApi.approved, 'loan approved');
+    assert.isTrue(loanApi.canceled, 'loan canceled');
+
+    let debtExists;
+    try {
+        await api.get_debt(id);
+        debtExists = true;
+    } catch (error) {
+        debtExists = false;
+    } finally {
+        assert.isFalse(debtExists, 'debt dot exists :)');
+    }
+};
+
+const checkTransfer = async function (loanManager, debtEngine, newLenderAddress, lenderAddress, id) {
+    assert.equal(newLenderAddress, await loanManager.ownerOf(id));
+
+    const loanJsonAfterTransfer = await api.get_loan(id);
+    const loanAfterTransfer = loanJsonAfterTransfer.content;
+
+    assert.equal(newLenderAddress, loanAfterTransfer.lender);
+
+    // Should not be able to transfer if the sender is not the owner of the debt
+    let error;
+    try {
+        error = await debtEngine.safeTransferFrom(lenderAddress, newLenderAddress, id, { from: lenderAddress });
+    } catch (e) {
+        error = 'Not the owner of the debt';
+    }
+    assert.equal(error, 'Not the owner of the debt');
+};
+
+const checkWithdraw = async function (debtEngine, rcnToken, lenderAddress, id, balanceLenderBeforeWithdraw) {
+    const debtApi = (await api.get_debt(id)).content;
+    const debtEth = await debtEngine.debts(id);
+
+    const balanceLenderAfterWithdraw = parseInt(await rcnToken.balanceOf(lenderAddress));
+    const totalBalance = balanceLenderBeforeWithdraw + parseInt(web3.utils.toWei('120', 'ether'));
+
+    assert.equal(parseInt(debtApi.balance), parseInt(debtEth.balance), 'balance eq');
+    assert.equal(totalBalance, balanceLenderAfterWithdraw, 'balance lender eq');
+};
+
 module.exports = {
     requestLoan: requestLoan,
     checkRequestLoan: checkRequestLoan,
     checkApprove: checkApprove,
     checkLend: checkLend,
     checkPay: checkPay,
+    checkCancel: checkCancel,
+    checkTransfer: checkTransfer,
+    checkWithdraw: checkWithdraw,
 };
