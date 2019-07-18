@@ -76,7 +76,7 @@
         "type": "function"
     },
     {
-        "constant": true,
+        "constant": false,
         "inputs": [
             {
                 "name": "_amount",
@@ -95,6 +95,10 @@
                 "type": "address"
             },
             {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
                 "name": "_salt",
                 "type": "uint256"
             },
@@ -103,46 +107,70 @@
                 "type": "uint64"
             },
             {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
                 "name": "_loanData",
                 "type": "bytes"
             }
         ],
-        "name": "encodeRequest",
+        "name": "requestLoan",
         "outputs": [
-            {
-                "name": "requestData",
-                "type": "bytes"
-            },
             {
                 "name": "id",
                 "type": "bytes32"
             }
         ],
         "payable": false,
-        "stateMutability": "view",
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "constant": true,
+        "constant": false,
         "inputs": [
             {
-                "name": "_id",
+                "name": "_requestData",
+                "type": "bytes"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            },
+            {
+                "name": "_cosigner",
+                "type": "address"
+            },
+            {
+                "name": "_maxCosignerCost",
+                "type": "uint256"
+            },
+            {
+                "name": "_cosignerData",
+                "type": "bytes"
+            },
+            {
+                "name": "_oracleData",
+                "type": "bytes"
+            },
+            {
+                "name": "_creatorSig",
+                "type": "bytes"
+            },
+            {
+                "name": "_borrowerSig",
+                "type": "bytes"
+            },
+            {
+                "name": "_callbackData",
+                "type": "bytes"
+            }
+        ],
+        "name": "settleLend",
+        "outputs": [
+            {
+                "name": "id",
                 "type": "bytes32"
             }
         ],
-        "name": "isApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
         "payable": false,
-        "stateMutability": "view",
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -229,6 +257,61 @@
         "constant": true,
         "inputs": [
             {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_loanData",
+                "type": "bytes"
+            }
+        ],
+        "name": "encodeRequest",
+        "outputs": [
+            {
+                "name": "requestData",
+                "type": "bytes"
+            },
+            {
+                "name": "id",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
                 "name": "_id",
                 "type": "bytes32"
             }
@@ -268,6 +351,25 @@
         "inputs": [
             {
                 "name": "_id",
+                "type": "bytes32"
+            }
+        ],
+        "name": "getCallback",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_id",
                 "type": "uint256"
             }
         ],
@@ -276,6 +378,57 @@
             {
                 "name": "",
                 "type": "bytes"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_model",
+                "type": "address"
+            },
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            },
+            {
+                "name": "_data",
+                "type": "bytes"
+            }
+        ],
+        "name": "calcId",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
             }
         ],
         "payable": false,
@@ -328,53 +481,6 @@
         "constant": true,
         "inputs": [
             {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            },
-            {
-                "name": "_data",
-                "type": "bytes"
-            }
-        ],
-        "name": "calcId",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
                 "name": "_id",
                 "type": "bytes32"
             }
@@ -384,55 +490,6 @@
             {
                 "name": "",
                 "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_creator",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            }
-        ],
-        "name": "buildInternalSalt",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "pure",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getDirectory",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32[]"
             }
         ],
         "payable": false,
@@ -460,50 +517,12 @@
     },
     {
         "constant": true,
-        "inputs": [
-            {
-                "name": "_id",
-                "type": "uint256"
-            }
-        ],
-        "name": "isApproved",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
         "inputs": [],
         "name": "debtEngine",
         "outputs": [
             {
                 "name": "",
                 "type": "address"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [
-            {
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "directory",
-        "outputs": [
-            {
-                "name": "",
-                "type": "bytes32"
             }
         ],
         "payable": false,
@@ -647,10 +666,6 @@
                 "type": "bool"
             },
             {
-                "name": "position",
-                "type": "uint64"
-            },
-            {
                 "name": "expiration",
                 "type": "uint64"
             },
@@ -679,26 +694,16 @@
                 "type": "address"
             },
             {
+                "name": "callback",
+                "type": "address"
+            },
+            {
                 "name": "salt",
                 "type": "uint256"
             },
             {
                 "name": "loanData",
                 "type": "bytes"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "getDirectoryLength",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint256"
             }
         ],
         "payable": false,
@@ -718,6 +723,20 @@
             {
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "GAS_CALLBACK",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
             }
         ],
         "payable": false,
@@ -917,6 +936,10 @@
             {
                 "name": "_cosignerData",
                 "type": "bytes"
+            },
+            {
+                "name": "_callbackData",
+                "type": "bytes"
             }
         ],
         "name": "lend",
@@ -928,6 +951,45 @@
         ],
         "payable": false,
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "_amount",
+                "type": "uint128"
+            },
+            {
+                "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "name": "_creator",
+                "type": "address"
+            },
+            {
+                "name": "_callback",
+                "type": "address"
+            },
+            {
+                "name": "_salt",
+                "type": "uint256"
+            },
+            {
+                "name": "_expiration",
+                "type": "uint64"
+            }
+        ],
+        "name": "buildInternalSalt",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "pure",
         "type": "function"
     },
     {
@@ -966,96 +1028,6 @@
         ],
         "payable": false,
         "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_requestData",
-                "type": "bytes"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            },
-            {
-                "name": "_cosigner",
-                "type": "address"
-            },
-            {
-                "name": "_maxCosignerCost",
-                "type": "uint256"
-            },
-            {
-                "name": "_cosignerData",
-                "type": "bytes"
-            },
-            {
-                "name": "_oracleData",
-                "type": "bytes"
-            },
-            {
-                "name": "_creatorSig",
-                "type": "bytes"
-            },
-            {
-                "name": "_borrowerSig",
-                "type": "bytes"
-            }
-        ],
-        "name": "settleLend",
-        "outputs": [
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "_amount",
-                "type": "uint128"
-            },
-            {
-                "name": "_model",
-                "type": "address"
-            },
-            {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_borrower",
-                "type": "address"
-            },
-            {
-                "name": "_salt",
-                "type": "uint256"
-            },
-            {
-                "name": "_expiration",
-                "type": "uint64"
-            },
-            {
-                "name": "_loanData",
-                "type": "bytes"
-            }
-        ],
-        "name": "requestLoan",
-        "outputs": [
-            {
-                "name": "id",
-                "type": "bytes32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -1114,6 +1086,11 @@
             {
                 "indexed": false,
                 "name": "_borrower",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_callback",
                 "type": "address"
             },
             {
