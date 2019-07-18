@@ -1,22 +1,12 @@
-const mochaSteps = require('mocha-steps');
 
 const TestToken = artifacts.require('./utils/test/TestToken.sol');
 const LoanManager = artifacts.require('./diaspore/LoanManager.sol');
 const DebtEngine = artifacts.require('./diaspore/DebtEngine.sol');
 const InstallmentsModel = artifacts.require('./diaspore/model/InstallmentsModel');
 
-const BN = web3.utils.BN;
-const expect = require('chai')
-    .use(require('bn-chai')(BN))
-    .expect;
-
 const api = require('./api.js');
 const helper = require('./Helper.js');
 const loanHelper = require('./LoanHelper.js');
-
-function bn(number) {
-    return new BN(number);
-}
 
 contract('Loans Life Cycle Tests', async accounts => {
     // Global instances variables
@@ -37,19 +27,19 @@ contract('Loans Life Cycle Tests', async accounts => {
     // command: ganache-cli -m "delay practice wall dismiss amount tackle energy annual wrap digital arrive since"
 
     // Accounts
-    const creatorPrivateKey = '0xaf080fd098ca962cc4778758dab7b88b4692afa18a613e7a93b77f8667207dd1';
+    // const creatorPrivateKey = '0xaf080fd098ca962cc4778758dab7b88b4692afa18a613e7a93b77f8667207dd1';
     const creatorAddress = '0x1B274E25A1B02D77f8de7550daFf58C07A0D12c8';
 
-    const borrowerPrivateKey = '0x9cd9fa19cb2d594f41aa1e89bc6ca3ee8998d405b4f7d096e366fcb59743c277';
+    // const borrowerPrivateKey = '0x9cd9fa19cb2d594f41aa1e89bc6ca3ee8998d405b4f7d096e366fcb59743c277';
     const borrowerAddress = '0x3FaD5afc06e263Ad2E73E82C98377739E746eF15';
 
-    const lenderPrivateKey = '0xda06412214b4901dc170f99a3b51cc36b485bb92d688a449de94638117978c56';
+    // const lenderPrivateKey = '0xda06412214b4901dc170f99a3b51cc36b485bb92d688a449de94638117978c56';
     const lenderAddress = '0xa4D49A5e03c6cEEa80eCC48fBF92835AFd4C37e1';
 
-    const newLenderPrivateKey = '0x1ac6294ae9975943a1917d49d967db683a5755237c626658530a52f2f61209e1';
+    // const newLenderPrivateKey = '0x1ac6294ae9975943a1917d49d967db683a5755237c626658530a52f2f61209e1';
     const newLenderAddress = '0x060a109b32d70e58e39376516b2f97E9346939a9';
 
-    function sleep(millis) {
+    function sleep (millis) {
         return new Promise(resolve => setTimeout(resolve, millis));
     }
 
@@ -75,7 +65,6 @@ contract('Loans Life Cycle Tests', async accounts => {
 
     describe('Flujo 1: REQUEST LOAN', function () {
         it('should create a new loan Request ', async () => {
-
             const cuota = '10000000000000000000';
             const punInterestRate = '1555200000000';
             const installments = '12';
@@ -339,8 +328,8 @@ contract('Loans Life Cycle Tests', async accounts => {
             // Test pay, test total pay
             await sleep(5000);
             await loanHelper.checkPay(loanManager, debtEngine, installmentModel, id);
-            const loanApi4 = (await api.get_loan(id)).content;
-            const debtApi4 = (await api.get_debt(id)).content;
+            const loanApi4 = (await api.getLoan(id)).content;
+            const debtApi4 = (await api.getDebt(id)).content;
 
             assert.equal(loanApi4.status, await loanManager.getStatus(id), 'Status payed');
             assert.isAtLeast(parseInt(debtApi4.balance), parseInt(loanApi4.amount), 'balance >= amount');
@@ -469,8 +458,8 @@ contract('Loans Life Cycle Tests', async accounts => {
             // Test pay, test total pay
             await sleep(5000);
             await loanHelper.checkPay(loanManager, debtEngine, installmentModel, id);
-            const loanApi4 = (await api.get_loan(id)).content;
-            const debtApi4 = (await api.get_debt(id)).content;
+            const loanApi4 = (await api.getLoan(id)).content;
+            const debtApi4 = (await api.getDebt(id)).content;
 
             assert.equal(loanApi4.status, await loanManager.getStatus(id), 'Status payed');
             assert.isAtLeast(parseInt(debtApi4.balance), parseInt(loanApi4.amount), 'balance >= amount');

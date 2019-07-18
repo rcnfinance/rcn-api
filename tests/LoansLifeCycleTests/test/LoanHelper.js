@@ -90,11 +90,11 @@ const requestLoan = async function (installmentsModel, borrowerAddress, saltValu
 // Function which checks requestLoan consistency Api and Eth
 const checkRequestLoan = async function (loanManager, installmentModel, id, loanData) {
     // Query the API for Loan data
-    const loanApi = (await api.get_loan(id)).content;
+    const loanApi = (await api.getLoan(id)).content;
     const loanEth = await loanManager.requests(id);
     // check loan data
     const keysToCheck = ['open', 'model', 'borrower', 'creator', 'oracle', 'cosigner', 'currency', 'amount', 'expiration', 'approved', 'loanData', 'status'];
-    helper.check_loan(loanEth, loanApi, keysToCheck);
+    helper.checkLoan(loanEth, loanApi, keysToCheck);
 
     // get descriptor Values from InstallmentModel
     const simFirstObligationTimeAndAmount = await installmentModel.simFirstObligation(loanData);
@@ -116,36 +116,36 @@ const checkRequestLoan = async function (loanManager, installmentModel, id, loan
 };
 
 const checkApprove = async function (loanManager, id) {
-    const loanApiAfter = (await api.get_loan(id)).content;
+    const loanApiAfter = (await api.getLoan(id)).content;
     const loanEthAfter = await loanManager.requests(id);
 
     const keysToCheckAfter = ['approved'];
-    helper.check_loan(loanEthAfter, loanApiAfter, keysToCheckAfter);
+    helper.checkLoan(loanEthAfter, loanApiAfter, keysToCheckAfter);
 };
 
 const checkLend = async function (loanManager, debtEngine, installmentModel, loanEthBeforeLend, id) {
-    const loanApi = (await api.get_loan(id)).content;
+    const loanApi = (await api.getLoan(id)).content;
 
     // Query the API for Debt data
-    const debtApi = (await api.get_debt(id)).content;
+    const debtApi = (await api.getDebt(id)).content;
     const debtEth = await debtEngine.debts(id);
 
-    const modelInfo = await api.get_model_debt_info(id);
+    const modelInfo = await api.getModelDebtInfo(id);
 
     // Query the API for config data
-    const configApi = (await api.get_config(id)).content;
+    const configApi = (await api.getConfig(id)).content;
     const configEth = await installmentModel.configs(id);
 
     // Query the API for state data
-    const stateApi = (await api.get_state(id)).content;
+    const stateApi = (await api.getState(id)).content;
     const stateEth = await installmentModel.states(id);
 
     // call check_status functions
-    await helper.check_state(stateEth, stateApi);
-    await helper.check_config(configEth, configApi);
-    await helper.check_debt(debtEth, debtApi);
+    await helper.checkState(stateEth, stateApi);
+    await helper.checkConfig(configEth, configApi);
+    await helper.checkDebt(debtEth, debtApi);
     const keyToCheck3 = ['approved', 'expiration', 'amount', 'cosigner', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
-    await helper.check_loan(loanEthBeforeLend, loanApi, keyToCheck3);
+    await helper.checkLoan(loanEthBeforeLend, loanApi, keyToCheck3);
 
     assert.equal(loanApi.open, false);
     assert.equal(loanApi.approved, true);
@@ -177,23 +177,23 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
 };
 
 const checkPay = async function (loanManager, debtEngine, installmentModel, id) {
-    const debtApi = (await api.get_debt(id)).content;
+    const debtApi = (await api.getDebt(id)).content;
     const debtEth = await debtEngine.debts(id);
 
-    const stateApi = (await api.get_state(id)).content;
+    const stateApi = (await api.getState(id)).content;
     const stateEth = await installmentModel.states(id);
 
-    const configApi = (await api.get_config(id)).content;
+    const configApi = (await api.getConfig(id)).content;
     const configEth = await installmentModel.configs(id);
 
-    const modelInfo = await api.get_model_debt_info(id);
+    const modelInfo = await api.getModelDebtInfo(id);
 
     assert.equal(debtEth.balance, debtApi.balance, 'DEBT Balance not eq :(');
     assert.equal(stateEth.paid, stateApi.paid, 'State paid not eq :(');
 
-    helper.check_debt(debtEth, debtApi);
-    helper.check_state(stateEth, stateApi);
-    helper.check_config(configEth, configApi);
+    helper.checkDebt(debtEth, debtApi);
+    helper.checkState(stateEth, stateApi);
+    helper.checkConfig(configEth, configApi);
 
     // check model_info
     // check model_info.due_time
@@ -221,13 +221,13 @@ const checkPay = async function (loanManager, debtEngine, installmentModel, id) 
 };
 
 const checkCancel = async function (id) {
-    const loanApi = (await api.get_loan(id)).content;
+    const loanApi = (await api.getLoan(id)).content;
     assert.isTrue(loanApi.approved, 'loan approved');
     assert.isTrue(loanApi.canceled, 'loan canceled');
 
     let debtExists;
     try {
-        await api.get_debt(id);
+        await api.getDebt(id);
         debtExists = true;
     } catch (error) {
         debtExists = false;
@@ -239,7 +239,7 @@ const checkCancel = async function (id) {
 const checkTransfer = async function (loanManager, debtEngine, newLenderAddress, lenderAddress, id) {
     assert.equal(newLenderAddress, await loanManager.ownerOf(id));
 
-    const loanJsonAfterTransfer = await api.get_loan(id);
+    const loanJsonAfterTransfer = await api.getLoan(id);
     const loanAfterTransfer = loanJsonAfterTransfer.content;
 
     assert.equal(newLenderAddress, loanAfterTransfer.lender);
@@ -255,7 +255,7 @@ const checkTransfer = async function (loanManager, debtEngine, newLenderAddress,
 };
 
 const checkWithdraw = async function (debtEngine, rcnToken, lenderAddress, id, balanceLenderBeforeWithdraw) {
-    const debtApi = (await api.get_debt(id)).content;
+    const debtApi = (await api.getDebt(id)).content;
     const debtEth = await debtEngine.debts(id);
 
     const balanceLenderAfterWithdraw = parseInt(await rcnToken.balanceOf(lenderAddress));

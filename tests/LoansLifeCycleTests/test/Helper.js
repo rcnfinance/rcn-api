@@ -157,67 +157,67 @@ module.exports.almostEqual = async (p1, p2, reason, margin = 3) => {
     );
 };
 
-module.exports.check_state = async (state_eth, state_api) => {
-    assert.equal(state_eth.status, state_api.status, 'state.status eq');
-    assert.equal(state_eth.clock, state_api.clock, 'state.clock eq');
-    assert.equal(state_eth.lastPayment, state_api.last_payment, 'state.last_payment eq');
-    assert.equal(state_eth.paid, state_api.paid, 'state.paid eq');
-    assert.equal(state_eth.paidBase, state_api.paid_base, 'state.paid_base eq');
-    assert.equal(state_eth.interest, state_api.interest, 'state.interest eq');
+module.exports.checkState = async (stateEth, stateApi) => {
+    assert.equal(stateEth.status, stateApi.status, 'state.status eq');
+    assert.equal(stateEth.clock, stateApi.clock, 'state.clock eq');
+    assert.equal(stateEth.lastPayment, stateApi.last_payment, 'state.last_payment eq');
+    assert.equal(stateEth.paid, stateApi.paid, 'state.paid eq');
+    assert.equal(stateEth.paidBase, stateApi.paid_base, 'state.paid_base eq');
+    assert.equal(stateEth.interest, stateApi.interest, 'state.interest eq');
 };
 
-module.exports.check_config = async (config_eth, config_api) => {
-    assert.equal(config_eth.installments, config_api.data.installments, 'config.installments eq');
-    assert.equal(config_eth.timeUnit, config_api.data.time_unit, 'config.time_unit eq');
-    assert.equal(config_eth.duration, config_api.data.duration, 'config.duration eq');
-    assert.equal(config_eth.lentTime, config_api.data.lent_time, 'config.lent_time eq');
-    assert.equal(config_eth.cuota, config_api.data.cuota, 'config.cuota eq');
-    assert.equal(config_eth.interestRate, config_api.data.interest_rate, 'config.interest_rate eq');
+module.exports.checkConfig = async (configEth, configApi) => {
+    assert.equal(configEth.installments, configApi.data.installments, 'config.installments eq');
+    assert.equal(configEth.timeUnit, configApi.data.time_unit, 'config.time_unit eq');
+    assert.equal(configEth.duration, configApi.data.duration, 'config.duration eq');
+    assert.equal(configEth.lentTime, configApi.data.lent_time, 'config.lent_time eq');
+    assert.equal(configEth.cuota, configApi.data.cuota, 'config.cuota eq');
+    assert.equal(configEth.interestRate, configApi.data.interest_rate, 'config.interest_rate eq');
 };
 
-module.exports.check_debt = async (debt_eth, debt_api) => {
-    assert.equal(debt_eth.error, debt_api.error, 'debt.error eq');
-    assert.equal(debt_eth.balance, debt_api.balance, 'debt.balance eq');
-    assert.equal(debt_eth.model, debt_api.model, 'debt.model eq');
-    assert.equal(debt_eth.creator, debt_api.creator, 'debt.creator eq');
-    assert.equal(debt_eth.oracle, debt_api.oracle, 'debt.oracle eq');
+module.exports.checkDebt = async (debtEth, debtApi) => {
+    assert.equal(debtEth.error, debtApi.error, 'debt.error eq');
+    assert.equal(debtEth.balance, debtApi.balance, 'debt.balance eq');
+    assert.equal(debtEth.model, debtApi.model, 'debt.model eq');
+    assert.equal(debtEth.creator, debtApi.creator, 'debt.creator eq');
+    assert.equal(debtEth.oracle, debtApi.oracle, 'debt.oracle eq');
 };
 
-module.exports.check_loan = async (loan_eth, loan_api, check_keys) => {
-    if (check_keys.includes('open')) {
-        assert.equal(loan_eth.open, loan_api.open, 'loan.open');
+module.exports.checkLoan = async (loanEth, loanApi, checkKeys) => {
+    if (checkKeys.includes('open')) {
+        assert.equal(loanEth.open, loanApi.open, 'loan.open');
     }
-    if (check_keys.includes('approved')) {
-        assert.equal(loan_eth.approved, loan_api.approved, 'loan.approved');
+    if (checkKeys.includes('approved')) {
+        assert.equal(loanEth.approved, loanApi.approved, 'loan.approved');
     }
-    if (check_keys.includes('position')) {
-        assert.equal(loan_eth.position, loan_api.position, 'loan.position');
+    if (checkKeys.includes('position')) {
+        assert.equal(loanEth.position, loanApi.position, 'loan.position');
     }
-    if (check_keys.includes('expiration')) {
-        assert.equal(loan_eth.expiration, loan_api.expiration, 'loan.expiration');
+    if (checkKeys.includes('expiration')) {
+        assert.equal(loanEth.expiration, loanApi.expiration, 'loan.expiration');
     }
-    if (check_keys.includes('amount')) {
-        assert.equal(loan_eth.amount, loan_api.amount, 'loan.amount');
+    if (checkKeys.includes('amount')) {
+        assert.equal(loanEth.amount, loanApi.amount, 'loan.amount');
     }
-    if (check_keys.includes('cosigner')) {
-        assert.equal(loan_eth.cosigner, loan_api.cosigner, 'loan.cosigner');
+    if (checkKeys.includes('cosigner')) {
+        assert.equal(loanEth.cosigner, loanApi.cosigner, 'loan.cosigner');
     }
-    if (check_keys.includes('model')) {
-        assert.equal(loan_eth.model, loan_api.model, 'loan.model');
+    if (checkKeys.includes('model')) {
+        assert.equal(loanEth.model, loanApi.model, 'loan.model');
     }
-    if (check_keys.includes('creator')) {
-        assert.equal(loan_eth.creator, loan_api.creator, 'loan.creator');
+    if (checkKeys.includes('creator')) {
+        assert.equal(loanEth.creator, loanApi.creator, 'loan.creator');
     }
-    if (check_keys.includes('oracle')) {
-        assert.equal(loan_eth.oracle, loan_api.oracle, 'loan.oracle');
+    if (checkKeys.includes('oracle')) {
+        assert.equal(loanEth.oracle, loanApi.oracle, 'loan.oracle');
     }
-    if (check_keys.includes('borrower')) {
-        assert.equal(loan_eth.borrower, loan_api.borrower, 'loan.borrower');
+    if (checkKeys.includes('borrower')) {
+        assert.equal(loanEth.borrower, loanApi.borrower, 'loan.borrower');
     }
-    if (check_keys.includes('salt')) {
-        assert.equal(loan_eth.salt, loan_api.salt, 'loan.salt');
+    if (checkKeys.includes('salt')) {
+        assert.equal(loanEth.salt, loanApi.salt, 'loan.salt');
     }
-    if (check_keys.includes('loanData')) {
-        assert.equal(loan_eth.loanData, loan_api.loanData, 'loan.loanData');
+    if (checkKeys.includes('loanData')) {
+        assert.equal(loanEth.loanData, loanApi.loanData, 'loan.loanData');
     }
 };
