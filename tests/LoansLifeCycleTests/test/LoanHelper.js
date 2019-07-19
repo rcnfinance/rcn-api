@@ -6,7 +6,7 @@ const expect = require('chai')
     .expect;
 
 // Function to calculate the id of a Loan
-async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _salt, _expiration, _data) {
+async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _callback, _salt, _expiration, _data) {
     const _two = '0x02';
     const controlId = await loanManager.calcId(
         _amount,
@@ -14,6 +14,7 @@ async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _m
         _creator,
         _model.address,
         _oracle,
+        _callback,
         _salt,
         _expiration,
         _data
@@ -23,6 +24,7 @@ async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _m
         _amount,
         _borrower,
         _creator,
+        _callback,
         _salt,
         _expiration
     );
@@ -32,6 +34,7 @@ async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _m
             { t: 'uint128', v: _amount },
             { t: 'address', v: _borrower },
             { t: 'address', v: _creator },
+            { t: 'address', v: _callback },
             { t: 'uint256', v: _salt },
             { t: 'uint64', v: _expiration }
         )
@@ -54,7 +57,7 @@ async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _m
 
 // Function creates a new loan request
 const requestLoan = async function (installmentsModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-    _cuota, _interestRate, _installments, _duration, _timeUnit, _amount, _oracle, _expiration) {
+    _cuota, _interestRate, _installments, _duration, _timeUnit, _amount, _oracle, _callback, _expiration) {
     // Set loan data parameters
     const cuota = _cuota;
     const interestRate = _interestRate;  // punitive interest rate
@@ -70,12 +73,13 @@ const requestLoan = async function (installmentsModel, borrowerAddress, saltValu
     const modelAddress = installmentsModel.address;
     const oracle = _oracle;
     const borrower = borrowerAddress;
+    const callback = _callback;
     const salt = saltValue;
     const expiration = _expiration;
 
-    await loanManager.requestLoan(amount, modelAddress, oracle, borrower, salt, expiration, loanData);
+    await loanManager.requestLoan(amount, modelAddress, oracle, borrower, callback, salt, expiration, loanData);
 
-    const id = await calcId(loanManager, debtEngine, amount, borrower, creatorAddress, installmentsModel, oracle, salt, expiration, loanData);
+    const id = await calcId(loanManager, debtEngine, amount, borrower, creatorAddress, installmentsModel, oracle, callback, salt, expiration, loanData);
 
     // Obtains loanId from logs of the transaction receipt
     // const loanId = request.logs[0].args[0];
@@ -93,7 +97,7 @@ const checkRequestLoan = async function (loanManager, installmentModel, id, loan
     const loanApi = (await api.getLoan(id)).content;
     const loanEth = await loanManager.requests(id);
     // check loan data
-    const keysToCheck = ['open', 'model', 'borrower', 'creator', 'oracle', 'cosigner', 'currency', 'amount', 'expiration', 'approved', 'loanData', 'status'];
+    const keysToCheck = ['open', 'model', 'borrower', 'creator', 'oracle', 'callback', 'cosigner', 'currency', 'amount', 'expiration', 'approved', 'loanData', 'status'];
     helper.checkLoan(loanEth, loanApi, keysToCheck);
 
     // get descriptor Values from InstallmentModel

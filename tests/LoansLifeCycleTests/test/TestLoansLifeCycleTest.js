@@ -72,11 +72,12 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
@@ -96,12 +97,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -127,12 +129,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -159,6 +162,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
             await sleep(5000);
@@ -177,12 +181,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -209,6 +214,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
 
@@ -237,12 +243,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -274,12 +281,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -306,6 +314,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
 
@@ -348,12 +357,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -380,6 +390,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
 
@@ -405,12 +416,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -437,6 +449,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
             await sleep(5000);
@@ -485,12 +498,13 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             const amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = (await helper.getBlockTime()) + delta;
             ++saltValue;
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             const id = result.id;
             const loanData = result.loanData;
 
@@ -515,6 +529,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                     '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                     '0', // Cosigner limit
                     [],                 // Cosigner data
+                    [],                 // Callback data
                     { from: lenderAddress }
                 );
                 error = false;
@@ -540,11 +555,12 @@ contract('Loans Life Cycle Tests', async accounts => {
             const timeUnit = '2592000';
             amount = '100000000000000000000';
             const oracle = '0x0000000000000000000000000000000000000000';
+            const callback = '0x0000000000000000000000000000000000000000';
             const expiration = '1578571215';
 
             // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
             const result = await loanHelper.requestLoan(installmentModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
-                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, expiration);
+                cuota, punInterestRate, installments, duration, timeUnit, amount, oracle, callback, expiration);
             id = result.id;
             const loanData = result.loanData;
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
@@ -579,6 +595,7 @@ contract('Loans Life Cycle Tests', async accounts => {
                 '0x0000000000000000000000000000000000000000',   // Cosigner  0x address
                 '0', // Cosigner limit
                 [],                 // Cosigner data
+                [],                 // Callback data
                 { from: lenderAddress }    // Owner/Lender
             );
             await sleep(5000);

@@ -214,6 +214,9 @@ module.exports.checkLoan = async (loanEth, loanApi, checkKeys) => {
     if (checkKeys.includes('borrower')) {
         assert.equal(loanEth.borrower, loanApi.borrower, 'loan.borrower');
     }
+    if (checkKeys.includes('callback')) {
+        assert.equal(loanEth.callback, loanApi.callback, 'loan.callback');
+    }
     if (checkKeys.includes('salt')) {
         assert.equal(loanEth.salt, loanApi.salt, 'loan.salt');
     }
