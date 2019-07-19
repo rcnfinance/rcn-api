@@ -1,3 +1,21 @@
+
+## 2019.7.19 (19 July 2019)
+
+### Added
+- Add callback request parameter in Api
+- Add callback parameter to work with all tests
+- Add pre-commit and esLint
+
+### Fix
+- fix handler transfer in debtEngine contract
+
+###Enhancements
+- refactor test functions to make them more reusable 
+- make test more legible
+- update contracts and truffle-config
+- update loanManager contract ABI
+- update debtEngine contract abi
+
 ## 2019.7.1 (02 July 2019)
 
 ###Enhancements
