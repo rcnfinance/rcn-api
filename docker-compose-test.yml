@@ -60,7 +60,7 @@ services:
   test-truffle:
     build:
       context: ./tests/truffle
-    command: bash -c "npm install axios chai bn-chai mocha-steps && truffle test"
+    command: bash -c "npm install axios chai bn-chai && truffle test"
     stdin_open: true
     tty: true
     environment:
