@@ -3,6 +3,7 @@ from .event_handler import EventHandler
 from handlers import utils
 from models import Commit
 
+
 class ApprovedByHandler(EventHandler):
     signature = 'ApprovedBy(uint256,address)'
     signature_hash = web3.Web3.sha3(text=signature)
@@ -26,5 +27,6 @@ class ApprovedByHandler(EventHandler):
         commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
+        commit.id_loan = self._index
 
         return [commit]

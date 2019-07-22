@@ -26,5 +26,6 @@ class DestroyedByHandler(EventHandler):
         commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
         commit.proof = self._transaction
         commit.data = data
+        commit.id_loan = self._index
 
         return [commit]

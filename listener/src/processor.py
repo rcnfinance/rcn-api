@@ -7,6 +7,7 @@ from handlers import get_class_by_event
 
 logger = logging.getLogger(__name__)
 
+
 class Processor:
     last_seen = 0
 
@@ -75,6 +76,7 @@ class Processor:
                 commit.timestamp = schedule.timestamp
                 commit.data = {}
                 commit.data['loan'] = loan.index
+                commit.id_loan = loan.index
                 return [commit]
             else:
                 return []
@@ -93,6 +95,7 @@ class Processor:
                 commit.data = {
                     "loan": loan.index
                 }
+                commit.id_loan = self._index
                 return [commit]
             else:
                 return []
@@ -126,7 +129,7 @@ class Processor:
                     loan.currency = data['currency']
                     loan.cancelable_at = data['cancelable_at']
                     loan.expiration_requests = data['expiration_requests']
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} created loan {}".format(commit.order, commit.opcode, loan.index))
 
@@ -145,7 +148,7 @@ class Processor:
                     loan = Loan.objects(index=data['loan']).first()
                     assert loan.status == 0, "The loan was lent"
                     assert int(loan.expiration_requests) <= self.clock, "The loan is not expired" # < or <= ? check contract
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
@@ -155,7 +158,7 @@ class Processor:
                     loan.status = 1
                     loan.lender = data['lender']
                     loan.due_time = data["due_time"]
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
@@ -173,7 +176,7 @@ class Processor:
                 if opcode == "loan_in_debt":
                     loan = Loan.objects(index=data['loan']).first()
                     assert loan.status == 1, "The loan was paid or destroyed"
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
@@ -181,34 +184,34 @@ class Processor:
                     loan = Loan.objects(index=data['loan']).first()
                     data['from'] = loan.lender
                     loan.lender = data['to']
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {} from {} to {}".format(commit.order, commit.opcode, loan.index, data['from'], data['to']))
 
                 if opcode == "approved_loan":
                     loan = Loan.objects(index=data["loan"]).first()
                     loan.approbations.append(data["approved_by"])
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {} by {}".format(commit.order, commit.opcode, loan.index, data['approved_by']))
 
                 if opcode == "destroyed_loan":
                     loan = Loan.objects(index=data["loan"]).first()
                     loan.status = 2
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
                 if opcode == "partial_payment":
                     loan = Loan.objects(index=data["loan"]).first()
                     loan.paid = str(int(loan.paid) + int(commit.data.get("amount")))
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
 
                 if opcode == "total_payment":
                     loan = Loan.objects(index=data["loan"]).first()
                     loan.status = 3
-                    loan.commits.append(commit)
+                    commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
