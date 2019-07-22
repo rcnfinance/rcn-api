@@ -4,4 +4,5 @@ gunicorn
 mongoengine
 falcon-cors
 raven
-python-mimeparse
+web3
+mimeparse

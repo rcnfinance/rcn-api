@@ -1,5 +1,21 @@
 version: '2'
 services:
+  api-graphql:
+    restart: always
+    build: api-graphql
+    volumes:
+      - ./api-graphql/src/:/project/
+    command: uvicorn app:app --port 8001 --workers 4 --host 0.0.0.0
+    ports:
+      - 8001:8001
+    links:
+      - mongo:mongo
+    env_file:
+      - config.env
+    environment:
+     - GRAPHIQL_MODE=True
+    depends_on:
+      - mongo
   api-falcon:
     restart: always
     build: api-falcon
@@ -10,6 +26,8 @@ services:
       - 8000:8000
     links:
       - mongo:mongo
+    env_file:
+      - config.env
     depends_on:
       - mongo
   mongo:

@@ -59,4 +59,3 @@ class Clock():
 
     def __rsub__(self, other_time):
         return self.time - other_time
-
