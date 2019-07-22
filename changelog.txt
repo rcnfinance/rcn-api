@@ -1,0 +1,8 @@
+## 2019.7.19 (19 July 2019)
+
+### Added
+- Separate commit from loan
+- Add filters to loan endpoint
+
+### Fix
+- clock 0 on api
