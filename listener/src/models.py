@@ -18,7 +18,7 @@ class Commit(Document):
     order = IntField(required=True)
     proof = StringField(max_length=150)
     data = DictField(required=True)
-    address = StringField(required=True, max_length=150)
+    address = StringField(max_length=150)
 
     meta = {
         "indexes": [
@@ -143,3 +143,33 @@ class OracleHistory(Document):
     tokens = StringField(required=True, max_length=150)
     equivalent = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=100)
+
+
+class Participant(EmbeddedDocument):
+    lender = StringField(required=True, max_length=150, primary_key=True)
+    balance = StringField(required=True, max_length=150)
+
+class Pool(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    manager = StringField(required=True, max_length=150)
+    loanId = StringField(required=True, max_length=150)
+    cosigner = StringField(required=True, max_length=150)
+    cosigner_limit = StringField(required=True, max_length=150)
+    cosigner_data = StringField(required=True, max_length=150)
+    started = BooleanField(required=True)
+    tracker = StringField(required=True, max_length=150)
+    token = StringField(required=True, max_length=150)
+    raised = StringField(required=True, max_length=150)
+    collected = StringField(required=True, max_length=150)
+    participants = EmbeddedDocumentListField(Participant)
+
+class Claim(EmbeddedDocument):
+    lender = StringField(required=True, max_length=150, primary_key=True)
+    claimed_amount = StringField(required=True, max_length=150)
+    
+class ERC20D(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    token = StringField(required=True, max_length=150)
+    paid = StringField(required=True, max_length=150)
+    claimers = EmbeddedDocumentListField(Claim)
+
