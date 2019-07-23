@@ -75,8 +75,11 @@ class Listener:
         setup_logging(handler)
 
     def run(self):
-        self.connection = connect(db='rcn', host='mongo')
-        self.connection.drop_database('rcn')
+        mongo_db = os.environ.get("MONGO_DB", "rcn")
+        mongo_host = os.environ.get("MONGO_HOST", "mongo")
+
+        self.connection = connect(db=mongo_db, host=mongo_host)
+        self.connection.drop_database(mongo_db)
 
         self.setup_logging(logging.INFO)
 
