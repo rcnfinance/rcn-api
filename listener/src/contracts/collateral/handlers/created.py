@@ -5,7 +5,7 @@ from models import Commit
 
 
 class Created(EventHandler):
-    signature = "Created(parameters..)"
+    signature = "Created(uint256,bytes32,address,uint256,uint32,uint32,uint32,uint32)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -19,8 +19,14 @@ class Created(EventHandler):
         commit.proof = self._transaction
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "id": self._args.get("_id"),
+            "debt_id": self._args.get("_debtId"),
+            "token": self._args.get("_token"),
+            "amount": self._args.get("_amount"),
+            "liquidation_ratio": self._args.get("_liquidationRatio"),
+            "balance_ratio": self._args.get("_balanceRatio"),
+            "burn_fee": self._args.get("_burnFee"),  
+            "reward_fee": self._args.get("_rewardFee"),  
         }
 
         commit.data = data

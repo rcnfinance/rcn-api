@@ -1,5 +1,5 @@
-#from models import Loan
-#from contracts.commit_processor import CommitProcessor
+from models import Collateral
+from contracts.commit_processor import CommitProcessor
 
 
 class Created(CommitProcessor):
@@ -7,13 +7,19 @@ class Created(CommitProcessor):
         self.opcode = "created_collateral"
 
     def process(self, commit, *args, **kwargs):
-        #data = commit.data
+        data = commit.data
 
-        #loan = Loan.objects.get(id=data.get("id"))
+        collateral = Collateral()
 
-        #loan.open = data.get("open")
-        #loan.lender = data.get("lender")
-        #loan.status = data.get("status")
-        #loan.commits.append(commit)
-
-        #loan.save()
+        collateral.id = data.get("id")
+        collateral.debt_id = data.get("debt_id")
+        collateral.token = data.get("token")
+        collateral.amount = data.get("amount")
+        collateral.liquidation_ratio = data.get("liquidation_ratio")
+        collateral.balance_ratio = data.get("balance_ratio")
+        collateral.burn_fee = data.get("burn_fee")
+        collateral.reward_fee = data.get("reward_fee")
+ 
+        # loan.commits.append(commit)
+        commit.save()
+        collateral.save()
