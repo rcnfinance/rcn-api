@@ -220,7 +220,7 @@ const deposit = async function (tok, col, id, amount, from, collateral, auxToken
 
     // Restore balance
     await fromSnap.restore();
-}
+};
 
 const withdraw = async function (id, to, amount, from, data = [], collateral, auxToken) {
     const prevEntry = await collateral.entries(id);
@@ -300,7 +300,7 @@ const requireDeleted = async function (entryId, loanId, collateral) {
     expect(entry.amount).to.eq.BN(0);
 
     expect(await collateral.debtToEntry(loanId)).to.eq.BN(0);
-}
+};
 
 const getId = async function (promise) {
     const receipt = await promise;
