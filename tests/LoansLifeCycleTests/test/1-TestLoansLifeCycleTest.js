@@ -4,9 +4,9 @@ const LoanManager = artifacts.require('./diaspore/LoanManager.sol');
 const DebtEngine = artifacts.require('./diaspore/DebtEngine.sol');
 const InstallmentsModel = artifacts.require('./diaspore/model/InstallmentsModel');
 
-const api = require('./api.js');
-const helper = require('./Helper.js');
-const loanHelper = require('./LoanHelper.js');
+const api = require('./helpers/api.js');
+const helper = require('./helpers/Helper.js');
+const loanHelper = require('./helpers/LoanHelper.js');
 
 contract('Loans Life Cycle Tests', async accounts => {
     // Global instances variables
