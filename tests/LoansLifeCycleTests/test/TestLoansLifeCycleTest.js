@@ -3,6 +3,9 @@ const TestToken = artifacts.require('./utils/test/TestToken.sol');
 const LoanManager = artifacts.require('./diaspore/LoanManager.sol');
 const DebtEngine = artifacts.require('./diaspore/DebtEngine.sol');
 const InstallmentsModel = artifacts.require('./diaspore/model/InstallmentsModel');
+const TestConverter = artifacts.require('TestConverter');
+const TestRateOracle = artifacts.require('TestRateOracle');
+const Collateral = artifacts.require('Collateral');
 
 const api = require('./helpers/api.js');
 const helper = require('./helpers/Helper.js');
@@ -16,11 +19,21 @@ contract('Loans Life Cycle Tests', async accounts => {
     let installmentModel;
     let saltValue = 100;
 
+    // Collateral
+    let auxToken;
+    let converter;
+    let collateral;
+    let oracle;
+
     // Static Contract Addresses for backend
     const rcnTokenAddress = '0xe5EA9D03D391d86933277c69ce6d2c3f073c4819';
     const debtEngineAddress = '0xdC8Dd86b3337A8EB4B1955DfF4B79676c9A40991';
     const loanManagerAddress = '0x275b0DC17674e02a8a434689A638E98D9aCd417a';
     const installmentModelAddress = '0xf1d88d1a22AD6D4A56137761e8df4aa68eDa3A11';
+    const converterAddress = '0xE662674F70Fc55c1A2Dc2d15ed2C51E898091447';
+    const auxTokenAddress = '0x0396B3E4feBb28c9Fe54D0236bE5c7D92d78B34b';
+    const oracleAddress = '0xB9008d66dFEf39501884f839B6D718bC8E7Ec81d';
+    const collateralAddress = '0x690f4330B5E9Fa9d0142BA52D8f20dc767C6495C';
 
     // mnemonic used to create accounts
     // "delay practice wall dismiss amount tackle energy annual wrap digital arrive since"
@@ -50,6 +63,13 @@ contract('Loans Life Cycle Tests', async accounts => {
         loanManager = await LoanManager.new(debtEngine.address);
         installmentModel = await InstallmentsModel.new();
         await installmentModel.setEngine(debtEngine.address);
+
+        // Collateral
+        converter = await TestConverter.new();
+        auxToken = await TestToken.new();
+        oracle = await TestRateOracle.new();
+        collateral = await Collateral.new(loanManager.address);
+        await collateral.setConverter(converter.address);
     });
 
     describe('Use Static contracts', function () {
@@ -58,6 +78,10 @@ contract('Loans Life Cycle Tests', async accounts => {
             assert.equal(debtEngine.address, debtEngineAddress);
             assert.equal(loanManager.address, loanManagerAddress);
             assert.equal(installmentModel.address, installmentModelAddress);
+            assert.equal(converter.address, converterAddress);
+            assert.equal(auxToken.address, auxTokenAddress);
+            assert.equal(oracle.address, oracleAddress);
+            assert.equal(collateral.address, collateralAddress);
         });
     });
 
