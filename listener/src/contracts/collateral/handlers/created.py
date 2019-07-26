@@ -14,6 +14,8 @@ class Created(EventHandler):
     def handle(self):
         commit = Commit()
 
+        print('Handling collateral creation')
+
         commit.opcode = "created_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
