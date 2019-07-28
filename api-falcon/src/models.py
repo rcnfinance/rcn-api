@@ -77,6 +77,23 @@ class State(Document):
         ]
     }
 
+class Collateral(Document):
+    id = StringField(required=True, max_length=150, primary_key=True)
+    debt_id = StringField(required=True, max_length=150)
+    token = StringField(required=True, max_length=150)
+    amount = StringField(required=True, max_length=150)
+    liquidation_ratio = StringField(required=True, max_length=150)
+    balance_ratio = StringField(required=True, max_length=150)
+    burn_fee = StringField(required=True, max_length=150)
+    reward_fee = StringField(required=True, max_length=150)  
+
+    meta = {
+        "indexes": [
+            "id",
+            "debt_id",
+            "token"
+        ]
+    }  
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -117,6 +134,7 @@ class Loan(Document):
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
     descriptor = EmbeddedDocumentField(Descriptor)
+    collaterals = EmbeddedDocumentListField(Collateral)
     currency = StringField(required=True, max_length=150)
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)

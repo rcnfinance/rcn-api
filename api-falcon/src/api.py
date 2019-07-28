@@ -17,6 +17,9 @@ from resources import StateListCount
 from resources import StateItem
 from resources import CommitList
 from resources import CommitListCount
+from resources import CollateralList
+from resources import CollateralListCount
+from resources import CollateralItem
 
 from resources import ModelAndDebtDataResource
 from falcon_cors import CORS
@@ -51,3 +54,7 @@ api.add_route("/v4/model_debt_info/{id_loan}/", ModelAndDebtDataResource())
 
 api.add_route("/v4/commits/", CommitList())
 api.add_route("/v4/count/commits/", CommitListCount())
+
+api.add_route("/v4/collaterals/", CollateralList())
+api.add_route("/v4/count/collaterals/", CollateralListCount())
+api.add_route("/v4/count/collaterals/{id_collateral}/", CollateralItem())

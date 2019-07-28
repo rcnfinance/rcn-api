@@ -17,12 +17,15 @@ from serializers import ConfigCountSerializer
 from serializers import StateCountSerializer
 from serializers import CommitSerializer
 from serializers import CommitCountSerializer
+from serializers import CollateralSerializer
+from serializers import CollateralCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
 from models import OracleHistory
 from models import State
 from models import Commit
+from models import Collateral
 from clock import Clock
 from utils import get_data
 
@@ -200,6 +203,53 @@ class StateItem(RetrieveAPI):
             raise falcon.HTTPNotFound(
                 title='State does not exists',
                 description='State with id={} does not exists'.format(id_state)
+            )
+
+class CollateralList(PaginatedListAPI):
+    serializer = CollateralSerializer()
+
+    id = StringParam("Id filter")
+    debt_id = StringParam("debt_id filter")
+    token = StringParam("token filter")
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = Collateral.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
+
+class CollateralListCount(RetrieveAPI):
+    serializer = CollateralCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Collateral.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
+
+
+class CollateralItem(RetrieveAPI):
+    serializer = CollateralSerializer()
+
+    def retrieve(self, params, meta, id_collateral, **kwargs):
+        try:
+            return Collateral.objects.get(id=id_collateral)
+        except Collateral.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title='Collateral does not exists',
+                description='Collateral with id={} does not exists'.format(id_collateral)
             )
 
 

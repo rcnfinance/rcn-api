@@ -35,6 +35,15 @@ class DebtSerializer(BaseSerializer):
     oracle = RawField("oracle")
     # commits = ListField("list of commits", serializer=CommitSerializer())
 
+class CollateralSerializer(BaseSerializer):
+    id = RawField("id")
+    debt_id = RawField("debt_id")
+    token = RawField("token")
+    amount = RawField("amount")
+    liquidation_ratio = RawField("liquidation_ratio")
+    balance_ratio = RawField("balance_ratio")
+    burn_fee = RawField("burn_fee")
+    reward_fee = RawField("reward_fee")
 
 class ConfigSerializer(BaseSerializer):
     id = RawField("id")
@@ -96,6 +105,8 @@ class StateCountSerializer(BaseSerializer):
 class CommitCountSerializer(BaseSerializer):
     count = IntField("State count")
 
+class CollateralCountSerializer(BaseSerializer):
+    count = IntField("State count")
 
 class OracleHistorySerializer(BaseSerializer):
     id = RawField("id")
