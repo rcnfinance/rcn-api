@@ -1,5 +1,6 @@
 const Helper = require('./Helper.js');
 const loanHelper = require('./LoanHelper.js');
+const api = require('./api.js');
 const BN = web3.utils.BN;
 const expect = require('chai')
     .use(require('bn-chai')(BN))
@@ -28,6 +29,7 @@ class EntryBuilder {
         this.oracle = { address: Helper.address0x };
         // Loan
         this.loanId = undefined;
+        this.loanData = undefined;
         // this.loanAmount = rand(1, 200000000);
         this.loanAmount = '100000000000000000000';
         this.loanAmountRcn = this.loanAmount;
@@ -82,6 +84,7 @@ class EntryBuilder {
                 this.cuota, this.punInterestRate, this.installments, this.duration, this.timeUnit, this.loanAmount,
                 this.oracle.address, this.callback, this.expiration);
             this.loanId = result.id;
+            this.loanData = result.loanData;
 
             if (this.oracle.address !== Helper.address0x) {
                 this.oracleData = await this.oracle.encodeRate(this.tokens, this.equivalent);
@@ -145,47 +148,6 @@ class EntryBuilder {
         return converter.getReturn(rcn.address, auxToken.address, amount);
     }
 }
-
-const deposit = async function (tok, col, id, amount, from, collateral, auxToken) {
-    const prevEntry = await collateral.entries(id);
-    await tok.setBalance(from, amount);
-    await tok.approve(col.address, amount, { from: from });
-
-    const collateralSnap = await Helper.balanceSnap(auxToken, collateral.address);
-    const fromSnap = await Helper.balanceSnap(auxToken, from);
-    const Deposited = await Helper.toEvents(
-        col.deposit(
-            id,
-            amount,
-            { from: from }
-        ),
-        'Deposited'
-    );
-
-    // Test events
-    expect(Deposited._id).to.eq.BN(id);
-    expect(Deposited._amount).to.eq.BN(amount);
-
-    // Test collateral entry
-    const entry = await collateral.entries(id);
-    // Should remain the same
-    expect(entry.liquidationRatio).to.eq.BN(prevEntry.liquidationRatio);
-    expect(entry.balanceRatio).to.eq.BN(prevEntry.balanceRatio);
-    expect(entry.burnFee).to.eq.BN(prevEntry.burnFee);
-    expect(entry.rewardFee).to.eq.BN(prevEntry.rewardFee);
-    expect(entry.token).to.equal(prevEntry.token);
-    expect(entry.debtId).to.equal(prevEntry.debtId);
-
-    // Should increase by amount
-    expect(entry.amount).to.eq.BN(amount.add(prevEntry.amount));
-    await collateralSnap.requireIncrease(amount);
-
-    // Should decreae by amount
-    await fromSnap.requireDecrease(amount);
-
-    // Restore balance
-    await fromSnap.restore();
-};
 
 const withdraw = async function (id, to, amount, from, data = [], collateral, auxToken) {
     const prevEntry = await collateral.entries(id);
@@ -286,11 +248,26 @@ const roundCompare = function (x, y) {
     );
 };
 
+const checkCollateral = async function (collateral, entryId) {
+
+    const apiCollateral = (await api.getCollateralByEntryId(entryId)).content;
+    const ethCollateral = await collateral.entries(entryId);
+
+    assert.equal(apiCollateral.id, entryId);
+    assert.equal(apiCollateral.debt_id, ethCollateral.debtId);
+    assert.equal(apiCollateral.token, ethCollateral.token);
+    assert.equal(apiCollateral.amount, ethCollateral.amount);
+    assert.equal(apiCollateral.liquidation_ratio, ethCollateral.liquidationRatio);
+    assert.equal(apiCollateral.balance_ratio, ethCollateral.balanceRatio);
+    assert.equal(apiCollateral.burn_fee, ethCollateral.burnFee);
+    assert.equal(apiCollateral.reward_fee, ethCollateral.rewardFee);
+};
+
 module.exports = {
-    deposit: deposit,
     withdraw: withdraw,
     lend: lend,
     requireDeleted: requireDeleted,
     roundCompare: roundCompare,
     EntryBuilder: EntryBuilder,
+    checkCollateral: checkCollateral,
 };

@@ -45,9 +45,20 @@ async function getModelDebtInfo (idLoan) {
     return response.data;
 };
 
-async function getCollateral (idLoan) {
+async function getCollateralByLoanId (idLoan) {
     const endPointResource = 'collaterals?debt_id=' + idLoan;
     const url = baseUrl + endPointResource;
+
+    console.log('URL:', url);
+
+    const response = await axios.get(url);
+
+    return response.data;
+};
+
+async function getCollateralByEntryId (idEntry) {
+    const endPointResource = 'collaterals/';
+    const url = baseUrl + endPointResource + idEntry;
 
     console.log('URL:', url);
 
@@ -62,5 +73,6 @@ module.exports = {
     getConfig: getConfig,
     getState: getState,
     getModelDebtInfo: getModelDebtInfo,
-    getCollateral: getCollateral,
+    getCollateralByLoanId: getCollateralByLoanId,
+    getCollateralByEntryId: getCollateralByEntryId,
 };
