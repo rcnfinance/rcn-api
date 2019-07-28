@@ -1,3 +1,17 @@
+## 2019.7.26 (26 July 2019)
+
+### Added
+- create events handlers for collateral contract
+- Add logic in listener collateral contract, handler and commit for event created
+- Add collateral model listener and api-falcon
+- Add collateral resource and endpoint in api-falcon
+- Add and update contracts collateral for test
+- Add static contracts for collateral test
+- Add logic in listener collateral contract, handler and commit for event "Created"
+- Add collateral creation test
+
+###Enhancements
+- reorganize tests helpers
 
 ## 2019.7.19 (19 July 2019)
 
