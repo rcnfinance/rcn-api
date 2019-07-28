@@ -5,7 +5,7 @@ from models import Commit
 
 
 class Deposited(EventHandler):
-    signature = "Deposited(parameters..)"
+    signature = "Deposited(uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -17,10 +17,11 @@ class Deposited(EventHandler):
         commit.opcode = "deposited_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "id": str(self._args.get("_id")),
+            "amount": str(self._args.get("_amount")),
         }
 
         commit.data = data

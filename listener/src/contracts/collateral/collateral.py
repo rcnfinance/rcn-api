@@ -32,9 +32,11 @@ from .handlers.take_fee import TakeFee
 from .handlers.withdrawed import Withdrawed
 
 from .commit_processors.created import Created as CreatedCommitProcessor
+from .commit_processors.deposited import Deposited as DepositedCommitProcessor
 
 commit_processors = [
     CreatedCommitProcessor(),
+    DepositedCommitProcessor(),
 ]
 
 schedule_processors = []
