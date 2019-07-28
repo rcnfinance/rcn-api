@@ -33,10 +33,12 @@ from .handlers.withdrawed import Withdrawed
 
 from .commit_processors.created import Created as CreatedCommitProcessor
 from .commit_processors.deposited import Deposited as DepositedCommitProcessor
+from .commit_processors.withdrawed import Withdrawed as WithdrawedCommitProcessor
 
 commit_processors = [
     CreatedCommitProcessor(),
     DepositedCommitProcessor(),
+    WithdrawedCommitProcessor(),
 ]
 
 schedule_processors = []
