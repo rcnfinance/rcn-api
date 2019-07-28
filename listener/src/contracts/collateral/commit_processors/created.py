@@ -1,4 +1,4 @@
-from models import Collateral, Loan
+from models import Collateral
 from contracts.commit_processor import CommitProcessor
 
 
@@ -8,8 +8,6 @@ class Created(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-
-        loan = Loan.objects.get(id=data.get("debt_id"))
 
         collateral = Collateral()
 
@@ -22,6 +20,5 @@ class Created(CommitProcessor):
         collateral.burn_fee = data.get("burn_fee")
         collateral.reward_fee = data.get("reward_fee")
  
-        loan.collaterals.append(collateral)
         commit.save()
         collateral.save()
