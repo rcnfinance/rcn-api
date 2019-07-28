@@ -1,4 +1,5 @@
 const Helper = require('./Helper.js');
+const loanHelper = require('./LoanHelper.js');
 const BN = web3.utils.BN;
 const expect = require('chai')
     .use(require('bn-chai')(BN))
@@ -19,17 +20,6 @@ function divceil (x, y) {
     }
 }
 
-function rand (min = 0, max = 2 ** 53) {
-    if (min instanceof BN) {
-        min = min.toNumber();
-    }
-    if (max instanceof BN) {
-        max = max.toNumber();
-    }
-    assert.isAtMost(min, max);
-    return bn(Math.floor(Math.random() * (max + 1 - min)) + min);
-}
-
 const WEI = bn(10).pow(bn(18));
 const BASE = bn(10000);
 
@@ -38,10 +28,22 @@ class EntryBuilder {
         this.oracle = { address: Helper.address0x };
         // Loan
         this.loanId = undefined;
-        this.loanAmount = rand(1, 200000000);
+        // this.loanAmount = rand(1, 200000000);
+        this.loanAmount = '100000000000000000000';
         this.loanAmountRcn = this.loanAmount;
-        this.expirationDelta = rand(1000, BASE);
-        this.durationDelta = rand(1000, BASE);
+        this.expirationDelta = bn(1000);
+        this.durationDelta = bn(1000);
+
+        // Installments
+        this.cuota = '10000000000000000000';
+        this.punInterestRate = '1555200000000';
+        this.installments = '12';
+        this.duration = '2592000';
+        this.timeUnit = '2592000';
+        this.callback = '0x0000000000000000000000000000000000000000';
+        // const oracle = '0x0000000000000000000000000000000000000000';
+        this.expiration = '1578571215';
+
         // To oracle
         this.oracleData = [];
         this.tokens = WEI;
@@ -51,10 +53,10 @@ class EntryBuilder {
         this.rateToRCN = WEI;
         // Entry
         this.createFrom = creator;
-        this.burnFee = rand(0, BASE);
-        this.rewardFee = rand(0, BASE.sub(this.burnFee).sub(bn(1)));
-        this.liquidationRatio = rand(BASE, 20000);
-        this.balanceRatio = rand(this.liquidationRatio.add(this.burnFee).add(this.rewardFee), 30000);
+        this.burnFee = bn(1000);
+        this.rewardFee = bn(1000);
+        this.liquidationRatio = bn(15000);
+        this.balanceRatio = bn(20000);
         this.collateralToken = auxToken;
     }
 
@@ -63,30 +65,24 @@ class EntryBuilder {
         return this;
     }
 
-    async build (rcn, converter, model, loanManager, borrower, collateral, creator) {
+    async build (rcn, converter, model, loanManager, debtEngine, collateral, borrower, creator) {
         if (rcn.address !== this.collateralToken.address) {
             await converter.setRate(rcn.address, this.collateralToken.address, this.rateFromRCN);
             await converter.setRate(this.collateralToken.address, rcn.address, this.rateToRCN);
         }
 
         const salt = bn(web3.utils.randomHex(32));
-        const now = bn(await Helper.getBlockTime());
-        const expiration = now.add(this.expirationDelta);
-        const duration = now.add(this.durationDelta);
-
-        const loanData = await model.encodeData(this.loanAmount, duration);
+        // const now = bn(await Helper.getBlockTime());
+        // const expiration = now.add(this.expirationDelta);
+        // const duration = now.add(this.durationDelta);
 
         if (this.loanId === undefined) {
-            this.loanId = await getId(loanManager.requestLoan(
-                this.loanAmount,     // Amount
-                model.address,       // Model
-                this.oracle.address, // Oracle
-                borrower,            // Borrower
-                salt,                // salt
-                expiration,          // Expiration
-                loanData,            // Loan data
-                { from: borrower }   // Creator
-            ));
+            // Brodcast transaction to the network -Request Loan  and  Calculate the Id of the loan with helper function
+            const result = await loanHelper.requestLoan(model, borrower, salt, loanManager, debtEngine, creator,
+                this.cuota, this.punInterestRate, this.installments, this.duration, this.timeUnit, this.loanAmount,
+                this.oracle.address, this.callback, this.expiration);
+            this.loanId = result.id;
+
             if (this.oracle.address !== Helper.address0x) {
                 this.oracleData = await this.oracle.encodeRate(this.tokens, this.equivalent);
                 this.loanAmountRcn = await this.currencyToRCN();
@@ -97,57 +93,26 @@ class EntryBuilder {
         }
 
         if (this.entryAmount === undefined) {
-            const loanAmountInColl = await this.RCNToCollateral(this.loanAmountRcn);
+            const loanAmountInColl = await this.RCNToCollateral(this.loanAmountRcn, converter, this.collateralToken, rcn);
             const minEntryAmount = divceil(loanAmountInColl.mul(this.balanceRatio.add(BASE)), BASE);
-            this.entryAmount = rand(minEntryAmount, 40000000000);
+            const entryAmount = minEntryAmount * 1.2;
+            this.entryAmount = bn(entryAmount.toString());
         }
 
         this.id = await collateral.getEntriesLength();
-
         await this.collateralToken.setBalance(creator, this.entryAmount);
         await this.collateralToken.approve(collateral.address, this.entryAmount, { from: creator });
 
-        const collateralSnap = await Helper.balanceSnap(this.collateralToken, collateral.address);
-        const creatorSnap = await Helper.balanceSnap(this.collateralToken, this.createFrom);
-
-        const createdEvent = await Helper.toEvents(
-            collateral.create(
-                this.loanId,                  // debtId
-                this.collateralToken.address, // token
-                this.entryAmount,             // amount
-                this.liquidationRatio,        // liquidationRatio
-                this.balanceRatio,            // balanceRatio
-                this.burnFee,                 // burnFee
-                this.rewardFee,               // rewardFee
-                { from: this.createFrom }     // sender
-            ),
-            'Created'
+        await collateral.create(
+            this.loanId,                  // debtId
+            this.collateralToken.address, // token
+            this.entryAmount,             // amount
+            this.liquidationRatio,        // liquidationRatio
+            this.balanceRatio,            // balanceRatio
+            this.burnFee,                 // burnFee
+            this.rewardFee,               // rewardFee
+            { from: this.createFrom }     // sender
         );
-
-        // Control collateral creation event
-        expect(createdEvent._id).to.eq.BN(this.id);
-        assert.equal(createdEvent._debtId, this.loanId);
-        assert.equal(createdEvent._token, this.collateralToken.address);
-        expect(createdEvent._amount).to.eq.BN(this.entryAmount);
-        expect(createdEvent._liquidationRatio).to.eq.BN(this.liquidationRatio);
-        expect(createdEvent._balanceRatio).to.eq.BN(this.balanceRatio);
-        expect(createdEvent._burnFee).to.eq.BN(this.burnFee);
-        expect(createdEvent._rewardFee).to.eq.BN(this.rewardFee);
-
-        // Expect entry creation
-        const entry = await collateral.entries(this.id);
-        expect(entry.liquidationRatio).to.eq.BN(this.liquidationRatio);
-        expect(entry.balanceRatio).to.eq.BN(this.balanceRatio);
-        expect(entry.burnFee).to.eq.BN(this.burnFee);
-        expect(entry.rewardFee).to.eq.BN(this.rewardFee);
-        assert.equal(entry.token, this.collateralToken.address);
-        assert.equal(entry.debtId, this.loanId);
-        expect(entry.amount).to.eq.BN(this.entryAmount);
-
-        // Owner and balance of colalteral
-        await creatorSnap.requireDecrease(this.entryAmount);
-        await collateralSnap.requireIncrease(this.entryAmount);
-        assert.equal(await collateral.ownerOf(this.id), creator);
 
         return this;
     }
@@ -302,12 +267,12 @@ const requireDeleted = async function (entryId, loanId, collateral) {
     expect(await collateral.debtToEntry(loanId)).to.eq.BN(0);
 };
 
-const getId = async function (promise) {
-    const receipt = await promise;
-    const event = receipt.logs.find(l => l.event === 'Requested');
-    assert.ok(event);
-    return event.args._id;
-};
+// const getId = async function (promise) {
+//     const receipt = await promise;
+//     const event = receipt.logs.find(l => l.event === 'Requested');
+//     assert.ok(event);
+//     return event.args._id;
+// };
 
 const roundCompare = function (x, y) {
     const z = x.sub(y).abs();

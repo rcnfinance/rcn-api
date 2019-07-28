@@ -45,10 +45,22 @@ async function getModelDebtInfo (idLoan) {
     return response.data;
 };
 
+async function getCollateral (idLoan) {
+    const endPointResource = 'collaterals?debt_id=' + idLoan;
+    const url = baseUrl + endPointResource;
+
+    console.log('URL:', url);
+
+    const response = await axios.get(url);
+
+    return response.data;
+};
+
 module.exports = {
     getLoan: getLoan,
     getDebt: getDebt,
     getConfig: getConfig,
     getState: getState,
     getModelDebtInfo: getModelDebtInfo,
+    getCollateral: getCollateral,
 };

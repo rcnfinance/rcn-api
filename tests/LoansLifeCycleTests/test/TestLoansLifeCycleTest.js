@@ -10,6 +10,19 @@ const Collateral = artifacts.require('Collateral');
 const api = require('./helpers/api.js');
 const helper = require('./helpers/Helper.js');
 const loanHelper = require('./helpers/LoanHelper.js');
+const collateralHelper = require('./helpers/CollateralHelper.js');
+
+const BN = web3.utils.BN;
+
+function bn (number) {
+    if (!(number instanceof String)) {
+        number.toString();
+    }
+    return new BN(number);
+}
+
+const WEI = bn(10).pow(bn(18));
+// const BASE = bn(10000);
 
 contract('Loans Life Cycle Tests', async accounts => {
     // Global instances variables
@@ -657,6 +670,32 @@ contract('Loans Life Cycle Tests', async accounts => {
             await debtEngine.withdrawPartial(id, newLenderAddress, web3.utils.toWei('120', 'ether'), { from: newLenderAddress });
             await sleep(5000);
             await loanHelper.checkWithdraw(debtEngine, rcnToken, newLenderAddress, id, balanceLenderBeforeWithdraw);
+        });
+    });
+
+    // COLLATERAL
+
+    describe('TEST COLLATERAL', function () {
+        it('should create a new loan Request, with a collateral entry ', async () => {
+            const entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
+                .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
+                .with('rateToRCN', bn(2).mul(WEI))
+                .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+            const loanResponse = await api.getLoan(entry.loanId);
+            const loan = loanResponse.content;
+
+            console.log('loanId:', entry.loanId);
+
+            const response = await api.getCollateral(entry.loanId);
+            const collateralEntry = response.content;
+
+            console.log('Loan:', loan);
+            console.log('Collateral:', collateralEntry);
+
+            assert(loan.id, collateralEntry.debt_id);
         });
     });
 });
