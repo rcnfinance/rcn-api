@@ -5,7 +5,7 @@ import utils
 
 
 class Created(EventHandler):
-    signature = "Created(uint256,bytes32,address,uint256,uint32,uint32,uint32,uint32)"
+    signature = "Created(uint256,bytes32,address,address,uint256,uint32,uint32,uint32,uint32)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
@@ -24,6 +24,7 @@ class Created(EventHandler):
         data = {
             "id": str(self._args.get("_id")),
             "debt_id": self._args.get("_debtId"),
+            "oracle": self._args.get("_oracle"),
             "token": self._args.get("_token"),
             "amount": str(self._args.get("_amount")),
             "liquidation_ratio": str(self._args.get("_liquidationRatio")),

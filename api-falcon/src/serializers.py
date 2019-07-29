@@ -38,6 +38,7 @@ class DebtSerializer(BaseSerializer):
 class CollateralSerializer(BaseSerializer):
     id = RawField("id")
     debt_id = RawField("debt_id")
+    oracle = RawField("oracle")
     token = RawField("token")
     amount = RawField("amount")
     liquidation_ratio = RawField("liquidation_ratio")

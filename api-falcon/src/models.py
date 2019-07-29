@@ -80,6 +80,7 @@ class State(Document):
 class Collateral(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     debt_id = StringField(required=True, max_length=150)
+    oracle = StringField(required=True, max_length=150)
     token = StringField(required=True, max_length=150)
     amount = StringField(required=True, max_length=150)
     liquidation_ratio = StringField(required=True, max_length=150)

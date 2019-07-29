@@ -13,6 +13,7 @@ class Created(CommitProcessor):
 
         collateral.id = data.get("id")
         collateral.debt_id = data.get("debt_id")
+        collateral.oracle = data.get("oracle")
         collateral.token = data.get("token")
         collateral.amount = data.get("amount")
         collateral.liquidation_ratio = data.get("liquidation_ratio")
