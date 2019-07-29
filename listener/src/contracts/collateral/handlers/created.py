@@ -30,7 +30,8 @@ class Created(EventHandler):
             "liquidation_ratio": str(self._args.get("_liquidationRatio")),
             "balance_ratio": str(self._args.get("_balanceRatio")),
             "burn_fee": str(self._args.get("_burnFee")),  
-            "reward_fee": str(self._args.get("_rewardFee")),  
+            "reward_fee": str(self._args.get("_rewardFee")),
+            "started": False  
         }
 
         commit.data = data

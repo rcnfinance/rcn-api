@@ -212,6 +212,8 @@ const checkCollateral = async function (collateral, entryId) {
     const apiCollateral = (await api.getCollateralByEntryId(entryId)).content;
     const ethCollateral = await collateral.entries(entryId);
 
+    const ethStarted = await collateral.debtToEntry(ethCollateral.debtId);
+
     assert.equal(apiCollateral.id, entryId);
     assert.equal(apiCollateral.debt_id, ethCollateral.debtId);
     assert.equal(apiCollateral.oracle, ethCollateral.oracle);
@@ -221,6 +223,7 @@ const checkCollateral = async function (collateral, entryId) {
     assert.equal(apiCollateral.balance_ratio, ethCollateral.balanceRatio);
     assert.equal(apiCollateral.burn_fee, ethCollateral.burnFee);
     assert.equal(apiCollateral.reward_fee, ethCollateral.rewardFee);
+    assert.equal(apiCollateral.started, ethStarted);
 };
 
 module.exports = {

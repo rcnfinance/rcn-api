@@ -724,6 +724,7 @@ contract('Loans Life Cycle Tests', async accounts => {
             await sleep(5000);
 
             await loanHelper.checkLend(loanManager, debtEngine, installmentModel, loanEthBeforeLend, entry.loanId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
         });
         it('should decrease the collateral amount by the amount Withdrawn', async () => {
             // Deposit more collateral

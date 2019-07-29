@@ -20,6 +20,7 @@ class Created(CommitProcessor):
         collateral.balance_ratio = data.get("balance_ratio")
         collateral.burn_fee = data.get("burn_fee")
         collateral.reward_fee = data.get("reward_fee")
+        collateral.started = data.get("started")
  
         commit.save()
         collateral.save()
