@@ -149,47 +149,6 @@ class EntryBuilder {
     }
 }
 
-const withdraw = async function (id, to, amount, from, data = [], collateral, auxToken) {
-    const prevEntry = await collateral.entries(id);
-
-    const collateralSnap = await Helper.balanceSnap(auxToken, collateral.address);
-    const toSnap = await Helper.balanceSnap(auxToken, to);
-
-    const Withdrawed = await Helper.toEvents(
-        collateral.withdraw(
-            id,
-            to,
-            amount,
-            data,
-            { from: from }
-        ),
-        'Withdrawed'
-    );
-
-    // Assert events
-    expect(Withdrawed._id).to.eq.BN(id);
-    expect(Withdrawed._to).to.equal(from);
-    expect(Withdrawed._amount).to.eq.BN(amount);
-
-    // Validate entry
-    const entry = await collateral.entries(id);
-    // Should remain the same
-    expect(entry.liquidationRatio).to.eq.BN(prevEntry.liquidationRatio);
-    expect(entry.balanceRatio).to.eq.BN(prevEntry.balanceRatio);
-    expect(entry.burnFee).to.eq.BN(prevEntry.burnFee);
-    expect(entry.rewardFee).to.eq.BN(prevEntry.rewardFee);
-    expect(entry.token).to.equal(prevEntry.token);
-    expect(entry.debtId).to.equal(prevEntry.debtId);
-
-    // Should decrease by amount
-    expect(entry.amount).to.eq.BN(prevEntry.amount.sub(amount));
-    await collateralSnap.requireDecrease(amount);
-
-    // Shoud increase by amount
-    await toSnap.requireIncrease(amount);
-    await toSnap.restore();
-};
-
 const lend = async function (entry, expectLoanAmount, rcn, lender, loanManager, collateral, model) {
     const lenderSnap = await Helper.balanceSnap(rcn, lender);
 
@@ -264,7 +223,6 @@ const checkCollateral = async function (collateral, entryId) {
 };
 
 module.exports = {
-    withdraw: withdraw,
     lend: lend,
     requireDeleted: requireDeleted,
     roundCompare: roundCompare,

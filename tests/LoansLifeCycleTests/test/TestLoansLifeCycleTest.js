@@ -703,5 +703,16 @@ contract('Loans Life Cycle Tests', async accounts => {
 
             await collateralHelper.checkCollateral(collateral, entryId);
         });
+        it('should decrease the collateral amount by the amount Withdrawn', async () => {
+            // Deposit more collateral
+            const amountToWithdraw = bn(1).mul(WEI);
+
+            await collateral.withdraw(entryId, creatorAddress, amountToWithdraw, [], { from: creatorAddress });
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+
+            await collateralHelper.checkCollateral(collateral, entryId);
+        });
     });
 });
