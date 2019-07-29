@@ -35,12 +35,16 @@ from .commit_processors.created import Created as CreatedCommitProcessor
 from .commit_processors.deposited import Deposited as DepositedCommitProcessor
 from .commit_processors.withdrawed import Withdrawed as WithdrawedCommitProcessor
 from .commit_processors.started import Started as StartedCommitProcessor
+from .commit_processors.redeemed import Redeemed as RedeemedCommitProcessor
+from .commit_processors.emergency_redeemed import EmergencyRedeemed as EmergencyRedeemedCommitProcessor
 
 commit_processors = [
     CreatedCommitProcessor(),
     DepositedCommitProcessor(),
     WithdrawedCommitProcessor(),
-    StartedCommitProcessor()
+    StartedCommitProcessor(),
+    RedeemedCommitProcessor(),
+    EmergencyRedeemedCommitProcessor()
 ]
 
 schedule_processors = []

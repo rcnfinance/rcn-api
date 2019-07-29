@@ -17,6 +17,7 @@ class Started(EventHandler):
         commit.opcode = "started_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
             "id": str(self._args.get("_id"))

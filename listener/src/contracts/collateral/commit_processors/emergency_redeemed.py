@@ -1,5 +1,5 @@
-#from models import Loan
-#from contracts.commit_processor import CommitProcessor
+from models import Collateral
+from contracts.commit_processor import CommitProcessor
 
 
 class EmergencyRedeemed(CommitProcessor):
@@ -7,13 +7,13 @@ class EmergencyRedeemed(CommitProcessor):
         self.opcode = "emergency_redeemed_collateral"
 
     def process(self, commit, *args, **kwargs):
-        #data = commit.data
+        data = commit.data
 
-        #loan = Loan.objects.get(id=data.get("id"))
-
-        #loan.open = data.get("open")
-        #loan.lender = data.get("lender")
-        #loan.status = data.get("status")
-        #loan.commits.append(commit)
-
-        #loan.save()
+        try:
+            collateral = Collateral.objects.get(id=data["id"])
+            collateral.amount = 0
+            
+            commit.save()
+            collateral.save()
+        except Collateral.DoesNotExist:
+            self.logger.warning("Collateral with id {} does not exist".format(data["id"]))

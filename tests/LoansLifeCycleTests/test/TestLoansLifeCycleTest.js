@@ -12,6 +12,9 @@ const loanHelper = require('./helpers/LoanHelper.js');
 const collateralHelper = require('./helpers/CollateralHelper.js');
 
 const BN = web3.utils.BN;
+const expect = require('chai')
+    .use(require('bn-chai')(BN))
+    .expect; 
 
 function bn (number) {
     if (!(number instanceof String)) {
@@ -727,8 +730,8 @@ contract('Loans Life Cycle Tests', async accounts => {
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
         it('should decrease the collateral amount by the amount Withdrawn', async () => {
-            // Deposit more collateral
-            const amountToWithdraw = bn(1).mul(WEI);
+            // Withdraw collateral
+            const amountToWithdraw = bn(10).mul(WEI);
 
             await collateral.withdraw(entry.id, creatorAddress, amountToWithdraw, [], { from: creatorAddress });
 
@@ -736,6 +739,26 @@ contract('Loans Life Cycle Tests', async accounts => {
             await sleep(5000);
 
             await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+        it('borrower pays the debt and creator redeem the collateral', async () => {
+            // Pay loan
+            await rcnToken.setBalance(borrowerAddress, web3.utils.toWei('120', 'ether'));
+            await rcnToken.approve(debtEngine.address, web3.utils.toWei('120', 'ether'), { from: borrowerAddress });
+
+            await debtEngine.pay(entry.loanId, web3.utils.toWei('120', 'ether'), borrowerAddress, [], { from: borrowerAddress });
+            // Test pay
+            await sleep(5000);
+            await loanHelper.checkPay(loanManager, debtEngine, installmentModel, entry.loanId);
+
+            const balanceBeforeRedeem = await rcnToken.balanceOf(creatorAddress);
+
+            await collateral.redeem(entry.id, { from: creatorAddress });
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+
+            const balanceAfterRedeem = await rcnToken.balanceOf(creatorAddress);
+            expect(entry.amount).to.eq.BN(balanceAfterRedeem.sub(balanceBeforeRedeem).toString());
         });
     });
 });
