@@ -707,6 +707,10 @@ contract('Loans Life Cycle Tests', async accounts => {
             // Deposit more collateral
             const amountToWithdraw = bn(1).mul(WEI);
 
+            const amountAvailableToWithdraw = await collateral.canWithdraw(entryId, 0, 0, { from: borrowerAddress });
+
+            console.log('Amount available to withdraw:', amountAvailableToWithdraw.toString());
+
             await collateral.withdraw(entryId, creatorAddress, amountToWithdraw, [], { from: creatorAddress });
 
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API

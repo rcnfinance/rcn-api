@@ -108,6 +108,7 @@ class EntryBuilder {
 
         await collateral.create(
             this.loanId,                  // debtId
+            this.oracle.address,
             this.collateralToken.address, // token
             this.entryAmount,             // amount
             this.liquidationRatio,        // liquidationRatio
@@ -208,12 +209,12 @@ const roundCompare = function (x, y) {
 };
 
 const checkCollateral = async function (collateral, entryId) {
-
     const apiCollateral = (await api.getCollateralByEntryId(entryId)).content;
     const ethCollateral = await collateral.entries(entryId);
 
     assert.equal(apiCollateral.id, entryId);
     assert.equal(apiCollateral.debt_id, ethCollateral.debtId);
+    assert.equal(apiCollateral.oracle, ethCollateral.oracle);
     assert.equal(apiCollateral.token, ethCollateral.token);
     assert.equal(apiCollateral.amount, ethCollateral.amount);
     assert.equal(apiCollateral.liquidation_ratio, ethCollateral.liquidationRatio);
