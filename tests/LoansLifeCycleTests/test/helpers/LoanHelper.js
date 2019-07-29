@@ -129,6 +129,7 @@ const checkApprove = async function (loanManager, id) {
 
 const checkLend = async function (loanManager, debtEngine, installmentModel, loanEthBeforeLend, id) {
     const loanApi = (await api.getLoan(id)).content;
+    const loanEthAfterLend = await loanManager.requests(id);
 
     // Query the API for Debt data
     const debtApi = (await api.getDebt(id)).content;
@@ -148,8 +149,9 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
     await helper.checkState(stateEth, stateApi);
     await helper.checkConfig(configEth, configApi);
     await helper.checkDebt(debtEth, debtApi);
-    const keyToCheck3 = ['approved', 'expiration', 'amount', 'cosigner', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
+    const keyToCheck3 = ['approved', 'expiration', 'amount', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
     await helper.checkLoan(loanEthBeforeLend, loanApi, keyToCheck3);
+    assert.equal(loanEthAfterLend.cosigner, loanApi.cosigner);
 
     assert.equal(loanApi.open, false);
     assert.equal(loanApi.approved, true);

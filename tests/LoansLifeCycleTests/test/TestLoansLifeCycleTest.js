@@ -1,4 +1,3 @@
-
 const TestToken = artifacts.require('./utils/test/TestToken.sol');
 const LoanManager = artifacts.require('./diaspore/LoanManager.sol');
 const DebtEngine = artifacts.require('./diaspore/DebtEngine.sol');
@@ -675,20 +674,21 @@ contract('Loans Life Cycle Tests', async accounts => {
 
     // COLLATERAL
     describe('TEST COLLATERAL', function () {
-        let entryId;
+        let entry;
 
         it('should create a new loan Request, with a collateral entry ', async () => {
-            const entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
+            entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
                 .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
                 .with('rateToRCN', bn(2).mul(WEI))
                 .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
 
-            entryId = entry.id;
+            await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
+
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
             await sleep(5000);
             await loanHelper.checkRequestLoan(loanManager, installmentModel, entry.loanId, entry.loanData);
 
-            await collateralHelper.checkCollateral(collateral, entryId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
         });
         it('should increase the collateral amount by the amount deposited', async () => {
             // Deposit more collateral
@@ -696,27 +696,45 @@ contract('Loans Life Cycle Tests', async accounts => {
             await auxToken.setBalance(borrowerAddress, amountToDeposit);
             await auxToken.approve(collateral.address, amountToDeposit, { from: borrowerAddress });
 
-            await collateral.deposit(entryId, amountToDeposit, { from: borrowerAddress });
+            await collateral.deposit(entry.id, amountToDeposit, { from: borrowerAddress });
 
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
             await sleep(5000);
 
-            await collateralHelper.checkCollateral(collateral, entryId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+
+        it('try lend loan with collateral', async () => {
+            const loanEthBeforeLend = await loanManager.requests(entry.loanId);
+
+            await rcnToken.setBalance(lenderAddress, entry.loanAmountRcn);
+            await rcnToken.approve(loanManager.address, entry.loanAmountRcn, { from: lenderAddress });
+
+            await loanManager.lend(
+                entry.loanId,               // Loan ID
+                entry.oracleData,           // Oracle data
+                collateral.address,         // Collateral cosigner address
+                bn(0),                      // Collateral cosigner cost
+                helper.toBytes32(entry.id), // Collateral ID reference
+                [],
+                { from: lenderAddress }
+            );
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+
+            await loanHelper.checkLend(loanManager, debtEngine, installmentModel, loanEthBeforeLend, entry.loanId);
         });
         it('should decrease the collateral amount by the amount Withdrawn', async () => {
             // Deposit more collateral
             const amountToWithdraw = bn(1).mul(WEI);
 
-            const amountAvailableToWithdraw = await collateral.canWithdraw(entryId, 0, 0, { from: borrowerAddress });
-
-            console.log('Amount available to withdraw:', amountAvailableToWithdraw.toString());
-
-            await collateral.withdraw(entryId, creatorAddress, amountToWithdraw, [], { from: creatorAddress });
+            await collateral.withdraw(entry.id, creatorAddress, amountToWithdraw, [], { from: creatorAddress });
 
             // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
             await sleep(5000);
 
-            await collateralHelper.checkCollateral(collateral, entryId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
         });
     });
 });
