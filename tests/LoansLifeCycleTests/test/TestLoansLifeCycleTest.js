@@ -14,7 +14,7 @@ const collateralHelper = require('./helpers/CollateralHelper.js');
 const BN = web3.utils.BN;
 const expect = require('chai')
     .use(require('bn-chai')(BN))
-    .expect; 
+    .expect;
 
 function bn (number) {
     if (!(number instanceof String)) {

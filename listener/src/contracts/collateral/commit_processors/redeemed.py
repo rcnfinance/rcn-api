@@ -11,6 +11,8 @@ class Redeemed(CommitProcessor):
 
         try:
             collateral = Collateral.objects.get(id=data["id"])
+            collateral.amount = '0'
+            collateral.invalid = True
             
             commit.save()
             collateral.save()

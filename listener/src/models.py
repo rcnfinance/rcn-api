@@ -88,6 +88,7 @@ class Collateral(Document):
     burn_fee = StringField(required=True, max_length=150)
     reward_fee = StringField(required=True, max_length=150)  
     started = BooleanField(required=True)
+    invalid = BooleanField(required=True)
 
     meta = {
         "indexes": [
