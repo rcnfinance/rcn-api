@@ -7,4 +7,5 @@ class ConvertPay(CommitProcessor):
         self.opcode = "convert_pay_collateral"
 
     def process(self, commit, *args, **kwargs):
-        pass
+        commit.save()
+        

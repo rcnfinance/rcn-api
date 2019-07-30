@@ -3,9 +3,8 @@ from contracts.event import EventHandler
 from models import Commit
 # import utils
 
-
 class Rebuy(EventHandler):
-    signature = "Rebuy(parameters..)"
+    signature = "Rebuy(uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -17,10 +16,11 @@ class Rebuy(EventHandler):
         commit.opcode = "rebuy_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "_fromAmount": self._args.get("_fromAmount"),
+            "_toAmount": self._args.get("_toAmount")
         }
 
         commit.data = data

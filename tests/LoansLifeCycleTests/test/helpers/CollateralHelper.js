@@ -97,11 +97,8 @@ class EntryBuilder {
 
         if (this.entryAmount === undefined) {
             const loanAmountInColl = await this.RCNToCollateral(this.loanAmountRcn, converter, this.collateralToken, rcn);
-            console.log('Loan amount in collateral:', loanAmountInColl.toString());
             const minEntryAmount = divceil(loanAmountInColl.mul(this.balanceRatio.add(BASE)), BASE);
-            console.log('Min entry amount:', minEntryAmount.toString());
             const entryAmount = minEntryAmount * 1.2;
-            console.log('entryAmount:', entryAmount);
             this.entryAmount = bn(entryAmount.toString());
         }
 
