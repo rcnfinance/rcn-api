@@ -20,9 +20,9 @@ class ConvertPay(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
-            "fromAmountd": self._args.get("_fromAmount"),
-            "toAmount": self._args.get("_toAmount"),
-            "oracleData": self._args.get("_oracleData"),
+            "fromAmount": str(self._args.get("_fromAmount")),
+            "toAmount": str(self._args.get("_toAmount")),
+            "oracleData": str(self._args.get("_oracleData")),
         }
 
         commit.data = data

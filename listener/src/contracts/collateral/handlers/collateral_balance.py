@@ -3,9 +3,8 @@ from contracts.event import EventHandler
 from models import Commit
 # import utils
 
-
 class CollateralBalance(EventHandler):
-    signature = "CollateralBalance(parameters..)"
+    signature = "CollateralBalance(uint256,uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -17,10 +16,12 @@ class CollateralBalance(EventHandler):
         commit.opcode = "collateral_balance_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "id": str(self._args.get("_id")),
+            "tokenRequiredToTryBalance": str(self._args.get("_tokenRequiredToTryBalance")),
+            "payTokens": str(self._args.get("_payTokens"))
         }
 
         commit.data = data

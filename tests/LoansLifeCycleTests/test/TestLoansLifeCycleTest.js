@@ -676,7 +676,7 @@ contract('Loans Life Cycle Tests', async accounts => {
     });
 
     // COLLATERAL
-    describe('TEST COLLATERAL - CREATE, DEPOSIT, WITHDRAW, REDEEM', function () {
+    describe('TEST COLLATERAL - CREATE, DEPOSIT, LEND, WITHDRAW, REDEEM', function () {
         let entry;
 
         it('should create a new loan Request, with a collateral entry ', async () => {
@@ -684,6 +684,9 @@ contract('Loans Life Cycle Tests', async accounts => {
                 .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
                 .with('rateToRCN', bn(2).mul(WEI))
                 .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
+
+            await converter.setRate(rcnToken.address, auxToken.address, entry.rateFromRCN);
+            await converter.setRate(auxToken.address, rcnToken.address, entry.rateToRCN);
 
             await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
 
@@ -762,13 +765,16 @@ contract('Loans Life Cycle Tests', async accounts => {
         });
     });
 
-    describe('TEST COLLATERAL - CREATE, PAYOFF', function () {
+    describe('TEST COLLATERAL - CREATE, LEND, PAYOFF', function () {
         let entry;
 
         it('should create a new loan Request, with a collateral entry ', async () => {
+            await auxToken.setBalance(converterAddress, bn(10000).mul(WEI));
+            await rcnToken.setBalance(converterAddress, bn(10000).mul(WEI));
+
             entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
-                .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
-                .with('rateToRCN', bn(2).mul(WEI))
+                .with('rateFromRCN', bn(1).mul(WEI).div(bn(1)))
+                .with('rateToRCN', bn(1).mul(WEI))
                 .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
 
             await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
@@ -779,12 +785,33 @@ contract('Loans Life Cycle Tests', async accounts => {
 
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
+        it('try lend loan with collateral', async () => {
+            const loanEthBeforeLend = await loanManager.requests(entry.loanId);
+
+            await rcnToken.setBalance(lenderAddress, entry.loanAmountRcn);
+            await rcnToken.approve(loanManager.address, entry.loanAmountRcn, { from: lenderAddress });
+
+            await loanManager.lend(
+                entry.loanId,               // Loan ID
+                entry.oracleData,           // Oracle data
+                collateral.address,         // Collateral cosigner address
+                bn(0),                      // Collateral cosigner cost
+                helper.toBytes32(entry.id), // Collateral ID reference
+                [],
+                { from: lenderAddress }
+            );
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+
+            await loanHelper.checkLend(loanManager, debtEngine, installmentModel, loanEthBeforeLend, entry.loanId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
         it('should payoff all the debt with the collateral', async () => {
             await collateral.payOffDebt(entry.id, [], { from: creatorAddress });
 
-            const collateralEntry = collateral.entries(entry.id);
-
-            console.log(collateralEntry);
+            await sleep(5000);
+            await collateralHelper.checkCollateral(collateral, entry.id);
         });
     });
 });

@@ -37,6 +37,8 @@ from .commit_processors.withdrawed import Withdrawed as WithdrawedCommitProcesso
 from .commit_processors.started import Started as StartedCommitProcessor
 from .commit_processors.redeemed import Redeemed as RedeemedCommitProcessor
 from .commit_processors.emergency_redeemed import EmergencyRedeemed as EmergencyRedeemedCommitProcessor
+from .commit_processors.pay_off_debt import PayOffDebt as PayOffDebtCommitProcessor
+from .commit_processors.convert_pay import ConvertPay as ConvertPayCommitProcessor
 
 commit_processors = [
     CreatedCommitProcessor(),
@@ -44,7 +46,9 @@ commit_processors = [
     WithdrawedCommitProcessor(),
     StartedCommitProcessor(),
     RedeemedCommitProcessor(),
-    EmergencyRedeemedCommitProcessor()
+    EmergencyRedeemedCommitProcessor(),
+    PayOffDebtCommitProcessor(),
+    ConvertPayCommitProcessor()
 ]
 
 schedule_processors = []
