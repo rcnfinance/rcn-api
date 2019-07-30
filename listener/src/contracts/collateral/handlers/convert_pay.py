@@ -5,7 +5,7 @@ from models import Commit
 
 
 class ConvertPay(EventHandler):
-    signature = "ConvertPay(parameters..)"
+    signature = "ConvertPay(uint256,uint256,bytes)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -17,10 +17,12 @@ class ConvertPay(EventHandler):
         commit.opcode = "convert_pay_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "fromAmountd": self._args.get("_fromAmount"),
+            "toAmount": self._args.get("_toAmount"),
+            "oracleData": self._args.get("_oracleData"),
         }
 
         commit.data = data

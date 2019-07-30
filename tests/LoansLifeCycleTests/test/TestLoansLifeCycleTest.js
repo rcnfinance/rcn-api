@@ -676,7 +676,7 @@ contract('Loans Life Cycle Tests', async accounts => {
     });
 
     // COLLATERAL
-    describe('TEST COLLATERAL', function () {
+    describe('TEST COLLATERAL - CREATE, DEPOSIT, WITHDRAW, REDEEM', function () {
         let entry;
 
         it('should create a new loan Request, with a collateral entry ', async () => {
@@ -759,6 +759,32 @@ contract('Loans Life Cycle Tests', async accounts => {
 
             const balanceAfterRedeem = await rcnToken.balanceOf(creatorAddress);
             expect(entry.amount).to.eq.BN(balanceAfterRedeem.sub(balanceBeforeRedeem).toString());
+        });
+    });
+
+    describe('TEST COLLATERAL - CREATE, PAYOFF', function () {
+        let entry;
+
+        it('should create a new loan Request, with a collateral entry ', async () => {
+            entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
+                .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
+                .with('rateToRCN', bn(2).mul(WEI))
+                .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
+
+            await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+            await loanHelper.checkRequestLoan(loanManager, installmentModel, entry.loanId, entry.loanData);
+
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+        it('should payoff all the debt with the collateral', async () => {
+            await collateral.payOffDebt(entry.id, [], { from: creatorAddress });
+
+            const collateralEntry = collateral.entries(entry.id);
+
+            console.log(collateralEntry);
         });
     });
 });

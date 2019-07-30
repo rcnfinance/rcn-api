@@ -5,7 +5,7 @@ from models import Commit
 
 
 class PayOffDebt(EventHandler):
-    signature = "PayOffDebt(parameters..)"
+    signature = "PayOffDebt(uint256,uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -17,10 +17,12 @@ class PayOffDebt(EventHandler):
         commit.opcode = "pay_off_debt_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
-            # "id": self._args.get("_id"),
-            # "approved": True
+            "id": str(self._args.get("_id")),
+            "closingObligationToken": str(self._args.get("_closingObligationToken")),
+            "payTokens": str(self._args.get("_payTokens"))
         }
 
         commit.data = data
