@@ -218,7 +218,7 @@ const checkCollateral = async function (collateral, entryId) {
     assert.equal(apiCollateral.debt_id, ethCollateral.debtId);
     assert.equal(apiCollateral.oracle, ethCollateral.oracle);
     assert.equal(apiCollateral.token, ethCollateral.token);
-    assert.equal(apiCollateral.amount, ethCollateral.amount);
+    assert.equal(apiCollateral.amount, ethCollateral.amount.toString());
     assert.equal(apiCollateral.liquidation_ratio, ethCollateral.liquidationRatio);
     assert.equal(apiCollateral.balance_ratio, ethCollateral.balanceRatio);
     assert.equal(apiCollateral.burn_fee, ethCollateral.burnFee);

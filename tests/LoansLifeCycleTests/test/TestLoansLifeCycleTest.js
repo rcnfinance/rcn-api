@@ -814,4 +814,55 @@ contract('Loans Life Cycle Tests', async accounts => {
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
     });
+    describe('TEST COLLATERAL - CREATE, LEND, CANCELDEBT', function () {
+        let entry;
+
+        it('should create a new loan Request, with a collateral entry ', async () => {
+            await auxToken.setBalance(converterAddress, bn(10000).mul(WEI));
+            await rcnToken.setBalance(converterAddress, bn(10000).mul(WEI));
+
+            entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
+                .with('rateFromRCN', bn(1).mul(WEI).div(bn(1)))
+                .with('rateToRCN', bn(1).mul(WEI))
+                .with('duration', bn(1))
+                .with('timeUnit', bn(1))
+                .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
+
+            await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+            await loanHelper.checkRequestLoan(loanManager, installmentModel, entry.loanId, entry.loanData);
+
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+        it('try lend loan with collateral', async () => {
+            const loanEthBeforeLend = await loanManager.requests(entry.loanId);
+
+            await rcnToken.setBalance(lenderAddress, entry.loanAmountRcn);
+            await rcnToken.approve(loanManager.address, entry.loanAmountRcn, { from: lenderAddress });
+
+            await loanManager.lend(
+                entry.loanId,               // Loan ID
+                entry.oracleData,           // Oracle data
+                collateral.address,         // Collateral cosigner address
+                bn(0),                      // Collateral cosigner cost
+                helper.toBytes32(entry.id), // Collateral ID reference
+                [],
+                { from: lenderAddress }
+            );
+
+            // sleep 5 seconds for the listener to capture the event , process, saved it database and resourse should be available in API
+            await sleep(5000);
+
+            await loanHelper.checkLend(loanManager, debtEngine, installmentModel, loanEthBeforeLend, entry.loanId);
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+        it('should CancelDebt with collateral', async () => {
+            await collateral.claim(creatorAddress, entry.loanId, [], { from: creatorAddress });
+
+            await sleep(5000);
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
+    });
 });
