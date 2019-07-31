@@ -697,6 +697,11 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "name": "_id",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "name": "_burned",
         "type": "uint256"

@@ -50,7 +50,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
     event PayOffDebt(uint256 indexed _id, uint256 _closingObligationToken, uint256 _payTokens);
     event CancelDebt(uint256 indexed _id, uint256 _obligationInToken, uint256 _payTokens);
     event CollateralBalance(uint256 indexed _id, uint256 _tokenRequiredToTryBalance, uint256 _payTokens);
-    event TakeFee(uint256 _burned, address _rewardTo, uint256 _rewarded);
+    event TakeFee(uint256 indexed _id, uint256 _burned, address _rewardTo, uint256 _rewarded);
 
     event ConvertPay(uint256 _fromAmount, uint256 _toAmount, bytes _oracleData);
     event Rebuy(uint256 _fromAmount, uint256 _toAmount);
@@ -170,10 +170,13 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
         Entry storage entry = entries[_id];
 
-        // Read oracle
-        (uint256 rateTokens, uint256 rateEquivalent) = loanManager.readOracle(entry.debtId, _oracleData);
-
-        require(_amount.toInt256() <= canWithdraw(_id, rateTokens, rateEquivalent), "Dont have collateral to withdraw");
+        if (debtToEntry[entry.debtId] != 0) {
+            // Read oracle
+            (uint256 rateTokens, uint256 rateEquivalent) = loanManager.readOracle(entry.debtId, _oracleData);
+            require(_amount.toInt256() <= canWithdraw(_id, rateTokens, rateEquivalent), "Dont have collateral to withdraw");
+        } else {
+            require(_amount <= entry.amount, "Dont have collateral to withdraw");
+        }
 
         require(entry.token.safeTransfer(_to, _amount), "Error sending tokens");
 
@@ -217,11 +220,9 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
         require(entry.token.safeTransfer(_to, entry.amount), "Error sending tokens");
 
-        if (!_emergency) {
-            // Destroy ERC721 collateral token
-            delete debtToEntry[entry.debtId];
-            delete entries[_id];
-        }
+        // Destroy ERC721 collateral token
+        delete debtToEntry[entry.debtId];
+        delete entries[_id];
     }
 
     function payOffDebt(
@@ -237,6 +238,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
         uint256 closingObligationToken = loanManager.amountToToken(debtId, _oracleData, closingObligation);
 
         uint256 payTokens = _convertPay(
+            _id,
             entry,
             closingObligationToken,
             _oracleData,
@@ -320,6 +322,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
             uint256 obligationToken = loanManager.amountToToken(debtId, _oracleData, obligation);
 
             uint256 payTokens = _convertPay(
+                entryId,
                 entry,
                 obligationToken,
                 _oracleData,
@@ -337,6 +340,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
             // Run margin call, buy required tokens
             // and substract from total collateral
             uint256 payTokens = _convertPay(
+                entryId,
                 entry,
                 tokenRequiredToTryBalance,
                 _oracleData,
@@ -361,6 +365,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
     }
 
     function _takeFee(
+        uint256 _entryId,
         Entry memory _entry,
         uint256 _amount // TODO to doc, this amount is in loanManagerToken
     ) internal returns(uint256 feeTaked) {
@@ -379,7 +384,12 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
         feeTaked = reward.add(burned);
 
         if (feeTaked != 0)
-            emit TakeFee(burned, msg.sender, reward);
+            emit TakeFee(
+                _entryId,
+                burned,
+                msg.sender,
+                reward)
+            ;
     }
 
     function _takeFeeTo(
@@ -395,6 +405,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
     }
 
     function _convertPay(
+        uint256 _entryId,
         Entry storage _entry,
         uint256 _requiredToken, // in loanManager token
         bytes memory _oracleData,
@@ -418,7 +429,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
             targetBuy             // Token to buy
         );
 
-        uint256 feeTaked = _chargeFee ? _takeFee(_entry, Math.min(bought, _requiredToken)) : 0;
+        uint256 feeTaked = _chargeFee ? _takeFee(_entryId, _entry, Math.min(bought, _requiredToken)) : 0;
         uint256 tokensToPay = Math.min(bought, targetBuy).sub(feeTaked);
 
         // Pay debt
@@ -520,6 +531,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
     /**
         @param _id The index of entry, inside of entries array
+
         @return The collateral ratio minus the liquidation ratio
     */
     function liquidationDeltaRatio(
@@ -532,6 +544,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
     /**
         @param _id The index of entry, inside of entries array
+
         @return The collateral ratio minus the balance ratio
     */
     function balanceDeltaRatio(
@@ -544,6 +557,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
     /**
         @param _id The index of entry, inside of entries array
+
         @return The ratio of the collateral vs the debt
     */
     function collateralRatio(
@@ -560,6 +574,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
     /**
         @param _id The index of entry, inside of entries array
+
         @return The _amount of the entry valuate in collateral Token
     */
     function collateralInTokens(
@@ -571,6 +586,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
     /**
         @param _id The index of entry, inside of entries array
         @param _amount The amount in collateral Token
+
         @return The _amount valuate in loanManager Token
     */
     function valueCollateralToTokens(
@@ -620,6 +636,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
     /**
         @param _id The index of entry, inside of entries array
         @param _amount The amount in loanManager Token
+
         @return The _amount valuate in collateral Token
     */
     function valueTokensToCollateral(
@@ -644,6 +661,7 @@ contract Collateral is Ownable, Cosigner, ERC721Base {
 
     /**
         @param _id The index of entry, inside of entries array
+
         @return The _amount of the debt valuate in loanManager Token
     */
     function debtInTokens(
