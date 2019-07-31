@@ -1,5 +1,5 @@
-#from models import Loan
-#from contracts.commit_processor import CommitProcessor
+from models import Collateral
+from contracts.commit_processor import CommitProcessor
 
 
 class CollateralBalance(CommitProcessor):
@@ -7,13 +7,14 @@ class CollateralBalance(CommitProcessor):
         self.opcode = "collateral_balance_collateral"
 
     def process(self, commit, *args, **kwargs):
-        #data = commit.data
+        data = commit.data
 
-        #loan = Loan.objects.get(id=data.get("id"))
-
-        #loan.open = data.get("open")
-        #loan.lender = data.get("lender")
-        #loan.status = data.get("status")
-        #loan.commits.append(commit)
-
-        #loan.save()
+        try:
+            collateral = Collateral.objects.get(id=data["id"])
+            new_amount = int(collateral.amount) - int(data.get("payTokens"))
+            collateral.amount = str(new_amount)
+            
+            commit.save()
+            collateral.save()
+        except Collateral.DoesNotExist:
+            self.logger.warning("Collateral with id {} does not exist".format(data["id"]))

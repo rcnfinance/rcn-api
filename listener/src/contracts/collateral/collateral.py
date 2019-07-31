@@ -42,7 +42,7 @@ from .commit_processors.convert_pay import ConvertPay as ConvertPayCommitProcess
 from .commit_processors.rebuy import Rebuy as ReBuyCommitProcessor
 from .commit_processors.cancel_debt import CancelDebt as CancelDebtCommitProcessor
 from .commit_processors.take_fee import TakeFee as TakeFeeCommitProcessor
-
+from .commit_processors.collateral_balance import CollateralBalance as CollateralBalanceCommitProcessor
 
 commit_processors = [
     CreatedCommitProcessor(),
@@ -55,7 +55,8 @@ commit_processors = [
     ConvertPayCommitProcessor(),
     ReBuyCommitProcessor(),
     CancelDebtCommitProcessor(),
-    TakeFeeCommitProcessor()
+    TakeFeeCommitProcessor(),
+    CollateralBalanceCommitProcessor()
 ]
 
 schedule_processors = []
