@@ -46,7 +46,7 @@ class CollateralSerializer(BaseSerializer):
     burn_fee = RawField("burn_fee")
     reward_fee = RawField("reward_fee")
     started = RawField("started")
-    invalid = RawField("started")
+    invalid = RawField("invalid")
 
 class ConfigSerializer(BaseSerializer):
     id = RawField("id")
