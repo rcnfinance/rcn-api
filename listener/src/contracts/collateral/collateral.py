@@ -40,6 +40,9 @@ from .commit_processors.emergency_redeemed import EmergencyRedeemed as Emergency
 from .commit_processors.pay_off_debt import PayOffDebt as PayOffDebtCommitProcessor
 from .commit_processors.convert_pay import ConvertPay as ConvertPayCommitProcessor
 from .commit_processors.rebuy import Rebuy as ReBuyCommitProcessor
+from .commit_processors.cancel_debt import CancelDebt as CancelDebtCommitProcessor
+from .commit_processors.take_fee import TakeFee as TakeFeeCommitProcessor
+
 
 commit_processors = [
     CreatedCommitProcessor(),
@@ -50,7 +53,9 @@ commit_processors = [
     EmergencyRedeemedCommitProcessor(),
     PayOffDebtCommitProcessor(),
     ConvertPayCommitProcessor(),
-    ReBuyCommitProcessor()
+    ReBuyCommitProcessor(),
+    CancelDebtCommitProcessor(),
+    TakeFeeCommitProcessor()
 ]
 
 schedule_processors = []
