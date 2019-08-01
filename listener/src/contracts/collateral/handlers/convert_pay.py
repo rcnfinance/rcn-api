@@ -5,7 +5,7 @@ from models import Commit
 
 
 class ConvertPay(EventHandler):
-    signature = "ConvertPay(uint256,uint256,bytes)"
+    signature = "ConvertPay(uint256,uint256,uint256,bytes)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     # def _normalize(self):
@@ -20,6 +20,7 @@ class ConvertPay(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
+            "id": str(self._args.get("_id")),
             "fromAmount": str(self._args.get("_fromAmount")),
             "toAmount": str(self._args.get("_toAmount")),
             "oracleData": str(self._args.get("_oracleData")),

@@ -19,6 +19,7 @@ class Rebuy(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
+            "id": str(self._args.get("_id")),
             "_fromAmount": self._args.get("_fromAmount"),
             "_toAmount": self._args.get("_toAmount")
         }
