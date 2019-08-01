@@ -89,6 +89,8 @@ class Collateral(Document):
     reward_fee = StringField(required=True, max_length=150)  
     started = BooleanField(required=True)
     invalid = BooleanField(required=True)
+    collateral_ratio = StringField(required=True, max_length=150)
+    can_claim = BooleanField(required=True) 
 
     meta = {
         "indexes": [

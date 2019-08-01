@@ -1,14 +1,18 @@
 import logging
+import requests
+from oracle_interface import OracleInterface
 from datetime import datetime as dt
 
 from models import Debt
 from models import State
 from models import Config
 from models import Loan
-
+from models import Collateral
 
 U_128_OVERFLOW = 2**128
+ORACLE_URL = "https://oracle.ripio.com/rate"
 
+logger = logging.getLogger(__name__)
 
 def get_data(id_loan):
     debt = Debt.objects.get(id=id_loan)
@@ -297,3 +301,35 @@ def get_obligation(_id, timestamp):
 
     logger.info("Output value: {},{}".format(obligation, defined))
     return obligation, defined
+
+def get_oracle_data(id):
+    try:
+        collateral = Collateral.objects.get(id=str(id))
+        
+        debtId = collateral.debt_id
+        loan = Loan.objects.get(id=debtId)
+
+        oracle = loan.oracle
+
+        response = requests.get(url = ORACLE_URL)
+        oracleData = response.json() 
+
+        for currencyObject in oracleData:
+            print('Currency:', currencyObject["currency"])
+            if currencyObject["currency"] == loan.currency:
+                currencyData = currencyObject["data"]
+            else:
+                currencyData = None    
+
+        if currencyData is None:
+            _tokens = 0
+            _equivalent = 0
+        else: 
+            (_tokens,_equivalent) = OracleInterface.readSample(currencyData, oracle)    
+    
+        print('tokens:', _tokens)
+        print('equivalent:', _equivalent)
+
+        return (_tokens,_equivalent)
+    except Collateral.DoesNotExist:
+        logger.warning("Collateral with id {} does not exist".format(str(id)))

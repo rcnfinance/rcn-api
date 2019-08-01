@@ -22,6 +22,8 @@ class Created(CommitProcessor):
         collateral.reward_fee = data.get("reward_fee")
         collateral.started = data.get("started")
         collateral.invalid = data.get("invalid")
- 
+        collateral.collateral_ratio = data.get("collateral_ratio")
+        collateral.can_claim = data.get("can_claim")
+
         commit.save()
         collateral.save()

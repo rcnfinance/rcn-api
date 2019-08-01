@@ -1,6 +1,9 @@
 import logging
 import time
 import json
+import os
+from ethereum_connection import EthereumConnection
+from ethereum_connection import ContractConnection
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
@@ -28,7 +31,23 @@ from models import Commit
 from models import Collateral
 from clock import Clock
 from utils import get_data
+from collateral_interface import CollateralInterface
 
+
+COLLATERAL_ADDRESS = os.environ.get("COLLATERAL_ADDRESS")
+
+ABI_PATH = os.path.join(
+    "/project/abi",
+    "collateral.json"
+)
+
+print(ABI_PATH)
+
+URL_NODE = os.environ.get("URL_NODE")
+eth_conn = EthereumConnection(URL_NODE)
+contract_connection = ContractConnection(eth_conn, COLLATERAL_ADDRESS, ABI_PATH)
+
+collateral_interface = CollateralInterface(contract_connection)
 
 logger = logging.getLogger(__name__)
 
@@ -245,7 +264,17 @@ class CollateralItem(RetrieveAPI):
 
     def retrieve(self, params, meta, id_collateral, **kwargs):
         try:
-            return Collateral.objects.get(id=id_collateral)
+            collateral = Collateral.objects.get(id=id_collateral)
+            print('Collaterlal:', collateral)
+            print('Debt ID:', collateral.debt_id)
+            print('Collateral ratio', collateral.collateral_ratio)
+            print('Collateral Id', id_collateral)
+            collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
+            print('New Collateral:', collateral.collateral_ratio)
+            collateral.can_claim = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral)) < 0
+            print('Can claim collateral:', collateral.can_claim)
+            collateral.save()
+            return collateral
         except Collateral.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title='Collateral does not exists',

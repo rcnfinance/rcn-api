@@ -5,7 +5,7 @@ from models import Loan
 
 ABI_PATH = os.path.join(
     "/project/abi",
-    "oracle.json"
+    "rateOracle.json"
 )
 URL_NODE = os.environ.get("URL_NODE")
 
