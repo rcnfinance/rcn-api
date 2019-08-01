@@ -265,15 +265,20 @@ class CollateralItem(RetrieveAPI):
     def retrieve(self, params, meta, id_collateral, **kwargs):
         try:
             collateral = Collateral.objects.get(id=id_collateral)
-            print('Collaterlal:', collateral)
+            print('Collateral before update:', collateral)
             print('Debt ID:', collateral.debt_id)
-            print('Collateral ratio', collateral.collateral_ratio)
+            print('Collateral ratio before', collateral.collateral_ratio)
             print('Collateral Id', id_collateral)
-            collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
-            print('New Collateral:', collateral.collateral_ratio)
-            collateral.can_claim = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral)) < 0
-            print('Can claim collateral:', collateral.can_claim)
-            collateral.save()
+            print('Collateral Started', collateral.started)
+            if collateral.started:
+                collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
+                print('New Collateral:', collateral.collateral_ratio)
+                liquidationDeltaRatio = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral))
+                print('liquidation_delta_ratio:', liquidationDeltaRatio)
+                collateral.can_claim = liquidationDeltaRatio < 0
+                print('Can claim collateral:', collateral.can_claim)
+                collateral.save()
+            print(collateral)    
             return collateral
         except Collateral.DoesNotExist:
             raise falcon.HTTPNotFound(

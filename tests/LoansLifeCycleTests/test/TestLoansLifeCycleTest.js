@@ -680,13 +680,13 @@ contract('Loans Life Cycle Tests', async accounts => {
         let entry;
 
         it('should create a new loan Request, with a collateral entry ', async () => {
+            await auxToken.setBalance(converterAddress, bn(10000).mul(WEI));
+            await rcnToken.setBalance(converterAddress, bn(10000).mul(WEI));
+
             entry = await new collateralHelper.EntryBuilder(creatorAddress, auxToken)
                 .with('rateFromRCN', bn(5).mul(WEI).div(bn(10)))
                 .with('rateToRCN', bn(2).mul(WEI))
                 .build(rcnToken, converter, installmentModel, loanManager, debtEngine, collateral, borrowerAddress, creatorAddress);
-
-            await converter.setRate(rcnToken.address, auxToken.address, entry.rateFromRCN);
-            await converter.setRate(auxToken.address, rcnToken.address, entry.rateToRCN);
 
             await loanManager.approveRequest(entry.loanId, { from: borrowerAddress });
 

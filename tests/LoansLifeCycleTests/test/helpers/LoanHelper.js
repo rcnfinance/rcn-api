@@ -168,6 +168,8 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
     // estimated_obligation
     const estimatedObligationApi = modelInfo.estimated_obligation;
     const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
+    console.log('est api:', estimatedObligationApi.toString());
+    console.log('est eth:', estimatedObligationEth.toString());
     assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
 
     // next_obligation

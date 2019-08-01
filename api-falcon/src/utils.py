@@ -315,7 +315,6 @@ def get_oracle_data(id):
         oracleData = response.json() 
 
         for currencyObject in oracleData:
-            print('Currency:', currencyObject["currency"])
             if currencyObject["currency"] == loan.currency:
                 currencyData = currencyObject["data"]
             else:
@@ -326,9 +325,6 @@ def get_oracle_data(id):
             _equivalent = 0
         else: 
             (_tokens,_equivalent) = OracleInterface.readSample(currencyData, oracle)    
-    
-        print('tokens:', _tokens)
-        print('equivalent:', _equivalent)
 
         return (_tokens,_equivalent)
     except Collateral.DoesNotExist:
