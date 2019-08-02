@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 def get_data(id_loan):
     debt = Debt.objects.get(id=id_loan)
-    now = dt.utcnow().timestamp()
+    now = int(dt.utcnow().timestamp())
 
     paid = get_paid(id_loan)
     due_time = get_due_time(id_loan)

@@ -675,7 +675,7 @@ contract('Loans Life Cycle Tests', async accounts => {
         });
     });
 
-    COLLATERAL
+    // COLLATERAL
     describe('TEST COLLATERAL - CREATE, DEPOSIT, LEND, WITHDRAW, REDEEM', function () {
         let entry;
 
@@ -809,30 +809,26 @@ contract('Loans Life Cycle Tests', async accounts => {
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
         it('should claim and balance collateral to the baseRatio', async () => {
-
-            const collateralRatio = await collateral.collateralRatio(entry.id, 0, 0);
-            console.log('Collateral Ratio:', collateralRatio.toString());
-            console.log('Change rate so collateral ratio is lower than the liquidation ratio');
-
-            const collateralBefore = await api.getCollateralByEntryId(entry.id);
-            console.log(collateralBefore);
+            // const collateralRatio = await collateral.collateralRatio(entry.id, 0, 0);
+            // console.log('Collateral Ratio:', collateralRatio.toString());
+            // console.log('Change rate so collateral ratio is lower than the liquidation ratio');
+            // const collateralBefore = await api.getCollateralByEntryId(entry.id);
+            // console.log(collateralBefore);
 
             await converter.setRate(auxToken.address, rcnToken.address, bn(14).mul(WEI).div(bn(10)));
 
-            const newCollateralRatio = await collateral.collateralRatio(entry.id, 0, 0);
-            console.log('New Collateral Ratio:', newCollateralRatio.toString());
-
-            const liquidationDeltaRatio = await collateral.liquidationDeltaRatio(entry.id, 0, 0);
-            console.log('Liquidation delta ratio', liquidationDeltaRatio.toString());
-
-            const collateralAfterRateChange = await api.getCollateralByEntryId(entry.id);
-            console.log(collateralAfterRateChange);
+            // const newCollateralRatio = await collateral.collateralRatio(entry.id, 0, 0);
+            // console.log('New Collateral Ratio:', newCollateralRatio.toString());
+            // const liquidationDeltaRatio = await collateral.liquidationDeltaRatio(entry.id, 0, 0);
+            // console.log('Liquidation delta ratio', liquidationDeltaRatio.toString());
+            // const collateralAfterRateChange = await api.getCollateralByEntryId(entry.id);
+            // console.log(collateralAfterRateChange);
 
             await collateral.claim(creatorAddress, entry.loanId, [], { from: creatorAddress });
 
             await sleep(5000);
-            const collateralAfterClaim = await api.getCollateralByEntryId(entry.id);
-            console.log(collateralAfterClaim);
+            // const collateralAfterClaim = await api.getCollateralByEntryId(entry.id);
+            // console.log(collateralAfterClaim);
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
     });
@@ -930,11 +926,11 @@ contract('Loans Life Cycle Tests', async accounts => {
             await loanHelper.checkLend(loanManager, debtEngine, installmentModel, loanEthBeforeLend, entry.loanId);
             await collateralHelper.checkCollateral(collateral, entry.id);
         });
-        // it('should CancelDebt with collateral', async () => {
-        //     await collateral.claim(creatorAddress, entry.loanId, [], { from: creatorAddress });
+        it('should CancelDebt with collateral', async () => {
+            await collateral.claim(creatorAddress, entry.loanId, [], { from: creatorAddress });
 
-        //     await sleep(5000);
-        //     await collateralHelper.checkCollateral(collateral, entry.id);
-        // });
+            await sleep(5000);
+            await collateralHelper.checkCollateral(collateral, entry.id);
+        });
     });
 });

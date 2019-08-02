@@ -214,15 +214,15 @@ const checkCollateral = async function (collateral, entryId) {
 
     // const ethStarted = await collateral.debtToEntry(ethCollateral.debtId);
 
-    assert.equal(apiCollateral.id, entryId);
-    assert.equal(apiCollateral.debt_id, ethCollateral.debtId);
-    assert.equal(apiCollateral.oracle, ethCollateral.oracle);
-    assert.equal(apiCollateral.token, ethCollateral.token);
-    assert.equal(apiCollateral.amount, ethCollateral.amount.toString());
-    assert.equal(apiCollateral.liquidation_ratio, ethCollateral.liquidationRatio);
-    assert.equal(apiCollateral.balance_ratio, ethCollateral.balanceRatio);
-    assert.equal(apiCollateral.burn_fee, ethCollateral.burnFee);
-    assert.equal(apiCollateral.reward_fee, ethCollateral.rewardFee);
+    assert.equal(apiCollateral.id, entryId, 'Id not equal');
+    assert.equal(apiCollateral.debt_id, ethCollateral.debtId, 'Debt not equal');
+    assert.equal(apiCollateral.oracle, ethCollateral.oracle, 'Oracle not equal');
+    assert.equal(apiCollateral.token, ethCollateral.token, 'token not equal');
+    assert.equal(apiCollateral.amount, ethCollateral.amount.toString(), 'amount not equal');
+    assert.equal(apiCollateral.liquidation_ratio, ethCollateral.liquidationRatio, 'liquidationRatio not equal');
+    assert.equal(apiCollateral.balance_ratio, ethCollateral.balanceRatio, 'Balance ratio not equal');
+    assert.equal(apiCollateral.burn_fee, ethCollateral.burnFee, 'burn fee not equal');
+    assert.equal(apiCollateral.reward_fee, ethCollateral.rewardFee, 'Reward fee not equal');
     // assert.equal(apiCollateral.started, ethStarted !== undefined);
 };
 

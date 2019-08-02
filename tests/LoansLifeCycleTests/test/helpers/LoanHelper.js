@@ -168,20 +168,18 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
     // estimated_obligation
     const estimatedObligationApi = modelInfo.estimated_obligation;
     const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
-    console.log('est api:', estimatedObligationApi.toString());
-    console.log('est eth:', estimatedObligationEth.toString());
-    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
+    assert.equal(estimatedObligationApi.toString(), estimatedObligationEth.toString(), 'estimated obligation eq');
 
     // next_obligation
     const nextObligationApi = modelInfo.next_obligation;
     const nextObligationEth = await installmentModel.getObligation(id, dueTime);
-    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
+    assert.equal(nextObligationApi.toString(), nextObligationEth[0].toString(), 'next_obligation');
 
     // current_obligation
     const now = parseInt(Date.now() / 1000);
     const currentObligationApi = modelInfo.current_obligation;
     const currentObligationEth = await installmentModel.getObligation(id, now);
-    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+    assert.equal(currentObligationApi.toString(), currentObligationEth[0].toString(), 'currentObligation');
 };
 
 const checkPay = async function (loanManager, debtEngine, installmentModel, id) {
@@ -214,18 +212,18 @@ const checkPay = async function (loanManager, debtEngine, installmentModel, id) 
     // estimated_obligation
     const estimatedObligationApi = modelInfo.estimated_obligation;
     const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
-    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
+    assert.equal(estimatedObligationApi.toString(), estimatedObligationEth.toString(), 'estimated obligation eq');
 
     // next_obligation
     const nextObligationApi = modelInfo.next_obligation;
     const nextObligationEth = await installmentModel.getObligation(id, dueTime);
-    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
+    assert.equal(nextObligationApi.toString(), nextObligationEth[0].toString(), 'next_obligation');
 
     // current_obligation
     const now = parseInt(Date.now() / 1000);
     const currentObligationApi = modelInfo.current_obligation;
     const currentObligationEth = await installmentModel.getObligation(id, now);
-    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+    assert.equal(currentObligationApi.toString(), currentObligationEth[0].toString(), 'currentObligation');
 };
 
 const checkCancel = async function (id) {
