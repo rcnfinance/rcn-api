@@ -1,6 +1,9 @@
 import logging
 import time
 import json
+import os
+from ethereum_connection import EthereumConnection
+from ethereum_connection import ContractConnection
 from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
@@ -17,15 +20,34 @@ from serializers import ConfigCountSerializer
 from serializers import StateCountSerializer
 from serializers import CommitSerializer
 from serializers import CommitCountSerializer
+from serializers import CollateralSerializer
+from serializers import CollateralCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
 from models import OracleHistory
 from models import State
 from models import Commit
+from models import Collateral
 from clock import Clock
 from utils import get_data
+from collateral_interface import CollateralInterface
 
+
+COLLATERAL_ADDRESS = os.environ.get("COLLATERAL_ADDRESS")
+
+ABI_PATH = os.path.join(
+    "/project/abi",
+    "collateral.json"
+)
+
+print(ABI_PATH)
+
+URL_NODE = os.environ.get("URL_NODE")
+eth_conn = EthereumConnection(URL_NODE)
+contract_connection = ContractConnection(eth_conn, COLLATERAL_ADDRESS, ABI_PATH)
+
+collateral_interface = CollateralInterface(contract_connection)
 
 logger = logging.getLogger(__name__)
 
@@ -200,6 +222,68 @@ class StateItem(RetrieveAPI):
             raise falcon.HTTPNotFound(
                 title='State does not exists',
                 description='State with id={} does not exists'.format(id_state)
+            )
+
+class CollateralList(PaginatedListAPI):
+    serializer = CollateralSerializer()
+
+    id = StringParam("Id filter")
+    debt_id = StringParam("debt_id filter")
+    token = StringParam("token filter")
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = Collateral.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
+
+class CollateralListCount(RetrieveAPI):
+    serializer = CollateralCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Collateral.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
+
+
+class CollateralItem(RetrieveAPI):
+    serializer = CollateralSerializer()
+
+    def retrieve(self, params, meta, id_collateral, **kwargs):
+        try:
+            collateral = Collateral.objects.get(id=id_collateral)
+            print('Collateral before update:', collateral)
+            print('Debt ID:', collateral.debt_id)
+            print('Collateral ratio before', collateral.collateral_ratio)
+            print('Collateral Id', id_collateral)
+            print('Collateral Started', collateral.started)
+            if collateral.started:
+                collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
+                print('New Collateral:', collateral.collateral_ratio)
+                liquidationDeltaRatio = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral))
+                print('liquidation_delta_ratio:', liquidationDeltaRatio)
+                collateral.can_claim = liquidationDeltaRatio < 0
+                print('Can claim collateral:', collateral.can_claim)
+                collateral.save()
+            print(collateral)    
+            return collateral
+        except Collateral.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title='Collateral does not exists',
+                description='Collateral with id={} does not exists'.format(id_collateral)
             )
 
 

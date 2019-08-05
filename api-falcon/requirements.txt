@@ -6,3 +6,4 @@ falcon-cors
 raven
 web3
 mimeparse
+requests

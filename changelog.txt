@@ -1,3 +1,40 @@
+## 2019.2.08 (02 August 2019)
+
+### Added
+- Add ethereum connection to interact with collateral contract in api-falcon
+- Update collateral resourse values of collateralRatio and deltaLiquidationRatio using eth node
+- Add axios middleware to handle bigInt in the response object in tests
+
+###Enhancements
+- fix tests using bignumber
+- Fix bigNumber comparison between api resourse and Eth model_debt_info
+
+## 2019.1.08 (01 August 2019)
+
+### Added
+- Add logic in listener collateral contract, handler and commit for events Deposited and Withdrawed
+- Add lend, deposited and withdrawed collateral tests
+- Add handler and commit processor for events Started, Redeemed and emergencyRedeemed
+- Add handler and commit processor for events ConvertPay, PayOffDebt, CancelDebt, CollateralBalance and TakeFee
+- Add ConvertPay, PayOffDebt, CancelDebt, CollateralBalance and TakeFee tests  
+
+###Enhancements
+- reorganize tests 
+
+## 2019.7.26 (26 July 2019)
+
+### Added
+- create events handlers for collateral contract
+- Add logic in listener collateral contract, handler and commit for event created
+- Add collateral model listener and api-falcon
+- Add collateral resource and endpoint in api-falcon
+- Add and update contracts collateral for test
+- Add static contracts for collateral test
+- Add logic in listener collateral contract, handler and commit for event "Created"
+- Add collateral creation test
+
+###Enhancements
+- reorganize tests helpers
 
 ## 2019.7.19 (19 July 2019)
 

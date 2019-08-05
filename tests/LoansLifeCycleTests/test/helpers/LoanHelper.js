@@ -5,6 +5,15 @@ const expect = require('chai')
     .use(require('bn-chai')(BN))
     .expect;
 
+function bn (number) {
+    if (!(number instanceof String)) {
+        number.toString();
+    }
+    return new BN(number);
+}
+
+const WEI = bn(10).pow(bn(18));
+
 // Function to calculate the id of a Loan
 async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _model, _oracle, _callback, _salt, _expiration, _data) {
     const _two = '0x02';
@@ -54,6 +63,37 @@ async function calcId (loanManager, debtEngine, _amount, _borrower, _creator, _m
     assert.equal(id, controlId, 'bug calcId');
     return id;
 };
+
+async function checkModel (modelInfo, installmentModel, id, dueTime) {
+    const delta = bn(1).mul(WEI).div(bn(100000));
+
+    // console.log('DELTA:', delta.toString());
+    // estimated_obligation
+    const estimatedObligationApi = modelInfo.estimated_obligation;
+    const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
+    // console.log('est api:', estimatedObligationApi.toString());
+    // console.log('est eth:', estimatedObligationEth.toString());
+    const deltaEstimatedObligation = bn(estimatedObligationApi.toString()).sub(bn(estimatedObligationEth.toString()));
+    // console.log('deltaEstimatedObligation', deltaEstimatedObligation.abs().toString());
+
+    expect(delta, 'estimated obligation delta to big').to.be.gt.BN(deltaEstimatedObligation.abs());
+
+    // next_obligation
+    const nextObligationApi = modelInfo.next_obligation;
+    const nextObligationEth = await installmentModel.getObligation(id, dueTime);
+    let deltaNextObligation = bn(0);
+    if (nextObligationEth[0].toString() > 0) {
+        deltaNextObligation = bn(nextObligationApi.toString()).sub(bn(nextObligationEth[0].toString()));
+    }
+    expect(delta, 'next obligation delta to big').to.be.gt.BN(deltaNextObligation.abs());
+
+    // current_obligation
+    const now = parseInt(Date.now() / 1000);
+    const currentObligationApi = modelInfo.current_obligation;
+    const currentObligationEth = await installmentModel.getObligation(id, now);
+    const deltaCurrentObligation = bn(currentObligationApi.toString()).sub(bn(currentObligationEth[0].toString()));
+    expect(delta, 'current obligation delta to big').to.be.gt.BN(deltaCurrentObligation.abs());
+}
 
 // Function creates a new loan request
 const requestLoan = async function (installmentsModel, borrowerAddress, saltValue, loanManager, debtEngine, creatorAddress,
@@ -129,6 +169,7 @@ const checkApprove = async function (loanManager, id) {
 
 const checkLend = async function (loanManager, debtEngine, installmentModel, loanEthBeforeLend, id) {
     const loanApi = (await api.getLoan(id)).content;
+    const loanEthAfterLend = await loanManager.requests(id);
 
     // Query the API for Debt data
     const debtApi = (await api.getDebt(id)).content;
@@ -148,8 +189,9 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
     await helper.checkState(stateEth, stateApi);
     await helper.checkConfig(configEth, configApi);
     await helper.checkDebt(debtEth, debtApi);
-    const keyToCheck3 = ['approved', 'expiration', 'amount', 'cosigner', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
+    const keyToCheck3 = ['approved', 'expiration', 'amount', 'model', 'creator', 'oracle', 'borrower', 'loanData'];
     await helper.checkLoan(loanEthBeforeLend, loanApi, keyToCheck3);
+    assert.equal(loanEthAfterLend.cosigner, loanApi.cosigner);
 
     assert.equal(loanApi.open, false);
     assert.equal(loanApi.approved, true);
@@ -163,21 +205,7 @@ const checkLend = async function (loanManager, debtEngine, installmentModel, loa
     // check model_info.balance
     assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, 'debtETH.balance eq model_info.balance');
 
-    // estimated_obligation
-    const estimatedObligationApi = modelInfo.estimated_obligation;
-    const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
-    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
-
-    // next_obligation
-    const nextObligationApi = modelInfo.next_obligation;
-    const nextObligationEth = await installmentModel.getObligation(id, dueTime);
-    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
-
-    // current_obligation
-    const now = parseInt(Date.now() / 1000);
-    const currentObligationApi = modelInfo.current_obligation;
-    const currentObligationEth = await installmentModel.getObligation(id, now);
-    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+    checkModel(modelInfo, installmentModel, id, dueTime);
 };
 
 const checkPay = async function (loanManager, debtEngine, installmentModel, id) {
@@ -207,21 +235,7 @@ const checkPay = async function (loanManager, debtEngine, installmentModel, id) 
     // check model_info.balance
     assert.equal(parseInt(debtEth.balance), modelInfo.debt_balance, 'debtETH.balance eq model_info.balance');
 
-    // estimated_obligation
-    const estimatedObligationApi = modelInfo.estimated_obligation;
-    const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
-    assert.equal(estimatedObligationApi, estimatedObligationEth, 'estimated obligation eq');
-
-    // next_obligation
-    const nextObligationApi = modelInfo.next_obligation;
-    const nextObligationEth = await installmentModel.getObligation(id, dueTime);
-    assert.equal(nextObligationApi, nextObligationEth[0], 'next_obligation');
-
-    // current_obligation
-    const now = parseInt(Date.now() / 1000);
-    const currentObligationApi = modelInfo.current_obligation;
-    const currentObligationEth = await installmentModel.getObligation(id, now);
-    assert.equal(currentObligationApi, currentObligationEth[0], 'currentObligation');
+    checkModel(modelInfo, installmentModel, id, dueTime);
 };
 
 const checkCancel = async function (id) {
