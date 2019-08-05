@@ -74,7 +74,7 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     // console.log('est api:', estimatedObligationApi.toString());
     // console.log('est eth:', estimatedObligationEth.toString());
     let deltaEstimatedObligation = bn(0);
-    if (estimatedObligationEth.toString() > 0) {
+    if (estimatedObligationEth.toString() > 0 && estimatedObligationApi.toString() > 0) {
         deltaEstimatedObligation = bn(estimatedObligationApi.toString()).sub(bn(estimatedObligationEth.toString()));
     }
     // console.log('deltaEstimatedObligation', deltaEstimatedObligation.abs().toString());
@@ -87,7 +87,7 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     // console.log('next api:', nextObligationApi.toString());
     // console.log('next eth:', nextObligationEth[0].toString());
     let deltaNextObligation = bn(0);
-    if (nextObligationEth[0].toString() > 0) {
+    if (nextObligationEth[0].toString() > 0 && nextObligationApi.toString() > 0) {
         deltaNextObligation = bn(nextObligationApi.toString()).sub(bn(nextObligationEth[0].toString()));
     }
     expect(delta, 'next obligation delta to big').to.be.gt.BN(deltaNextObligation.abs());
@@ -99,7 +99,7 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     // console.log('current api:', currentObligationApi.toString());
     // console.log('current eth:', currentObligationEth[0].toString());
     let deltaCurrentObligation = bn(0);
-    if (currentObligationEth[0].toString() > 0) {
+    if (currentObligationEth[0].toString() > 0 && currentObligationApi.toString() > 0) {
         deltaCurrentObligation = bn(currentObligationApi.toString()).sub(bn(currentObligationEth[0].toString()));
     }
     expect(delta, 'current obligation delta to big').to.be.gt.BN(deltaCurrentObligation.abs());
