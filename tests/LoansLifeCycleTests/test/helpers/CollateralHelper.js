@@ -2,9 +2,6 @@ const Helper = require('./Helper.js');
 const loanHelper = require('./LoanHelper.js');
 const api = require('./api.js');
 const BN = web3.utils.BN;
-const expect = require('chai')
-    .use(require('bn-chai')(BN))
-    .expect;
 
 function bn (number) {
     if (!(number instanceof String)) {
@@ -150,52 +147,6 @@ class EntryBuilder {
     }
 }
 
-const lend = async function (entry, expectLoanAmount, rcn, lender, loanManager, collateral, model) {
-    const lenderSnap = await Helper.balanceSnap(rcn, lender);
-
-    await rcn.setBalance(lender, entry.loanAmountRcn);
-    await rcn.approve(loanManager.address, entry.loanAmountRcn, { from: lender });
-
-    await loanManager.lend(
-        entry.loanId,               // Loan ID
-        entry.oracleData,           // Oracle data
-        collateral.address,         // Collateral cosigner address
-        bn(0),                      // Collateral cosigner cost
-        Helper.toBytes32(entry.id), // Collateral ID reference
-        { from: lender }
-    );
-
-    if (expectLoanAmount !== undefined) {
-        assert.isTrue(expectLoanAmount.gt(entry.loanAmount), 'The new amount should be greater');
-        await model.addDebt(entry.loanId, expectLoanAmount.sub(entry.loanAmount));
-        entry.loanAmount = entry.loanAmount.add(expectLoanAmount.sub(entry.loanAmount));
-        entry.loanAmountRcn = await entry.currencyToRCN();
-    }
-
-    // TODO Check entry status change
-    await lenderSnap.restore();
-};
-
-const requireDeleted = async function (entryId, loanId, collateral) {
-    const entry = await collateral.entries(entryId);
-    expect(entry.liquidationRatio).to.eq.BN(0);
-    expect(entry.balanceRatio).to.eq.BN(0);
-    expect(entry.burnFee).to.eq.BN(0);
-    expect(entry.rewardFee).to.eq.BN(0);
-    assert.equal(entry.token, Helper.address0x);
-    assert.equal(entry.debtId, Helper.bytes320x);
-    expect(entry.amount).to.eq.BN(0);
-
-    expect(await collateral.debtToEntry(loanId)).to.eq.BN(0);
-};
-
-// const getId = async function (promise) {
-//     const receipt = await promise;
-//     const event = receipt.logs.find(l => l.event === 'Requested');
-//     assert.ok(event);
-//     return event.args._id;
-// };
-
 const roundCompare = function (x, y) {
     const z = x.sub(y).abs();
     assert.isTrue(z.gte(bn(0)) || z.lte(bn(2)),
@@ -227,8 +178,6 @@ const checkCollateral = async function (collateral, entryId) {
 };
 
 module.exports = {
-    lend: lend,
-    requireDeleted: requireDeleted,
     roundCompare: roundCompare,
     EntryBuilder: EntryBuilder,
     checkCollateral: checkCollateral,
