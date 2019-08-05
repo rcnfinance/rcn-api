@@ -73,7 +73,10 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     const estimatedObligationEth = await installmentModel.getEstimateObligation(id);
     // console.log('est api:', estimatedObligationApi.toString());
     // console.log('est eth:', estimatedObligationEth.toString());
-    const deltaEstimatedObligation = bn(estimatedObligationApi.toString()).sub(bn(estimatedObligationEth.toString()));
+    let deltaEstimatedObligation = bn(0);
+    if (estimatedObligationEth.toString() > 0) {
+        deltaEstimatedObligation = bn(estimatedObligationApi.toString()).sub(bn(estimatedObligationEth.toString()));
+    }
     // console.log('deltaEstimatedObligation', deltaEstimatedObligation.abs().toString());
 
     expect(delta, 'estimated obligation delta to big').to.be.gt.BN(deltaEstimatedObligation.abs());
@@ -81,6 +84,8 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     // next_obligation
     const nextObligationApi = modelInfo.next_obligation;
     const nextObligationEth = await installmentModel.getObligation(id, dueTime);
+    // console.log('next api:', nextObligationApi.toString());
+    // console.log('next eth:', nextObligationEth[0].toString());
     let deltaNextObligation = bn(0);
     if (nextObligationEth[0].toString() > 0) {
         deltaNextObligation = bn(nextObligationApi.toString()).sub(bn(nextObligationEth[0].toString()));
@@ -91,7 +96,12 @@ async function checkModel (modelInfo, installmentModel, id, dueTime) {
     const now = parseInt(Date.now() / 1000);
     const currentObligationApi = modelInfo.current_obligation;
     const currentObligationEth = await installmentModel.getObligation(id, now);
-    const deltaCurrentObligation = bn(currentObligationApi.toString()).sub(bn(currentObligationEth[0].toString()));
+    // console.log('current api:', currentObligationApi.toString());
+    // console.log('current eth:', currentObligationEth[0].toString());
+    let deltaCurrentObligation = bn(0);
+    if (currentObligationEth[0].toString() > 0) {
+        deltaCurrentObligation = bn(currentObligationApi.toString()).sub(bn(currentObligationEth[0].toString()));
+    }
     expect(delta, 'current obligation delta to big').to.be.gt.BN(deltaCurrentObligation.abs());
 }
 
