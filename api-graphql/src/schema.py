@@ -75,6 +75,7 @@ class Loan(graphene.ObjectType):
     status = graphene.String()
     canceled = graphene.Boolean()
     lender = graphene.String()
+    callback = graphene.String()
 
 
 class State(graphene.ObjectType):

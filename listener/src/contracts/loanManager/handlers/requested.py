@@ -21,6 +21,10 @@ class Requested(EventHandler):
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
+        currency = loan_manager_interface.get_currency(self._args.get('_id'))
+        if currency:
+            currency = utils.add_0x_prefix(currency)
+
         data = {
             "id": self._args.get("_id"),
             "open": True,
@@ -37,7 +41,7 @@ class Requested(EventHandler):
             "salt": str(self._args.get("_salt")),
             "loanData": self._args.get("_loanData"),
             "created": str(self._block_timestamp()),
-            "currency": utils.add_0x_prefix(loan_manager_interface.get_currency(self._args.get("_id"))),
+            "currency": currency,
             "status": "0"
         }
 

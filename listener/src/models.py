@@ -138,7 +138,7 @@ class Loan(Document):
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
     descriptor = EmbeddedDocumentField(Descriptor)
-    currency = StringField(required=True, max_length=150)
+    currency = StringField(required=False, max_length=150, null=True)
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
     lender = StringField(required=False, max_length=150)
