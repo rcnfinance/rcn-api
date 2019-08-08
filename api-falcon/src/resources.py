@@ -22,6 +22,8 @@ from serializers import CommitSerializer
 from serializers import CommitCountSerializer
 from serializers import CollateralSerializer
 from serializers import CollateralCountSerializer
+from serializers import OracleRateSerializer
+from serializers import OracleRateCountSerializer
 from models import Debt
 from models import Config
 from models import Loan
@@ -29,6 +31,7 @@ from models import OracleHistory
 from models import State
 from models import Commit
 from models import Collateral
+from models import OracleRate
 from clock import Clock
 from utils import get_data
 from collateral_interface import CollateralInterface
@@ -175,6 +178,36 @@ class ConfigItem(RetrieveAPI):
                 description='Config with id={} does not exists'.format(id_config)
             )
 
+class OracleRateList(PaginatedListAPI):
+    serializer = OracleRateSerializer()
+
+    def list(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = OracleRate.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
+
+
+class OracleRateListCount(RetrieveAPI):
+    serializer = OracleRateCountSerializer()
+
+    def retrieve(self, params, meta, **kwargs):
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        all_objects = Config.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+
+        return {"count": count_objects}
 
 class StateList(PaginatedListAPI):
     serializer = StateSerializer()

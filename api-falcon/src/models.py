@@ -165,3 +165,8 @@ class OracleHistory(Document):
     tokens = StringField(required=True, max_length=150)
     equivalent = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=100)
+
+class OracleRate(Document):
+    oracle = StringField(required=True, max_length=150)
+    signer = StringField(required=True, max_length=150)
+    rate = StringField(required=True, max_length=150)

@@ -193,3 +193,8 @@ class ERC20D(Document):
     paid = StringField(required=True, max_length=150)
     claimers = EmbeddedDocumentListField(Claim)
 
+class OracleRate(Document):
+    oracle = StringField(required=True, max_length=150)
+    signer = StringField(required=True, max_length=150)
+    rate = StringField(required=True, max_length=150)
+

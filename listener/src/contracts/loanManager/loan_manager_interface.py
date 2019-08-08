@@ -22,7 +22,10 @@ class LoanManagerInterface():
         return self.fn.getDirectory().call()
 
     def get_currency(self, _id):
-        return self.fn.getCurrency(_id).call().hex()
+        try:
+            return self.fn.getCurrency(_id).call().hex()
+        except Exception:
+            return '0x0'
 
     def get_due_time(self, _id):
         return self.fn.getDueTime(_id).call()

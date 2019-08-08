@@ -6,8 +6,9 @@ from contracts.debtEngine.debt_engine import debt_engine
 from contracts.installmentsModel.installments import installments
 from contracts.loanManager.loan_manager import loan_manager
 from contracts.collateral.collateral import Collateral
+from contracts.oracleFactory.oracleFactory import Oraclefactory
 
-all_contracts = [debt_engine, installments, loan_manager, Collateral]
+all_contracts = [debt_engine, installments, loan_manager, Collateral, Oraclefactory]
 
 contract_manager = ContractManager(all_contracts)
 

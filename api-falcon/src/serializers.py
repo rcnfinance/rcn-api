@@ -106,7 +106,6 @@ class ConfigCountSerializer(BaseSerializer):
 class StateCountSerializer(BaseSerializer):
     count = IntField("State count")
 
-
 class CommitCountSerializer(BaseSerializer):
     count = IntField("State count")
 
@@ -118,3 +117,11 @@ class OracleHistorySerializer(BaseSerializer):
     tokens = RawField("discortokens")
     equivalent = RawField("equivalent")
     timestamp = RawField("timestamp")
+
+class OracleRateSerializer(BaseSerializer):
+    oracle = RawField("oracle")
+    signer = RawField("signer")
+    rate = RawField("rate")
+
+class OracleRateCountSerializer(BaseSerializer):
+    count = IntField("Oracle Rate count")
