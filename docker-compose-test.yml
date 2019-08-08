@@ -10,8 +10,11 @@ services:
       - 8000:8000
     links:
       - mongo:mongo
-    env_file:
-      - config.env
+    environment:
+      - URL_NODE=http://ganachecli:8545
+      - MONGO_DB=rcn
+      - MONGO_HOST=mongo
+      - COLLATERAL_ADDRESS=0x690f4330B5E9Fa9d0142BA52D8f20dc767C6495C
     depends_on:
       - mongo
   mongo:
@@ -38,6 +41,7 @@ services:
      - LOAN_MANAGER_ADDRESS=0x275b0DC17674e02a8a434689A638E98D9aCd417a
      - DEBT_ENGINE_ADDRESS=0xdC8Dd86b3337A8EB4B1955DfF4B79676c9A40991
      - INSTALLMENTS_ADDRESS=0xf1d88d1a22AD6D4A56137761e8df4aa68eDa3A11
+     - COLLATERAL_ADDRESS=0x690f4330B5E9Fa9d0142BA52D8f20dc767C6495C
      - URL_NODE=http://ganachecli:8545
      - START_SYNC=-1
      - SENTRY_DSN=
@@ -60,7 +64,7 @@ services:
   test-truffle:
     build:
       context: ./tests/truffle
-    command: bash -c "npm install axios chai bn-chai && truffle test"
+    command: bash -c "npm install axios chai bn-chai json-bigint && truffle test"
     stdin_open: true
     tty: true
     environment:
