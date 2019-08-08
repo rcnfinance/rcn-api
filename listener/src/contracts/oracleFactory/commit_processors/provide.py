@@ -1,6 +1,11 @@
 from models import OracleRate
 from contracts.commit_processor import CommitProcessor
 import requests
+import os
+from contracts.oracleFactory.oracleFactory import oracle_factory_interface
+import web3
+
+API_ENDPOINT = os.environ.get("DISCORD_WEBHOOK")
 
 class Provide(CommitProcessor):
     def __init__(self):
@@ -15,27 +20,25 @@ class Provide(CommitProcessor):
         oracleRate.signer = data.get("signer")
         oracleRate.rate = data.get("rate")
 
-        # defining the api-endpoint  
-        API_ENDPOINT = "https://discordapp.com/api/webhooks/609025990974505000/FiC9Q5JpAfTmb35kCeHhHqwb7fCcCtg9bPv5eq73XDNPHSsPaL1ymhV4kzAcTCgRsHFy"
+        get_symbol = oracle_factory_interface.get_symbol(oracleRate.oracle)
+        rate_decimals = int(oracleRate.rate) / (10 ** 18)
 
         separation = '-----' + '\n' 
-        title = 'New Rate Provided:' + '\n' 
+        title = 'New Rate Provided: ' + get_symbol + '/RCN' + '\n' 
         oracle = 'Oracle: ' + oracleRate.oracle + '\n'
         signer = 'Signer:' + oracleRate.signer + '\n'
-        rate = 'Rate:' + oracleRate.rate + '\n'  
+        raw_rate = 'Raw Rate:' + oracleRate.rate + '\n'  
+        rate = 'Rate:' + str("{:.10f}".format(rate_decimals)) + '\n'      
+        symbol = 'Symbol: ' + get_symbol + '\n'    
 
-        rateProvided = separation + title + oracle + signer + rate + separation         
-
+        rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + separation      
+   
         # data to be sent to api 
         payload = {'username':'Test', 
-                    'content': rateProvided } 
+                    'content': rate_provided_data } 
         
         # sending post request and saving response as response object 
-        r = requests.post(url = API_ENDPOINT, data = payload) 
-        
-        # extracting response text  
-        oracle_url = r.text 
-        print("The oracle URL is:%s"%oracle_url) 
+        requests.post(url = API_ENDPOINT, data = payload) 
 
         commit.save()
         oracleRate.save()
