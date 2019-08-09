@@ -52,6 +52,7 @@ services:
      - PYTHONUNBUFFERED=1
     env_file:
       - config.env
+      - .env
     depends_on:
       - mongo
     links:

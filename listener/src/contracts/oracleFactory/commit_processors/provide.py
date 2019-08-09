@@ -6,6 +6,7 @@ from contracts.oracleFactory.oracleFactory import oracle_factory_interface
 import web3
 
 API_ENDPOINT = os.environ.get("DISCORD_WEBHOOK")
+API_KEY = os.environ.get("WEBHOOK_KEY")
 
 class Provide(CommitProcessor):
     def __init__(self):
@@ -38,7 +39,7 @@ class Provide(CommitProcessor):
                     'content': rate_provided_data } 
         
         # sending post request and saving response as response object 
-        requests.post(url = API_ENDPOINT, data = payload) 
+        requests.post(url = API_ENDPOINT + API_KEY, data = payload) 
 
         commit.save()
         oracleRate.save()
