@@ -1,3 +1,7 @@
+## 2019.2.9
+### Fix
+- freeze web3 version to 4.9.2
+
 ## 2019.2.08 (02 August 2019)
 
 ### Added

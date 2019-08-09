@@ -4,6 +4,6 @@ gunicorn
 mongoengine
 falcon-cors
 raven
-web3
+web3==4.9.2
 mimeparse
 requests
