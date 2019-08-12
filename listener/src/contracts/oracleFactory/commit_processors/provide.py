@@ -4,6 +4,7 @@ import requests
 import os
 from contracts.oracleFactory.oracleFactory import oracle_factory_interface
 import web3
+from datetime import datetime
 
 API_ENDPOINT = os.environ.get("DISCORD_WEBHOOK")
 API_KEY = os.environ.get("WEBHOOK_KEY")
@@ -47,6 +48,7 @@ class Provide(CommitProcessor):
         oracleRate.rate = str("{:.10f}".format(rate_decimals))
         oracleRate.symbol = get_symbol
         oracleRate.timestamp = str(commit.timestamp)
+        oracleRate.time_bson = datetime.fromtimestamp(commit.timestamp)
 
         commit.save()
         oracleRate.save()

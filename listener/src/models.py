@@ -200,4 +200,5 @@ class OracleRate(Document):
     rate = StringField(required=True, max_length=150)
     symbol = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=150)
+    time_bson = DateTimeField(required=True)
 

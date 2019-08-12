@@ -125,6 +125,7 @@ class OracleRateSerializer(BaseSerializer):
     rate = RawField("rate")
     symbol = RawField("symbol")
     timestamp = RawField("timestamp")
+    time_bson = RawField("time_bson")
 
 class OracleRateCountSerializer(BaseSerializer):
     count = IntField("Oracle Rate count")
