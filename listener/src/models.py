@@ -198,6 +198,7 @@ class OracleRate(Document):
     signer = StringField(required=True, max_length=150)
     raw_rate = StringField(required=True, max_length=150)
     rate = StringField(required=True, max_length=150)
+    median_rate = StringField(required=True, max_length=150)
     symbol = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=150)
     time_bson = DateTimeField(required=True)

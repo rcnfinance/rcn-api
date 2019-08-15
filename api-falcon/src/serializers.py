@@ -123,6 +123,7 @@ class OracleRateSerializer(BaseSerializer):
     signer = RawField("signer")
     raw_rate = RawField("raw_rate")
     rate = RawField("rate")
+    median_rate = RawField("rate")
     symbol = RawField("symbol")
     timestamp = RawField("timestamp")
     time_bson = RawField("time_bson")

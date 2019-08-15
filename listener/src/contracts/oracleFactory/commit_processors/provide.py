@@ -51,7 +51,7 @@ class Provide(CommitProcessor):
         symbol = 'Symbol: ' + get_symbol + '\n'    
         timestamp = 'Timestamp: ' + str(commit.timestamp) + '\n'  
         time_bson = 'Time Bson:' +  str(datetime.fromtimestamp(commit.timestamp)) + '\n' 
-        median = 'Median Rate' +  str("{:.10f}".format(median_rate_decimals)) + '\n'      
+        median = 'Median Rate: ' +  str("{:.10f}".format(median_rate_decimals)) + '\n'      
 
         rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + time_bson + timestamp + median + separation      
    
@@ -66,6 +66,7 @@ class Provide(CommitProcessor):
             pass
   
         oracleRate.rate = str("{:.10f}".format(rate_decimals))
+        oracleRate.median_rate = str("{:.10f}".format(median_rate_decimals))
         oracleRate.symbol = get_symbol
         oracleRate.timestamp = str(commit.timestamp)
         oracleRate.time_bson = datetime.fromtimestamp(commit.timestamp)
