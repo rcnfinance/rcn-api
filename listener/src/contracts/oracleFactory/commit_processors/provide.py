@@ -32,8 +32,10 @@ class Provide(CommitProcessor):
         raw_rate = 'Raw Rate:' + oracleRate.raw_rate + '\n'  
         rate = 'Rate:' + str("{:.10f}".format(rate_decimals)) + '\n'      
         symbol = 'Symbol: ' + get_symbol + '\n'    
+        timestamp = 'Timestamp: ' + str(commit.timestamp) + '\n'  
+        time_bson = 'Time Bson:' +  str(datetime.fromtimestamp(commit.timestamp)) + '\n' 
 
-        rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + separation      
+        rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + time_bson + timestamp + separation      
    
         # data to be sent to api 
         payload = {'username':'Test', 
