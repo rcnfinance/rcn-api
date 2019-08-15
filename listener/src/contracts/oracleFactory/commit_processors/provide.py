@@ -5,9 +5,19 @@ import os
 from contracts.oracleFactory.oracleFactory import oracle_factory_interface
 import web3
 from datetime import datetime
+from ethereum_connection import EthereumConnection
+from ethereum_connection import ContractConnection
 
 API_ENDPOINT = os.environ.get("DISCORD_WEBHOOK")
 API_KEY = os.environ.get("WEBHOOK_KEY")
+
+ABI_PATH = os.path.join(
+    "/project/contracts/oracleFactory/abi",
+    "MultiSourceOracle.json"
+)
+URL_NODE = os.environ.get("URL_NODE")
+
+eth_conn = EthereumConnection(URL_NODE)
 
 class Provide(CommitProcessor):
     def __init__(self):
@@ -22,6 +32,13 @@ class Provide(CommitProcessor):
         oracleRate.signer = data.get("signer")
         oracleRate.raw_rate = data.get("rate")
 
+        contract_connection_oracle = ContractConnection(eth_conn, oracleRate.oracle, ABI_PATH)
+        contract_oracle = contract_connection_oracle.contract.functions
+
+        read_sample = contract_oracle.readSample().call()
+        median_rate = read_sample[1]
+        median_rate_decimals = int(median_rate) / (10 ** 18)
+
         get_symbol = oracle_factory_interface.get_symbol(oracleRate.oracle)
         rate_decimals = int(oracleRate.raw_rate) / (10 ** 18)
 
@@ -34,8 +51,9 @@ class Provide(CommitProcessor):
         symbol = 'Symbol: ' + get_symbol + '\n'    
         timestamp = 'Timestamp: ' + str(commit.timestamp) + '\n'  
         time_bson = 'Time Bson:' +  str(datetime.fromtimestamp(commit.timestamp)) + '\n' 
+        median = 'Median Rate' +  str("{:.10f}".format(median_rate_decimals)) + '\n'      
 
-        rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + time_bson + timestamp + separation      
+        rate_provided_data = separation + title + oracle + signer + rate + raw_rate + symbol + time_bson + timestamp + median + separation      
    
         # data to be sent to api 
         payload = {'username':'Test', 

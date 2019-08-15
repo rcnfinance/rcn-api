@@ -8,8 +8,8 @@ from .oracle_factory_interface import OracleFactoryInterface
 ADDRESS = os.environ.get("ORACLE_FACTORY_ADDRESS")
 
 ABI_PATH = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    "abi.json"
+    "/project/contracts/oracleFactory/abi",
+    "OracleFactory.json"
 )
 URL_NODE = os.environ.get("URL_NODE")
 
