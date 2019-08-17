@@ -36,6 +36,7 @@ class Provide(CommitProcessor):
         contract_oracle = contract_connection_oracle.contract.functions
 
         read_sample = contract_oracle.readSample().call()
+        signer_name = contract_oracle.nameOfSigner(oracleRate.signer).call()
         median_rate = read_sample[1]
         median_rate_decimals = int(median_rate) / (10 ** 18)
 
@@ -46,6 +47,7 @@ class Provide(CommitProcessor):
         title = 'New Rate Provided: ' + get_symbol + '/RCN' + '\n' 
         oracle = 'Oracle: ' + oracleRate.oracle + '\n'
         signer = 'Signer:' + oracleRate.signer + '\n'
+        signer = 'Signer Name: ' + signer_name  + '\n' 
         raw_rate = 'Raw Rate:' + oracleRate.raw_rate + '\n'  
         rate = 'Rate:' + str("{:.10f}".format(rate_decimals)) + '\n'      
         symbol = 'Symbol: ' + get_symbol + '\n'    
@@ -64,13 +66,14 @@ class Provide(CommitProcessor):
             requests.post(url = API_ENDPOINT + API_KEY, data = payload) 
         except Exception:
             pass
-  
+
+        oracleRate.signer_name = signer_name
         oracleRate.rate = str("{:.10f}".format(rate_decimals))
         oracleRate.median_rate = str("{:.10f}".format(median_rate_decimals))
         oracleRate.symbol = get_symbol
         oracleRate.timestamp = str(commit.timestamp)
         oracleRate.time_bson = datetime.fromtimestamp(commit.timestamp)
-
+    
         commit.save()
         oracleRate.save()
 

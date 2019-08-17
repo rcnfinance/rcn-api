@@ -3,15 +3,11 @@
         "constant": false,
         "inputs": [
             {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_signer",
-                "type": "address"
+                "name": "_symbol",
+                "type": "string"
             }
         ],
-        "name": "addSigner",
+        "name": "newOracle",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -44,11 +40,71 @@
                 "type": "address"
             },
             {
-                "name": "_name",
-                "type": "string"
+                "name": "_rate",
+                "type": "uint256"
             }
         ],
-        "name": "setName",
+        "name": "provide",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "paused",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_pauser",
+                "type": "address"
+            },
+            {
+                "name": "_enabled",
+                "type": "bool"
+            }
+        ],
+        "name": "setPauser",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "canPause",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [],
+        "name": "pause",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -58,15 +114,11 @@
         "constant": false,
         "inputs": [
             {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_rate",
-                "type": "uint256"
+                "name": "_data",
+                "type": "bytes32[]"
             }
         ],
-        "name": "provide",
+        "name": "provideMultiple",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -108,45 +160,38 @@
         "constant": false,
         "inputs": [
             {
-                "name": "_symbol",
-                "type": "string"
-            },
-            {
-                "name": "_name",
-                "type": "string"
-            },
-            {
-                "name": "_decimals",
-                "type": "uint256"
-            },
-            {
-                "name": "_token",
+                "name": "_oracle",
                 "type": "address"
             },
             {
-                "name": "_maintainer",
-                "type": "string"
+                "name": "_upgrade",
+                "type": "address"
             }
         ],
-        "name": "newOracle",
+        "name": "setUpgrade",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "constant": false,
-        "inputs": [
+        "constant": true,
+        "inputs": [],
+        "name": "isPaused",
+        "outputs": [
             {
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "name": "_maintainer",
-                "type": "string"
+                "name": "",
+                "type": "bool"
             }
         ],
-        "name": "setMaintainer",
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [],
+        "name": "start",
         "outputs": [],
         "payable": false,
         "stateMutability": "nonpayable",
@@ -169,6 +214,50 @@
         ],
         "payable": false,
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_signer",
+                "type": "address"
+            },
+            {
+                "name": "_name",
+                "type": "string"
+            }
+        ],
+        "name": "addSigner",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_oracle",
+                "type": "address"
+            },
+            {
+                "name": "_signer",
+                "type": "address"
+            },
+            {
+                "name": "_name",
+                "type": "string"
+            }
+        ],
+        "name": "setName",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -214,40 +303,6 @@
                 "indexed": false,
                 "name": "_signer",
                 "type": "address"
-            }
-        ],
-        "name": "AddSigner",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "name": "_signer",
-                "type": "address"
-            }
-        ],
-        "name": "RemoveSigner",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "name": "_oracle",
-                "type": "address"
-            },
-            {
-                "indexed": false,
-                "name": "_signer",
-                "type": "address"
             },
             {
                 "indexed": false,
@@ -256,6 +311,35 @@
             }
         ],
         "name": "Provide",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [],
+        "name": "Paused",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [],
+        "name": "Started",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "_pauser",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "name": "_enabled",
+                "type": "bool"
+            }
+        ],
+        "name": "CanPause",
         "type": "event"
     },
     {

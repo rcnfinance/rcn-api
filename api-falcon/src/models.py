@@ -169,6 +169,7 @@ class OracleHistory(Document):
 class OracleRate(Document):
     oracle = StringField(required=True, max_length=150)
     signer = StringField(required=True, max_length=150)
+    signer_name = StringField(required=True, max_length=150)
     raw_rate = StringField(required=True, max_length=150)
     rate = StringField(required=True, max_length=150)
     median_rate = StringField(required=True, max_length=150)

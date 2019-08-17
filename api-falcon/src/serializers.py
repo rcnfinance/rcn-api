@@ -121,6 +121,7 @@ class OracleHistorySerializer(BaseSerializer):
 class OracleRateSerializer(BaseSerializer):
     oracle = RawField("oracle")
     signer = RawField("signer")
+    signer_name = RawField("signer_name")
     raw_rate = RawField("raw_rate")
     rate = RawField("rate")
     median_rate = RawField("rate")
