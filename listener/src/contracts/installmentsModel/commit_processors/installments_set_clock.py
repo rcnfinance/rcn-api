@@ -7,7 +7,7 @@ class InstallmentsSetClock(CommitProcessor):
         self.opcode = "set_clock_installments"
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
 
         try:
             state = State.objects.get(id=data.get("id"))
@@ -15,7 +15,22 @@ class InstallmentsSetClock(CommitProcessor):
             state = State()
             state.id = data.get("id")
 
+        old_data = {
+            "id": data.get("id"),
+            "clock": state.clock
+        }
         state.clock = data.get("duration")
-        # state.commits.append(commit)
+
+        commit.old_data = old_data
         commit.save()
         state.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.old_data
+
+        state = State.objects.get(id=data.get("id"))
+
+        state.clock = data.get("clock")
+
+        state.save()
+        commit.delete()

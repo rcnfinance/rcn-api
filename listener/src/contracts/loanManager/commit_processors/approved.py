@@ -7,11 +7,18 @@ class Approved(CommitProcessor):
         self.opcode = "approved_loan_manager"
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
 
         loan = Loan.objects.get(id=data.get("id"))
 
         loan.approved = data.get("approved")
-        # loan.commits.append(commit)
         commit.save()
+        loan.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.old_data
+        loan = Loan.objects.get(id=data.get("id"))
+
+        loan.approved = data.get("approved")
+        commit.remove()
         loan.save()

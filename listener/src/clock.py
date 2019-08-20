@@ -28,6 +28,11 @@ class Clock():
             self._clock.time = str(value)
             self._save()
 
+    def set_back(self, value):
+        if value < self.time:
+            self._clock.time = str(value)
+            self._save()
+
     def reset(self):
         self._clock.time = '0'
         self._save()

@@ -3,12 +3,10 @@ from mongoengine import LongField
 from mongoengine import DictField
 from mongoengine import BooleanField
 from mongoengine import IntField
-from mongoengine import DateTimeField
 from mongoengine import Document
 from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
-from mongoengine import EmbeddedDocumentListField
 
 
 class Commit(Document):
@@ -17,14 +15,17 @@ class Commit(Document):
     timestamp = LongField(required=True)
     order = IntField(required=True)
     proof = StringField(max_length=150)
-    data = DictField(required=True)
-    address = StringField(max_length=150)
+    new_data = DictField(required=True)
+    old_data = DictField(required=False)
+    address = StringField(required=True, max_length=150)
+    block_number = StringField(required=False, max_length=150)
 
     meta = {
         "indexes": [
             "id_loan",
             "proof",
-            "address"
+            "address",
+            "block_number"
         ]
     }
 
@@ -77,27 +78,6 @@ class State(Document):
         ]
     }
 
-class Collateral(Document):
-    id = StringField(required=True, max_length=150, primary_key=True)
-    debt_id = StringField(required=True, max_length=150)
-    oracle = StringField(required=True, max_length=150)
-    token = StringField(required=True, max_length=150)
-    amount = StringField(required=True, max_length=150)
-    liquidation_ratio = StringField(required=True, max_length=150)
-    balance_ratio = StringField(required=True, max_length=150)
-    burn_fee = StringField(required=True, max_length=150)
-    reward_fee = StringField(required=True, max_length=150)  
-    started = BooleanField(required=True)
-    invalid = BooleanField(required=True)
-    collateral_ratio = StringField(required=True, max_length=150)
-    can_claim = BooleanField(required=True) 
-
-    meta = {
-        "indexes": [
-            "debt_id",
-            "token"
-        ]
-    }  
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -133,7 +113,6 @@ class Loan(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     borrower = StringField(required=True, max_length=150)
-    callback = StringField(required=True, max_length=150)
     salt = StringField(required=True, max_length=150)
     loanData = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
@@ -158,38 +137,9 @@ class Loan(Document):
         ]
     }
 
+
 class OracleHistory(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     tokens = StringField(required=True, max_length=150)
     equivalent = StringField(required=True, max_length=150)
     timestamp = StringField(required=True, max_length=100)
-
-
-class Participant(EmbeddedDocument):
-    lender = StringField(required=True, max_length=150, primary_key=True)
-    balance = StringField(required=True, max_length=150)
-
-class Pool(Document):
-    id = StringField(required=True, max_length=150, primary_key=True)
-    manager = StringField(required=True, max_length=150)
-    loanId = StringField(required=True, max_length=150)
-    cosigner = StringField(required=True, max_length=150)
-    cosigner_limit = StringField(required=True, max_length=150)
-    cosigner_data = StringField(required=True, max_length=150)
-    started = BooleanField(required=True)
-    tracker = StringField(required=True, max_length=150)
-    token = StringField(required=True, max_length=150)
-    raised = StringField(required=True, max_length=150)
-    collected = StringField(required=True, max_length=150)
-    participants = EmbeddedDocumentListField(Participant)
-
-class Claim(EmbeddedDocument):
-    lender = StringField(required=True, max_length=150, primary_key=True)
-    claimed_amount = StringField(required=True, max_length=150)
-    
-class ERC20D(Document):
-    id = StringField(required=True, max_length=150, primary_key=True)
-    token = StringField(required=True, max_length=150)
-    paid = StringField(required=True, max_length=150)
-    claimers = EmbeddedDocumentListField(Claim)
-

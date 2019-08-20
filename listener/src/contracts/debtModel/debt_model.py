@@ -6,6 +6,7 @@ from .handlers.changed_frecuencalcy import ChangedFrecuencalcy
 from .handlers.changed_obligation import ChangedObligation
 from .handlers.changed_status import ChangedStatus
 from .handlers.created import Created
+from .handlers.ownership_transferred import OwnershipTransferred
 from contract import Contract
 
 
@@ -17,12 +18,13 @@ BASE_EVENTS_HANDLERS = [
     ChangedFrecuencalcy,
     ChangedObligation,
     ChangedStatus,
-    Created
+    Created,
+    OwnershipTransferred
 ]
 
 
 class DebtModel(Contract):
-    def __init__(self, name, event_handlers, commit_processors, schedule_processors, contract_connection):
+    def __init__(self, name, address, abi_path, event_handlers, commit_processors, schedule_processors):
         map_signature_handler = {handler.signature: handler for handler in event_handlers}
         for base_handler in BASE_EVENTS_HANDLERS:
             if base_handler.signature not in map_signature_handler:
@@ -30,8 +32,9 @@ class DebtModel(Contract):
 
         super().__init__(
             name,
+            address,
+            abi_path,
             list(map_signature_handler.values()),
             commit_processors,
-            schedule_processors,
-            contract_connection
+            schedule_processors
         )

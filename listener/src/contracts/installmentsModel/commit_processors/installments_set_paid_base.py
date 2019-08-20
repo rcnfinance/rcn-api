@@ -7,10 +7,26 @@ class InstallmentsSetPaidBase(CommitProcessor):
         self.opcode = "set_paid_base_installments"
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
 
         state = State.objects.get(id=data.get("id"))
+
+        old_data = {
+            "id": data.get("id"),
+            "paid_base": state.paid_base
+        }
         state.paid_base = data.get("paid_base")
-        # state.commits.append(commit)
+
+        commit.old_data = old_data
         commit.save()
         state.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.old_data
+
+        state = State.objects.get(id=data.get('id'))
+
+        state.paid_base = data.get("paid_base")
+
+        state.save()
+        commit.delete()

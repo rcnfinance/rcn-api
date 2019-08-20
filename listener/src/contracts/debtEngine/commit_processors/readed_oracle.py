@@ -17,3 +17,6 @@ class ReadedOracle(CommitProcessor):
 
         commit.save()
         oracle.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        pass

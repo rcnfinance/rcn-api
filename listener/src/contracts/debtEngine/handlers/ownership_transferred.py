@@ -15,13 +15,14 @@ class OwnershipTransferred(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "previous_owner": self._args.get("_previousOwner"),
             "new_owner": self._args.get("_newOwner"),
         }
 
-        commit.data = data
+        commit.new_data = new_data
 
         # return [commit]
         return []

@@ -7,7 +7,7 @@ class InstallmentsAddedPaid(CommitProcessor):
         self.opcode = "added_paid_installments"
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
 
         try:
             state = State.objects.get(id=data.get("id"))
@@ -15,8 +15,23 @@ class InstallmentsAddedPaid(CommitProcessor):
             state = State()
             state.id = data.get("id")
 
+        old_data = {
+            "id": data.get("id"),
+            "state_last_payment": data.get("state_last_payment"),
+            "paid": data.get("paid")
+        }
+
         state.last_payment = data.get("state_last_payment")
         state.paid = data.get("paid")
-        # state.commits.append(commit)
+
+        commit.old_data = old_data
         commit.save()
         state.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.old_data
+
+        state = State.objects.get(id=data.get("id"))
+
+        state.delete()
+        commit.delete()

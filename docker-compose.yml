@@ -44,7 +44,7 @@ services:
       - mongo
   listener:
     build: listener
-    restart: always
+    #restart: always
     command: python3 main.py
     volumes:
       - ./listener/src/:/project

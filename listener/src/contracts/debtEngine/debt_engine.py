@@ -76,8 +76,9 @@ EVENTS_HANDLERS = [
 
 debt_engine = Contract(
     "DebtEngine",
+    ADDRESS,
+    ABI_PATH,
     EVENTS_HANDLERS,
     commit_processors,
-    schedule_processors,
-    contract_connection
+    schedule_processors
 )

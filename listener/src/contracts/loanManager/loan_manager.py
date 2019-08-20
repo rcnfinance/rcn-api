@@ -87,8 +87,9 @@ event_handlers = [
 
 loan_manager = Contract(
     "LoanManager",
+    ADDRESS,
+    ABI_PATH,
     event_handlers,
     commit_processors,
-    schedule_processors,
-    contract_connection
+    schedule_processors
 )

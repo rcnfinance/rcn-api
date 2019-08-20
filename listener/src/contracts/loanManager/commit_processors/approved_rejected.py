@@ -7,3 +7,6 @@ class ApprovedRejected(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         pass
+
+    def apply_old(self, commit, *args, **kwargs):
+        commit.delete()

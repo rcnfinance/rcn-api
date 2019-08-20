@@ -8,7 +8,7 @@ class Requested(CommitProcessor):
         self.opcode = "requested_loan_manager"
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
 
         loan = Loan()
 
@@ -30,6 +30,13 @@ class Requested(CommitProcessor):
         loan.descriptor = Descriptor(**data.get("descriptor"))
         loan.currency = data.get("currency")
         loan.status = data.get("status")
-        # loan.commits.append(commit)
+
         commit.save()
         loan.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.new_data
+
+        loan = Loan.objects.get(id=data.get("id"))
+        commit.delete()
+        loan.delete()

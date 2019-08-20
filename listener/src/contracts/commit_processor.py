@@ -7,3 +7,9 @@ class CommitProcessor():
 
     def process(self, commit, *args, **kwargs):
         raise NotImplementedError()
+
+    def apply_old(self, commit, *args, **kwargs):
+        raise NotImplementedError()
+
+    def name(self):
+        return self.__class__.name

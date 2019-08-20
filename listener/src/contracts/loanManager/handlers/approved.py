@@ -18,13 +18,20 @@ class Approved(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "approved": True
         }
 
+        old_data = {
+            "id": self._args.get("_id"),
+            "approved": False
+        }
+
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
+        commit.old_data = old_data
 
         return [commit]

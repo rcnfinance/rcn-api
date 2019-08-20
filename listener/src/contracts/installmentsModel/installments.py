@@ -57,8 +57,9 @@ schedule_processors = []
 
 installments = DebtModel(
     "Installments",
+    ADDRESS,
+    ABI_PATH,
     CUSTOM_EVENT_HANDLERS,
     commit_processors,
-    schedule_processors,
-    contract_connection
+    schedule_processors
 )

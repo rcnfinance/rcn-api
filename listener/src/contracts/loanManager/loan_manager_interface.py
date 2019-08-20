@@ -5,7 +5,7 @@ from ethereum_connection import ContractConnection
 MODEL_ADDRESS = os.environ.get("INSTALLMENTS_ADDRESS")
 
 ABI_PATH = os.path.join(
-    "/project/contracts/installmentsModel",
+    "contracts/installmentsModel",
     "abi.json"
 )
 URL_NODE = os.environ.get("URL_NODE")
@@ -26,7 +26,6 @@ class LoanManagerInterface():
             currency = self.fn.getCurrency(_id).call().hex()
         except ValueError:
             currency = None
-
         return currency
 
     def get_due_time(self, _id):

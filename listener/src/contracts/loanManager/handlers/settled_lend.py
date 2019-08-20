@@ -18,14 +18,15 @@ class SettledLend(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "lender": self._args.get("_lender"),
             "tokens": self._args.get("_tokens")
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.data = new_data
 
         return [commit]

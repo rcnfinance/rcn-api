@@ -18,14 +18,15 @@ class Canceled(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "canceler": self._args.get("_canceler"),
             "canceled": True
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.data = new_data
 
         return [commit]

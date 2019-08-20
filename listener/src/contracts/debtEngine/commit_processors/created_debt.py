@@ -8,8 +8,13 @@ class CreatedDebt(CommitProcessor):
         super().__init__()
 
     def process(self, commit, *args, **kwargs):
-        data = commit.data
+        data = commit.new_data
         debt = Debt()
+
+        old_data = {
+            "id": data.get("_id")
+        }
+
         debt.id = data.get("id")
         debt.error = data.get("error")
         debt.balance = data.get("balance")
@@ -17,6 +22,14 @@ class CreatedDebt(CommitProcessor):
         debt.creator = data.get("creator")
         debt.oracle = data.get("oracle")
         debt.created = data.get("created")
-        # debt.commits.append(commit)
+
+        commit.old_data = old_data
         commit.save()
         debt.save()
+
+    def apply_old(self, commit, *args, **kwargs):
+        data = commit.old_data
+
+        debt = Debt.objects.get(id=data.get("id"))
+        debt.delete()
+        commit.delete()

@@ -18,6 +18,7 @@ class Created3(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
         debt = debt_engine_interface.get_debt_by_id(self._id)
 
@@ -30,7 +31,7 @@ class Created3(EventHandler):
 
         created = str(self._block_timestamp())
 
-        data = {
+        new_data = {
             "error": error,
             "balance": str(balance),
             "model": model,
@@ -41,6 +42,6 @@ class Created3(EventHandler):
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
 
         return [commit]

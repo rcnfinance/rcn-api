@@ -30,10 +30,11 @@ class InstallmentsAddedPaid(AddedPaid):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
         state = State.objects.get(id=self._args.get("_id"))
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "real": str(self._args.get("_paid")),
             "paid": str(int(state.paid) + self._args.get("_paid")),
@@ -41,7 +42,7 @@ class InstallmentsAddedPaid(AddedPaid):
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
 
         return [commit]
 
@@ -79,15 +80,16 @@ class InstallmentsChangedStatus(ChangedStatus):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "timestamp": str(self._args.get("_timestamp")),
             "status": str(self._args.get("_status"))
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
         commits.append(commit)
 
         # commit full payment loan manager
@@ -95,15 +97,16 @@ class InstallmentsChangedStatus(ChangedStatus):
         commit_full_payment.opcode = "full_payment_loan_manager"
         commit_full_payment.timestamp = commit.timestamp
         commit_full_payment.proof = self._transaction
-        commit_full_payment.proof = self._tx.get("from")
+        commit_full_payment.address = self._tx.get("from")
+        commit_full_payment.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "status": str(self._args.get("_status"))
         }
 
         commit_full_payment.id_loan = self._args.get("_id")
-        commit_full_payment.data = data
+        commit_full_payment.new_data = new_data
 
         commits.append(commit_full_payment)
 
@@ -123,7 +126,8 @@ class InstallmentsCreated(Created):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
-        commit.data = config_data
+        commit.block_number = self._block_number
+        commit.new_data = config_data
         commit.id_loan = self._args.get("_id")
 
         return [commit]

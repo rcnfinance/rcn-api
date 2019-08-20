@@ -20,12 +20,13 @@ class Requested(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        currency = loan_manager_interface.get_currency(self._args.get('_id'))
+        currency = loan_manager_interface.get_currency(self._args.get("_id"))
         if currency:
             currency = utils.add_0x_prefix(currency)
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "open": True,
             "approved": self._args.get("_creator") == self._args.get("_borrower"),
@@ -45,11 +46,11 @@ class Requested(EventHandler):
             "status": "0"
         }
 
-        descriptor = loan_manager_interface.get_descriptor(data)
+        descriptor = loan_manager_interface.get_descriptor(new_data)
 
-        data["descriptor"] = descriptor
+        new_data["descriptor"] = descriptor
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
 
         return [commit]

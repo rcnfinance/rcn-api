@@ -1,6 +1,5 @@
 import web3
 from contracts.event import EventHandler
-from utils import split_every
 from models import Commit
 import utils
 
@@ -19,8 +18,9 @@ class Lent(EventHandler):
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
+        commit.block_number = self._block_number
 
-        data = {
+        new_data = {
             "id": self._args.get("_id"),
             "lender": self._args.get("_lender"),
             "tokens": str(self._args.get("_tokens")),
@@ -29,6 +29,6 @@ class Lent(EventHandler):
         }
 
         commit.id_loan = self._args.get("_id")
-        commit.data = data
+        commit.new_data = new_data
 
         return [commit]
