@@ -1,3 +1,4 @@
+import os
 from event_buffer import EventBuffer
 from listener import Listener
 from processor import Processor
@@ -11,12 +12,14 @@ all_contracts = [debt_engine, installments, loan_manager, Collateral]
 
 contract_manager = ContractManager(all_contracts)
 
+sleep_in_sync = int(os.environ.get("SLEEP_IN_SYNC", 5))
+
 
 def run():
     buffer = EventBuffer()
     processor = Processor(buffer, contract_manager)
     listener = Listener(buffer, contract_manager)
-    listener.run()
+    listener.run(sleep_in_sync)
 
 
 if __name__ == '__main__':

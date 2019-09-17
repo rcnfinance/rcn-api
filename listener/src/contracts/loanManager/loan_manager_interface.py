@@ -24,7 +24,7 @@ class LoanManagerInterface():
     def get_currency(self, _id):
         try:
             currency = self.fn.getCurrency(_id).call().hex()
-        except ValueError:
+        except Exception:
             currency = None
 
         return currency

@@ -4,7 +4,7 @@ import logging
 import logging.handlers
 from raven.handlers.logging import SentryHandler
 from raven.conf import setup_logging
-
+from db import connection
 
 logger = logging.getLogger(__name__)
 
@@ -73,10 +73,15 @@ class Listener:
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
         setup_logging(handler)
 
-    def run(self):
+    def clean_db_data(self):
+        # clean all data en db
+        connection.drop_database(os.environ.get("MONGO_DB"))
+
+    def run(self, sleep_in_sync):
         self.start_sync = int(os.environ['START_SYNC'])
         self.current_block = self.start_sync
         self.safe_block = self.start_sync
 
         # self.w3 = SafeWeb3(w3)
-        self.listen()
+        self.clean_db_data()
+        self.listen(sleep_in_sync)
