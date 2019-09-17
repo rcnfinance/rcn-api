@@ -33,7 +33,7 @@ class Processor:
         self._advance_time(timestamp)
 
     def integrity_error(self):
-        self.connection = connect(db='rcn', os.environ['MONGO_HOST'])
+        self.connection = connect(db='rcn', host=os.environ['MONGO_HOST'])
         self.connection.drop_database('rcn')
         self.clock.reset()
         self.nonce = 0

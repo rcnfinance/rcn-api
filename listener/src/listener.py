@@ -47,7 +47,7 @@ class Listener:
         while True:
             # Tick to current block time
             last_block = self.w3.eth.getBlock('latest')
-            dest_number = min(last_block.number, self.safe_block + 1000)
+            dest_number = min(last_block.number, self.safe_block + int(os.environ['BLOCK_WINDOW']))
 
             if dest_number == last_block.number:
                 dest_timestamp = last_block.timestamp
@@ -75,7 +75,7 @@ class Listener:
         setup_logging(handler)
 
     def run(self):
-        self.connection = connect(db='rcn', os.environ['MONGO_HOST'])
+        self.connection = connect(db='rcn', host=os.environ['MONGO_HOST'])
         self.connection.drop_database('rcn')
 
         self.setup_logging(logging.INFO)

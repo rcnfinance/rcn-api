@@ -4,3 +4,5 @@ ADD src /project
 ADD requirements.txt /project
 WORKDIR /project
 RUN pip install -r requirements.txt
+
+ENTRYPOINT python3 ./main.py
