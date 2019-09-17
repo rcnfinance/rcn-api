@@ -1,3 +1,4 @@
+import os
 import logging
 import datetime
 from models import Commit, Loan, Schedule
@@ -31,7 +32,7 @@ class Processor:
         self._advance_time(timestamp)
 
     def integrity_error(self):
-        self.connection = connect(db='rcn', host='mongo')
+        self.connection = connect(db='rcn', os.environ['MONGO_HOST'])
         self.connection.drop_database('rcn')
         self.clock.reset()
         self.nonce = 0
