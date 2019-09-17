@@ -5,6 +5,7 @@ import web3
 
 ABI_PATH = "engine-abi.json"
 
+
 class EventHandler():
     def __init__(self, event):
         self._event = event

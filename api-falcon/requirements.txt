@@ -4,3 +4,4 @@ gunicorn
 mongoengine
 falcon-cors
 raven
+mimeparse

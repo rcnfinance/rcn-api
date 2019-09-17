@@ -5,6 +5,7 @@ from handlers import utils
 from models import Commit
 from models import Loan
 
+
 class LentHandler(EventHandler):
     signature = 'Lent(uint256,address,address)'
     signature_hash = web3.Web3.sha3(text=signature)
@@ -29,8 +30,9 @@ class LentHandler(EventHandler):
         data["due_time"] = str(block_timestamp + int(loan.dues_in))
 
         commit.opcode = "lent"
-        commit.timestamp = block_timestamp
+        commit.timestamp = str(block_timestamp)
         commit.proof = self._transaction
         commit.data = data
+        commit.id_loan = self._index
+
         return [commit]
-    
