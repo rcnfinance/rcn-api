@@ -99,4 +99,4 @@ class Listener:
         logger.info('Creating filter from block {}'.format(0))
 
         self.w3 = SafeWeb3(w3)
-        self.listen(os.environ['POOL_RATE'])
+        self.listen(int(os.environ['POOL_RATE']))
