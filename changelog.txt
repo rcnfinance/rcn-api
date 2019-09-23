@@ -1,3 +1,11 @@
+## 2019.23.9
+### Fix
+- api canceled filter not boolean
+
+## 2019.17.9
+### Added
+- configure sleep time sync, remove collection when start listener
+
 ## 2019.2.9
 ### Fix
 - freeze web3 version to 4.9.2
