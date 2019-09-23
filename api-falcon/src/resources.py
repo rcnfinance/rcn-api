@@ -298,7 +298,7 @@ class LoanList(PaginatedListAPI):
     oracle = StringParam("Oracle filter")
     borrower = StringParam("Borrower filter")
     callback = StringParam("Callback filter")
-    canceled = StringParam("Canceled filter")
+    canceled = BoolParam("Canceled filter")
     status = StringParam("Status Filter")
     lender = StringParam("Lender filter")
 
