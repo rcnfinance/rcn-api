@@ -1,3 +1,10 @@
+## 2019.26.9
+### Fix
+- loan model currency 0x on error oracle
+
+### Added
+- filter not fields
+
 ## 2019.23.9
 ### Fix
 - api canceled filter not boolean
