@@ -1,4 +1,6 @@
+from __future__ import division
 import os
+import numpy as np
 from ethereum_connection import EthereumConnection
 from ethereum_connection import ContractConnection
 
@@ -52,21 +54,30 @@ class LoanManagerInterface():
         descriptor["installments"] = "0"
 
         if loan_data:
-            validate = contract_model.validate(loan_data).call()
+            contract_model.validate(loan_data).call()
 
             first_obligation_amount, first_obligation_time = contract_model.simFirstObligation(loan_data).call()
             total_obligation = contract_model.simTotalObligation(loan_data).call()
             duration = contract_model.simDuration(loan_data).call()
-            duration_percentage = ((total_obligation / int(data["amount"])) - 1) * 100
-            interest_rate = (duration_percentage * 360 * 86000) / duration
 
             descriptor["first_obligation"] = str(first_obligation_amount)
             descriptor["total_obligation"] = str(total_obligation)
 
             descriptor["duration"] = str(duration)
-            descriptor["interest_rate"] = str(interest_rate)
             descriptor["punitive_interest_rate"] = str(contract_model.simPunitiveInterestRate(loan_data).call())
             descriptor["frequency"] = str(contract_model.simFrequency(loan_data).call())
             descriptor["installments"] = str(contract_model.simInstallments(loan_data).call())
 
+            periodic_rate = np.rate(
+                int(descriptor["installments"]),
+                int(descriptor["first_obligation"]),
+                -int(data["amount"]),
+                0
+            )
+
+            annual_rate = float(periodic_rate) * (86400 * 360) / int(descriptor["frequency"])
+            perc_rate = annual_rate * 100
+            perc_rate_round = round(perc_rate, 2)
+
+            descriptor["interest_rate"] = str(perc_rate_round)
         return descriptor
