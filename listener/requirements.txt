@@ -1,3 +1,4 @@
 web3==4.9.2
 mongoengine
 raven
+numpy
