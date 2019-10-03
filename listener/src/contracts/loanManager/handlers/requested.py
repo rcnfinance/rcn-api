@@ -23,21 +23,6 @@ class Requested(EventHandler):
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
-        # currency = loan_manager_interface.get_currency(self._args.get('_id'))
-        # if currency:
-        #     currency = utils.add_0x_prefix(currency)
-        print("id {}".format(self._args.get("_id")))
-        print("oracle: {}".format(self._args.get("_oracle")))
-
-        # oracle = self._args.get("_oracle")
-        # if oracle != "0x0000000000000000000000000000000000000000":
-        #     oracle_contract = OracleInterface(self._args.get("_oracle"))
-        #     currency = oracle_contract.currency()
-        # else:
-        #     currency = loan_manager_interface.get_currency(self._args.get('_id'))
-        #     if currency:
-        #         currency = utils.add_0x_prefix(currency)
-
         oracle = self._args.get("_oracle")
         try:
             if oracle != "0x0000000000000000000000000000000000000000":

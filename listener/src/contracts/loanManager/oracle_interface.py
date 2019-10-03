@@ -21,6 +21,5 @@ class OracleInterface():
 
     def currency(self):
         currency = self._contract.functions.currency().call()
-        print(currency)
         hex_currency = web3.utils.contracts.encode_hex(currency)
         return hex_currency

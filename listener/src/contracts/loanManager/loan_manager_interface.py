@@ -72,7 +72,8 @@ class LoanManagerInterface():
                 int(descriptor["installments"]),
                 int(descriptor["first_obligation"]),
                 -int(data["amount"]),
-                0
+                0,
+                maxiter=9999999999999
             )
 
             annual_rate = float(periodic_rate) * (86400 * 360) / int(descriptor["frequency"])
