@@ -1,3 +1,7 @@
+## 2019.3.10
+### Fix
+- change calculation interest_rate loan
+
 ## 2019.26.9
 ### Fix
 - loan model currency 0x on error oracle
