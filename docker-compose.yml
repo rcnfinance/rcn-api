@@ -12,6 +12,8 @@ services:
       - mongo:mongo
     depends_on:
       - mongo
+    env_file:
+      - config.env
   mongo:
     image: mongo:rc-xenial
     restart: always

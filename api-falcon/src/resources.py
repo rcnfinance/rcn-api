@@ -93,11 +93,17 @@ class LoanList(PaginatedListAPI):
         #  Filtering -> Ordering -> Limiting
         filter_params = params.copy()
         filter_params.pop("indent")
+
         page_size = filter_params.pop("page_size")
         page = filter_params.pop("page")
+
         offset = page * page_size
 
-        return Loan.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = Loan.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class CommitList(PaginatedListAPI):
@@ -121,7 +127,11 @@ class CommitList(PaginatedListAPI):
 
         offset = page * page_size
 
-        return Commit.objects.filter(**filter_params).skip(offset).limit(page_size)
+        all_objects = Commit.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        return all_objects.skip(offset).limit(page_size)
 
 
 class LoanItem(RetrieveAPI):
