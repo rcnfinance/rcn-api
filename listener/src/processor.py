@@ -191,6 +191,7 @@ class Processor:
 
                 if opcode == "approved_loan":
                     loan = Loan.objects(index=data["loan"]).first()
+                    loan.approved = data["approved"]
                     loan.approbations.append(data["approved_by"])
                     commit.save()
                     loan.save()

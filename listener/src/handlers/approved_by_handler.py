@@ -22,6 +22,7 @@ class ApprovedByHandler(EventHandler):
         data = {}
         data['loan'] = self._index
         data['approved_by'] = self._address
+        data["approved"] = True
 
         commit.opcode = "approved_loan"
         commit.timestamp = str(self._w3.eth.getBlock(self._block_number).timestamp)
