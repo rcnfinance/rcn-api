@@ -1,3 +1,7 @@
+## 2019.10.16
+### Added
+- approved field in loan entity
+
 ## 2019.10.11
 ### Added
 - resource_count field on endpoints
