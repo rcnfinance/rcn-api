@@ -2,6 +2,7 @@ from mongoengine import StringField
 from mongoengine import Document
 from mongoengine import ListField
 from mongoengine import IntField
+from mongoengine import BooleanField
 from mongoengine import DictField
 from mongoengine import QuerySet
 
@@ -39,6 +40,7 @@ class Loan(Document):
     expiration_requests = StringField(required=True, max_length=150)
     approved_transfer = StringField(default='0x0000000000000000000000000000000000000000', max_length=150)
     approbations = ListField(StringField())
+    approved = BooleanField(required=False, default=False)
 
 
 class Event(Document):

@@ -4,6 +4,7 @@ import falcon
 
 from graceful.resources.generic import RetrieveAPI, PaginatedListAPI
 from graceful.parameters import StringParam
+from graceful.parameters import BoolParam
 
 from serializers import LoanSerializer
 from serializers import CommitSerializer
@@ -23,6 +24,7 @@ class LoanList(PaginatedListAPI):
     lender = StringParam("Borrower filter")
     cosigner = StringParam("Cosigner filter")
     approvedTransfer = StringParam("Approved Transfer filter")
+    approved = BoolParam("Approved filter")
 
     created__lt = StringParam("Created lt")
     created__lte = StringParam("Created lte")

@@ -34,3 +34,4 @@ class LoanSerializer(BaseSerializer):
     lender_balance = RawField('lender_balance')
     expiration_requests = RawField('expiration_requests')
     approved_transfer = RawField('approved_transfer')
+    approved = RawField("approved")
