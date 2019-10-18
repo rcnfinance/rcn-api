@@ -1,6 +1,6 @@
-class SetUrl(CommitProcessor):
+class ReadedOracle(CommitProcessor):
     def __init__(self):
-        self.opcode = "set_url_collateral"
+        self.opcode = "readed_oracle"
 
     def process(self, commit, *args, **kwargs):
         #TODO

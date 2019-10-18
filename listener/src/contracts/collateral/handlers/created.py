@@ -10,7 +10,7 @@ class Created(EventHandler):
 
     def _normalize(self):
         self._args["_debtId"] = utils.add_0x_prefix(self._args["_debtId"].hex())
-      
+
 
     def handle(self):
         commit = Commit()
@@ -22,19 +22,19 @@ class Created(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
-            "id": str(self._args.get("_id")),
+            "id": str(self._args.get("_entryId")),
             "debt_id": self._args.get("_debtId"),
             "oracle": self._args.get("_oracle"),
             "token": self._args.get("_token"),
             "amount": str(self._args.get("_amount")),
             "liquidation_ratio": str(self._args.get("_liquidationRatio")),
             "balance_ratio": str(self._args.get("_balanceRatio")),
-            "burn_fee": str(self._args.get("_burnFee")),  
+            "burn_fee": str(self._args.get("_burnFee")),
             "reward_fee": str(self._args.get("_rewardFee")),
-            "started": False,  
+            "started": False,
             "invalid": False,
             "collateral_ratio": "0",
-            "can_claim": False
+            "can_claim": False,
         }
 
         commit.data = data

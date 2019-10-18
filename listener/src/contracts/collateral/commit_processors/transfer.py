@@ -1,6 +1,6 @@
-class SetUrl(CommitProcessor):
+class Transfer(CommitProcessor):
     def __init__(self):
-        self.opcode = "set_url_collateral"
+        self.opcode = "transfer"
 
     def process(self, commit, *args, **kwargs):
         #TODO
