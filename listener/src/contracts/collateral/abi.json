@@ -3,6 +3,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "bytes4",
         "name": "interfaceId",
         "type": "bytes4"
       }
@@ -10,6 +11,7 @@
     "name": "supportsInterface",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
@@ -24,6 +26,7 @@
     "name": "name",
     "outputs": [
       {
+        "internalType": "string",
         "name": "",
         "type": "string"
       }
@@ -36,6 +39,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -43,6 +47,7 @@
     "name": "getApproved",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -55,10 +60,12 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -75,6 +82,7 @@
     "name": "totalSupply",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -87,14 +95,17 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_from",
         "type": "address"
       },
       {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -111,6 +122,7 @@
     "name": "loanManagerToken",
     "outputs": [
       {
+        "internalType": "contract IERC20",
         "name": "",
         "type": "address"
       }
@@ -123,10 +135,12 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -134,6 +148,7 @@
     "name": "isAuthorized",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
@@ -146,6 +161,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       }
@@ -153,6 +169,7 @@
     "name": "assetsOf",
     "outputs": [
       {
+        "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
       }
@@ -165,10 +182,12 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_index",
         "type": "uint256"
       }
@@ -176,6 +195,7 @@
     "name": "tokenOfOwnerByIndex",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -188,14 +208,17 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_from",
         "type": "address"
       },
       {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -210,6 +233,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
       }
@@ -217,6 +241,7 @@
     "name": "debtToEntry",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -229,6 +254,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "_index",
         "type": "uint256"
       }
@@ -236,6 +262,7 @@
     "name": "tokenByIndex",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -248,6 +275,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       }
@@ -255,6 +283,7 @@
     "name": "ownerOf",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -269,6 +298,7 @@
     "name": "allTokens",
     "outputs": [
       {
+        "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
       }
@@ -281,6 +311,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       }
@@ -288,6 +319,7 @@
     "name": "balanceOf",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -302,6 +334,7 @@
     "name": "owner",
     "outputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -316,6 +349,7 @@
     "name": "symbol",
     "outputs": [
       {
+        "internalType": "string",
         "name": "",
         "type": "string"
       }
@@ -328,10 +362,12 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
       {
+        "internalType": "bool",
         "name": "_authorized",
         "type": "bool"
       }
@@ -346,6 +382,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -353,34 +390,42 @@
     "name": "entries",
     "outputs": [
       {
+        "internalType": "contract RateOracle",
         "name": "oracle",
         "type": "address"
       },
       {
+        "internalType": "contract IERC20",
         "name": "token",
         "type": "address"
       },
       {
+        "internalType": "bytes32",
         "name": "debtId",
         "type": "bytes32"
       },
       {
+        "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
       },
       {
+        "internalType": "uint32",
         "name": "liquidationRatio",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "balanceRatio",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "burnFee",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "rewardFee",
         "type": "uint32"
       }
@@ -395,6 +440,7 @@
     "name": "loanManager",
     "outputs": [
       {
+        "internalType": "contract LoanManager",
         "name": "",
         "type": "address"
       }
@@ -407,18 +453,22 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_from",
         "type": "address"
       },
       {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_assetId",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "_userData",
         "type": "bytes"
       }
@@ -431,10 +481,32 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "tokenToMaxSpreadRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "converter",
     "outputs": [
       {
+        "internalType": "contract TokenConverter",
         "name": "",
         "type": "address"
       }
@@ -447,6 +519,7 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
       }
@@ -454,6 +527,7 @@
     "name": "tokenURI",
     "outputs": [
       {
+        "internalType": "string",
         "name": "",
         "type": "string"
       }
@@ -466,10 +540,12 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
       {
+        "internalType": "address",
         "name": "_assetHolder",
         "type": "address"
       }
@@ -477,6 +553,7 @@
     "name": "isApprovedForAll",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
@@ -489,6 +566,7 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "_newOwner",
         "type": "address"
       }
@@ -505,6 +583,7 @@
     "name": "VERSION",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -516,6 +595,7 @@
   {
     "inputs": [
       {
+        "internalType": "contract LoanManager",
         "name": "_loanManager",
         "type": "address"
       }
@@ -529,46 +609,55 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": true,
+        "internalType": "bytes32",
         "name": "_debtId",
         "type": "bytes32"
       },
       {
         "indexed": false,
+        "internalType": "contract RateOracle",
         "name": "_oracle",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "contract IERC20",
         "name": "_token",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint32",
         "name": "_liquidationRatio",
         "type": "uint32"
       },
       {
         "indexed": false,
+        "internalType": "uint32",
         "name": "_balanceRatio",
         "type": "uint32"
       },
       {
         "indexed": false,
+        "internalType": "uint32",
         "name": "_burnFee",
         "type": "uint32"
       },
       {
         "indexed": false,
+        "internalType": "uint32",
         "name": "_rewardFee",
         "type": "uint32"
       }
@@ -581,11 +670,13 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
@@ -598,16 +689,19 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
@@ -620,7 +714,8 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       }
     ],
@@ -632,16 +727,19 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_closingObligationToken",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_payTokens",
         "type": "uint256"
       }
@@ -654,16 +752,19 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_obligationInToken",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_payTokens",
         "type": "uint256"
       }
@@ -676,16 +777,19 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_tokenRequiredToTryBalance",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_payTokens",
         "type": "uint256"
       }
@@ -698,21 +802,25 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_burned",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "address",
         "name": "_rewardTo",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_rewarded",
         "type": "uint256"
       }
@@ -725,21 +833,25 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_fromAmount",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_toAmount",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "bytes",
         "name": "_oracleData",
         "type": "bytes"
       }
@@ -752,16 +864,19 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_fromAmount",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_toAmount",
         "type": "uint256"
       }
@@ -774,7 +889,8 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       }
     ],
@@ -786,11 +902,13 @@
     "inputs": [
       {
         "indexed": true,
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       }
@@ -803,6 +921,7 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "string",
         "name": "_url",
         "type": "string"
       }
@@ -815,6 +934,7 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "contract TokenConverter",
         "name": "_converter",
         "type": "address"
       }
@@ -827,16 +947,38 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_maxSpreadRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetMaxSpreadRatio",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "contract RateOracle",
         "name": "_oracle",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_tokens",
         "type": "uint256"
       },
       {
         "indexed": false,
+        "internalType": "uint256",
         "name": "_equivalent",
         "type": "uint256"
       }
@@ -849,16 +991,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_from",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
       }
@@ -871,16 +1016,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_approved",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "uint256",
         "name": "_tokenId",
         "type": "uint256"
       }
@@ -893,16 +1041,19 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_owner",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_operator",
         "type": "address"
       },
       {
         "indexed": false,
+        "internalType": "bool",
         "name": "_approved",
         "type": "bool"
       }
@@ -915,6 +1066,7 @@
     "inputs": [
       {
         "indexed": false,
+        "internalType": "address",
         "name": "_uriProvider",
         "type": "address"
       }
@@ -927,11 +1079,13 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_previousOwner",
         "type": "address"
       },
       {
         "indexed": true,
+        "internalType": "address",
         "name": "_newOwner",
         "type": "address"
       }
@@ -945,6 +1099,7 @@
     "name": "getEntriesLength",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -957,6 +1112,7 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "contract TokenConverter",
         "name": "_converter",
         "type": "address"
       }
@@ -971,34 +1127,62 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_debtId",
-        "type": "bytes32"
-      },
-      {
-        "name": "_oracle",
-        "type": "address"
-      },
-      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
+        "internalType": "uint256",
+        "name": "_maxSpreadRatio",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxSpreadRatio",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "_debtId",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "contract RateOracle",
+        "name": "_oracle",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IERC20",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       },
       {
+        "internalType": "uint32",
         "name": "_liquidationRatio",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "_balanceRatio",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "_burnFee",
         "type": "uint32"
       },
       {
+        "internalType": "uint32",
         "name": "_rewardFee",
         "type": "uint32"
       }
@@ -1006,6 +1190,7 @@
     "name": "create",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "entryId",
         "type": "uint256"
       }
@@ -1018,10 +1203,12 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       }
@@ -1036,18 +1223,22 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "_oracleData",
         "type": "bytes"
       }
@@ -1062,12 +1253,19 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       }
     ],
     "name": "redeem",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1076,16 +1274,24 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
+        "internalType": "address",
         "name": "_to",
         "type": "address"
       }
     ],
     "name": "emergencyRedeem",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1094,16 +1300,24 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "_oracleData",
         "type": "bytes"
       }
     ],
     "name": "payOffDebt",
-    "outputs": [],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "payTokens",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1112,6 +1326,7 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "string",
         "name": "_url",
         "type": "string"
       }
@@ -1126,18 +1341,22 @@
     "constant": true,
     "inputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "",
         "type": "bytes"
       },
       {
+        "internalType": "bytes",
         "name": "",
         "type": "bytes"
       }
@@ -1145,6 +1364,7 @@
     "name": "cost",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -1159,6 +1379,7 @@
     "name": "url",
     "outputs": [
       {
+        "internalType": "string",
         "name": "",
         "type": "string"
       }
@@ -1171,18 +1392,22 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_debtId",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "_data",
         "type": "bytes"
       },
       {
+        "internalType": "bytes",
         "name": "_oracleData",
         "type": "bytes"
       }
@@ -1190,6 +1415,7 @@
     "name": "requestCosign",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "",
         "type": "bool"
       }
@@ -1202,14 +1428,17 @@
     "constant": false,
     "inputs": [
       {
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
       {
+        "internalType": "uint256",
         "name": "_debtId",
         "type": "uint256"
       },
       {
+        "internalType": "bytes",
         "name": "_oracleData",
         "type": "bytes"
       }
@@ -1217,6 +1446,7 @@
     "name": "claim",
     "outputs": [
       {
+        "internalType": "bool",
         "name": "change",
         "type": "bool"
       }
@@ -1229,221 +1459,25 @@
     "constant": false,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
-        "name": "_rateTokens",
+        "internalType": "uint256",
+        "name": "_debtRateTokens",
         "type": "uint256"
       },
       {
-        "name": "_rateEquivalent",
+        "internalType": "uint256",
+        "name": "_debtRateEquivalent",
         "type": "uint256"
       }
     ],
-    "name": "tokensToPay",
+    "name": "getTokenRequiredToTryBalance",
     "outputs": [
       {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralToPay",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "canWithdraw",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "liquidationDeltaRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "balanceDeltaRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateTokens",
-        "type": "uint256"
-      },
-      {
-        "name": "_rateEquivalent",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralRatio",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      }
-    ],
-    "name": "collateralInTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "valueCollateralToTokens",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "_id",
-        "type": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "valueTokensToCollateral",
-    "outputs": [
-      {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
@@ -1456,21 +1490,180 @@
     "constant": true,
     "inputs": [
       {
-        "name": "_id",
+        "internalType": "uint256",
+        "name": "_entryId",
         "type": "uint256"
       },
       {
-        "name": "_rateTokens",
+        "internalType": "uint256",
+        "name": "_debtInToken",
         "type": "uint256"
       },
       {
-        "name": "_rateEquivalent",
+        "internalType": "uint256",
+        "name": "_collateralInToken",
+        "type": "uint256"
+      }
+    ],
+    "name": "canWithdraw",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_ratio",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_debtInToken",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralInToken",
+        "type": "uint256"
+      }
+    ],
+    "name": "deltaCollateralRatio",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_debtInToken",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralInToken",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralRatio",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "_entryToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_entryRateTokens",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_entryRateEquivalent",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralToTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "internalType": "contract RateOracle",
+        "name": "_oracle",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IERC20",
+        "name": "_entryToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "collateralToTokens",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_entryId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_debtRateTokens",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_debtRateEquivalent",
         "type": "uint256"
       }
     ],
     "name": "debtInTokens",
     "outputs": [
       {
+        "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
