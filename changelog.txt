@@ -1,3 +1,7 @@
+## 2019.10.18
+### Fix
+- Change status code for total_pay and destroyed
+
 ## 2019.10.16
 ### Added
 - approved field in loan entity
