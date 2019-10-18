@@ -199,7 +199,7 @@ class Processor:
 
                 if opcode == "destroyed_loan":
                     loan = Loan.objects(index=data["loan"]).first()
-                    loan.status = 2
+                    loan.status = 3
                     commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
@@ -213,7 +213,7 @@ class Processor:
 
                 if opcode == "total_payment":
                     loan = Loan.objects(index=data["loan"]).first()
-                    loan.status = 3
+                    loan.status = 2
                     commit.save()
                     loan.save()
                     self.log("Processing {} {} loan {}".format(commit.order, commit.opcode, loan.index))
