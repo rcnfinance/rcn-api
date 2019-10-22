@@ -26,15 +26,15 @@ class Created(EventHandler):
             "debt_id": self._args.get("_debtId"),
             "oracle": self._args.get("_oracle"),
             "token": self._args.get("_token"),
-            "amount": str(self._args.get("_amount")),
             "liquidation_ratio": str(self._args.get("_liquidationRatio")),
             "balance_ratio": str(self._args.get("_balanceRatio")),
             "burn_fee": str(self._args.get("_burnFee")),
             "reward_fee": str(self._args.get("_rewardFee")),
+
+            "amount": str(self._args.get("_amount")),
+            "can_claim": False,
             "started": False,
             "invalid": False,
-            "collateral_ratio": "0",
-            "can_claim": False,
         }
 
         commit.data = data

@@ -23,6 +23,7 @@ class CancelDebt(EventHandler):
             "id": str(self._args.get("_entryId")),
             "obligationInToken": str(self._args.get("_obligationInToken")),
             "payTokens": str(self._args.get("_payTokens")),
+            "can_claim": False
         }
 
         commit.data = data
