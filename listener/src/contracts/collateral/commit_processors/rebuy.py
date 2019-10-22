@@ -7,5 +7,4 @@ class Rebuy(CommitProcessor):
         self.opcode = "rebuy_collateral"
 
     def process(self, commit, *args, **kwargs):
-        #fixMe
-        commit.save()
+        pass
