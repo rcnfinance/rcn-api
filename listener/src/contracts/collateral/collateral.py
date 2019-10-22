@@ -109,7 +109,7 @@ event_handlers = [
     Withdrawed
 ]
 
-Collateral = Contract(
+collateral = Contract(
     "Collateral",
     event_handlers,
     commit_processors,
