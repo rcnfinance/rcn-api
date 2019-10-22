@@ -10,7 +10,7 @@ class CancelDebt(CommitProcessor):
         data = commit.data
 
         entry = Collateral.objects.get(id=data.get("id"))
-        
+
         entry.can_claim = data.get("can_claim")
 
         commit.save()

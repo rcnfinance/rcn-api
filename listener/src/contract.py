@@ -21,7 +21,7 @@ class Contract():
 
     def __handlers(self):
         self._handlers = {handler.signature_hash: handler for handler in self._event_handlers}
-    
+
     def is_my_event(self, event):
         event_hash = event.get("topics")[0].hex()
         event_address = event.get("address")
@@ -36,4 +36,3 @@ class Contract():
         self._logger.info("Handler name: {}".format(handler.__name__))
         h = handler(self._contract_connection, event)
         return h
-

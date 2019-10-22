@@ -14,11 +14,10 @@ class ConvertPay(CommitProcessor):
             new_amount = int(collateral.amount) - int(data.get("fromAmount"))
             print('new amount with balance:', new_amount)
             collateral.amount = str(new_amount)
-            
+
             commit.save()
             collateral.save()
-        
+
         except Collateral.DoesNotExist:
             self.logger.warning("Collateral with id {} does not exist".format(data["id"]))
         commit.save()
-        

@@ -1,7 +1,9 @@
+import utils
 import web3
+
 from contracts.event import EventHandler
 from models import Commit
-import utils
+from models import CollateralState
 
 
 class Created(EventHandler):
@@ -10,7 +12,6 @@ class Created(EventHandler):
 
     def _normalize(self):
         self._args["_debtId"] = utils.add_0x_prefix(self._args["_debtId"].hex())
-
 
     def handle(self):
         commit = Commit()

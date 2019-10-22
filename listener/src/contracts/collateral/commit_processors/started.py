@@ -12,7 +12,7 @@ class Started(CommitProcessor):
         try:
             collateral = Collateral.objects.get(id=data["id"])
             collateral.started = True
-            
+
             commit.save()
             collateral.save()
         except Collateral.DoesNotExist:

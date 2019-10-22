@@ -1,4 +1,3 @@
-#from models import Loan
 from contracts.commit_processor import CommitProcessor
 
 

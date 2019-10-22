@@ -77,6 +77,7 @@ class State(Document):
         ]
     }
 
+
 class Collateral(Document):
     # Constants
     id = StringField(required=True, max_length=150, primary_key=True)
