@@ -97,6 +97,7 @@ event_handlers = [
     EmergencyRedeemed,
     OwnershipTransferred,
     PayOffDebt,
+    ReadedOracle,
     Rebuy,
     Redeemed,
     SetConverter,
