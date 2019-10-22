@@ -97,7 +97,7 @@ class Collateral(Document):
             "debt_id",
             "token"
         ]
-    }  
+    }
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -186,10 +186,9 @@ class Pool(Document):
 class Claim(EmbeddedDocument):
     lender = StringField(required=True, max_length=150, primary_key=True)
     claimed_amount = StringField(required=True, max_length=150)
-    
+
 class ERC20D(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     token = StringField(required=True, max_length=150)
     paid = StringField(required=True, max_length=150)
     claimers = EmbeddedDocumentListField(Claim)
-

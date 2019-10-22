@@ -13,7 +13,7 @@ class Withdrawed(CommitProcessor):
             collateral = Collateral.objects.get(id=data["id"])
             new_amount = int(collateral.amount) - int(data.get("amount"))
             collateral.amount = str(new_amount)
-            
+
             commit.save()
             collateral.save()
         except Collateral.DoesNotExist:
