@@ -8,7 +8,6 @@ class Transfer(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-        print(data.get("tokenId"))
 
         collateral = Collateral()
 
