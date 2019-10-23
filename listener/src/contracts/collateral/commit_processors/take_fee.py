@@ -6,4 +6,4 @@ class TakeFee(CommitProcessor):
         self.opcode = "take_fee_collateral"
 
     def process(self, commit, *args, **kwargs):
-        commit.save()
+        pass

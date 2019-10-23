@@ -20,4 +20,4 @@ class SetConverter(EventHandler):
 
         commit.data = data
 
-        return [commit]
+        return []

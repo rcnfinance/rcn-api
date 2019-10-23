@@ -22,4 +22,4 @@ class Approval(EventHandler):
 
         commit.data = data
 
-        return [commit]
+        return []

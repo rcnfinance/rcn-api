@@ -9,10 +9,9 @@ class Created(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        collateral = Collateral()
+        collateral = Collateral.objects.get(id=data.get("id"))
 
         # Constants
-        collateral.id = data.get("id")
         collateral.debt_id = data.get("debt_id")
         collateral.oracle = data.get("oracle")
         collateral.token = data.get("token")
@@ -21,11 +20,9 @@ class Created(CommitProcessor):
         collateral.burn_fee = data.get("burn_fee")
         collateral.reward_fee = data.get("reward_fee")
         # Variable
+        collateral.owner = data.address
         collateral.amount = data.get("amount")
-        collateral.can_claim = data.get("can_claim")
-
-        collateral.started = data.get("started")
-        collateral.invalid = data.get("invalid")
+        collateral.status = CollateralState.CREATED.value
 
         commit.save()
         collateral.save()

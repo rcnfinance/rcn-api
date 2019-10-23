@@ -1,15 +1,11 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
-# import utils
 
 
 class EmergencyRedeemed(EventHandler):
     signature = "EmergencyRedeemed(uint256,address)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
-
-    # def _normalize(self):
-    #     self._args["_entryId"] = utils.add_0x_prefix(self._args["_entryId"].hex())
 
     def handle(self):
         commit = Commit()
@@ -26,4 +22,4 @@ class EmergencyRedeemed(EventHandler):
 
         commit.data = data
 
-        return [commit]
+        return []

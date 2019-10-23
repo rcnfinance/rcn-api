@@ -1,4 +1,5 @@
 import web3
+
 from contracts.event import EventHandler
 from models import Commit
 
@@ -17,7 +18,7 @@ class Transfer(EventHandler):
         data = {
             "from": self._args.get("_from"),
             "to": self._args.get("_to"),
-            "tokenId": self._args.get("_tokenId")
+            "tokenId": str(self._args.get("_tokenId"))
         }
 
         commit.data = data

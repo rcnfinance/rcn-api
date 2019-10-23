@@ -9,12 +9,8 @@ class Redeemed(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        try:
-            collateral = Collateral.objects.get(id=data["id"])
-            collateral.amount = '0'
-            collateral.invalid = True
+        collateral = Collateral.objects.get(id=data["id"])
+        collateral.status = CollateralState.CANCELED.value
 
-            commit.save()
-            collateral.save()
-        except Collateral.DoesNotExist:
-            self.logger.warning("Collateral with id {} does not exist".format(data["id"]))
+        commit.save()
+        collateral.save()

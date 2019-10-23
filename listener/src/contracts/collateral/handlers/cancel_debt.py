@@ -1,15 +1,11 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
-# import utils
 
 
 class CancelDebt(EventHandler):
     signature = "CancelDebt(uint256,uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
-
-    # def _normalize(self):
-    #     self._args["_entryId"] = utils.add_0x_prefix(self._args["_entryId"].hex())
 
     def handle(self):
         commit = Commit()
@@ -22,8 +18,7 @@ class CancelDebt(EventHandler):
         data = {
             "id": str(self._args.get("_entryId")),
             "obligationInToken": str(self._args.get("_obligationInToken")),
-            "payTokens": str(self._args.get("_payTokens")),
-            "can_claim": False
+            "payTokens": str(self._args.get("_payTokens"))
         }
 
         commit.data = data

@@ -9,9 +9,9 @@ class CancelDebt(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        entry = Collateral.objects.get(id=data.get("id"))
-
-        entry.can_claim = data.get("can_claim")
+        # TODO the loan its paid => status of the entry its payed
+        # if ()
+        #    collateral.status = CollateralState.PAYED.value
 
         commit.save()
-        entry.save()
+        collateral.save()

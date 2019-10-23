@@ -1,4 +1,5 @@
 from models import Collateral
+from models import CollateralState
 from contracts.commit_processor import CommitProcessor
 
 
@@ -9,11 +10,8 @@ class Started(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        try:
-            collateral = Collateral.objects.get(id=data["id"])
-            collateral.started = True
+        collateral = Collateral.objects.get(id=data["id"])
+        collateral.status = CollateralState.STARTED.value
 
-            commit.save()
-            collateral.save()
-        except Collateral.DoesNotExist:
-            self.logger.warning("Collateral with id {} does not exist".format(data["id"]))
+        commit.save()
+        collateral.save()

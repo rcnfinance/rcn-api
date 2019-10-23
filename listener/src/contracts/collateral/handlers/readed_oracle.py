@@ -22,4 +22,4 @@ class ReadedOracle(EventHandler):
 
         commit.data = data
 
-        return [commit]
+        return []

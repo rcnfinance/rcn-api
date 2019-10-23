@@ -1,15 +1,11 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
-# import utils
 
 
 class Withdrawed(EventHandler):
     signature = "Withdrawed(uint256,address,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
-
-    # def _normalize(self):
-    #     self._args["_entryId"] = utils.add_0x_prefix(self._args["_entryId"].hex())
 
     def handle(self):
         commit = Commit()
@@ -22,8 +18,7 @@ class Withdrawed(EventHandler):
         data = {
             "id": str(self._args.get("_entryId")),
             "to": self._args.get("_to"),
-            "amount": str(self._args.get("_amount")),
-
+            "amount": str(self._args.get("_amount"))
         }
 
         commit.data = data

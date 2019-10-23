@@ -32,10 +32,7 @@ class Created(EventHandler):
             "burn_fee": str(self._args.get("_burnFee")),
             "reward_fee": str(self._args.get("_rewardFee")),
 
-            "amount": str(self._args.get("_amount")),
-            "can_claim": False,
-            "started": False,
-            "invalid": False,
+            "amount": str(self._args.get("_amount"))
         }
 
         commit.data = data
