@@ -21,7 +21,6 @@ class Created(CommitProcessor):
         collateral.burn_fee = data.get("burn_fee")
         collateral.reward_fee = data.get("reward_fee")
         # Variable
-        collateral.owner = data.get("address")
         collateral.amount = data.get("amount")
         collateral.status = CollateralState.CREATED.value
 
