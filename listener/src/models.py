@@ -97,6 +97,7 @@ class Collateral(Document):
     balance_ratio = StringField(max_length=150)
     burn_fee = StringField(max_length=150)
     reward_fee = StringField(max_length=150)
+    owner = StringField(max_length=150)
     # Variables
     amount = StringField(max_length=150)
     status = StringField(max_length=150)
