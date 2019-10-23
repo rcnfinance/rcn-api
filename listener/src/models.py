@@ -1,3 +1,5 @@
+import enum
+
 from mongoengine import StringField
 from mongoengine import LongField
 from mongoengine import DictField
@@ -9,6 +11,13 @@ from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
+
+
+class CollateralState(enum.Enum):
+    CREATED = "1"
+    STARTED = "2"
+    CANCELED = "3"
+    PAYED = "4"
 
 
 class Commit(Document):
@@ -81,18 +90,16 @@ class State(Document):
 class Collateral(Document):
     # Constants
     id = StringField(required=True, max_length=150, primary_key=True)
-    debt_id = StringField(required=True, max_length=150)
-    oracle = StringField(required=True, max_length=150)
-    token = StringField(required=True, max_length=150)
-    liquidation_ratio = StringField(required=True, max_length=150)
-    balance_ratio = StringField(required=True, max_length=150)
-    burn_fee = StringField(required=True, max_length=150)
-    reward_fee = StringField(required=True, max_length=150)
+    debt_id = StringField(max_length=150)
+    oracle = StringField(max_length=150)
+    token = StringField(max_length=150)
+    liquidation_ratio = StringField(max_length=150)
+    balance_ratio = StringField(max_length=150)
+    burn_fee = StringField(max_length=150)
+    reward_fee = StringField(max_length=150)
     # Variables
-    amount = StringField(required=True, max_length=150)
-    started = BooleanField(required=True)
-    invalid = BooleanField(required=True)
-    can_claim = BooleanField(required=True)
+    amount = StringField(max_length=150)
+    status = StringField(max_length=150)
 
     meta = {
         "indexes": [
