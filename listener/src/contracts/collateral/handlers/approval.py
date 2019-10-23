@@ -10,7 +10,7 @@ class Approval(EventHandler):
     def handle(self):
         commit = Commit()
 
-        commit.opcode = "approval"
+        commit.opcode = "approval_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
 

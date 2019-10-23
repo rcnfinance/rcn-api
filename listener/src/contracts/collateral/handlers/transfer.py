@@ -11,9 +11,10 @@ class Transfer(EventHandler):
     def handle(self):
         commit = Commit()
 
-        commit.opcode = "transfer"
+        commit.opcode = "transfer_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
+        commit.address = self._tx.get("from")
 
         data = {
             "from": self._args.get("_from"),

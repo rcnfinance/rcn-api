@@ -10,7 +10,7 @@ class SetMaxSpreadRatio(EventHandler):
     def handle(self):
         commit = Commit()
 
-        commit.opcode = "set_max_spread_ratio"
+        commit.opcode = "set_max_spread_ratio_collateral"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
 

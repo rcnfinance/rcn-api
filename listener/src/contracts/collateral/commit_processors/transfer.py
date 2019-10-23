@@ -4,10 +4,11 @@ from contracts.commit_processor import CommitProcessor
 
 class Transfer(CommitProcessor):
     def __init__(self):
-        self.opcode = "transfer"
+        self.opcode = "transfer_collateral"
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
+        print(data.get("tokenId"))
 
         collateral = Collateral()
 
