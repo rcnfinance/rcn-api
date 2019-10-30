@@ -16,8 +16,9 @@ from mongoengine import EmbeddedDocumentListField
 class CollateralState(enum.Enum):
     CREATED = "1"
     STARTED = "2"
-    CANCELED = "3"
+    TO_REDEEM = "3"
     PAYED = "4"
+    CANCELED = "5"
 
 
 class Commit(Document):
