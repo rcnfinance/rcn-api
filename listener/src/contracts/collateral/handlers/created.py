@@ -31,7 +31,8 @@ class Created(EventHandler):
             "burn_fee": str(self._args.get("_burnFee")),
             "reward_fee": str(self._args.get("_rewardFee")),
 
-            "amount": str(self._args.get("_amount"))
+            "amount": str(self._args.get("_amount")),
+            "status": str(CollateralState.CREATED.value)
         }
 
         commit.data = data

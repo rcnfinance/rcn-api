@@ -22,7 +22,7 @@ class Created(CommitProcessor):
         collateral.reward_fee = data.get("reward_fee")
         # Variable
         collateral.amount = data.get("amount")
-        collateral.status = CollateralState.CREATED.value
+        collateral.status = data.get("status")
 
         commit.save()
         collateral.save()
