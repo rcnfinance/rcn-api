@@ -13,9 +13,5 @@ class Started(CommitProcessor):
         collateral = Collateral.objects.get(id=data["id"])
         collateral.status = CollateralState.STARTED.value
 
-        for _collateral in Collateral.objects(debt_id=collateral.debt_id):
-            _collateral.status = CollateralState.TO_REDEEM.value
-            _collateral.save()
-
-        commit.save()
         collateral.save()
+        commit.save()
