@@ -2,6 +2,7 @@ import utils
 import web3
 
 from contracts.event import EventHandler
+from models import CollateralState
 from models import Commit
 
 

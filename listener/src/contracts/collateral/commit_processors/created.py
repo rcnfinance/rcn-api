@@ -1,5 +1,4 @@
 from models import Collateral
-from models import CollateralState
 from contracts.commit_processor import CommitProcessor
 
 

@@ -1,4 +1,5 @@
 from models import Loan
+from models import CollateralState
 from contracts.commit_processor import CommitProcessor
 
 
