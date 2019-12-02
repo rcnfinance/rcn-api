@@ -7,7 +7,7 @@ from models import Commit
 
 
 class Created(EventHandler):
-    signature = "Created(uint256,bytes32,address,address,uint256,uint32,uint32,uint32,uint32)"
+    signature = "Created(uint256,bytes32,address,address,uint256,uint96,uint96)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
@@ -29,8 +29,6 @@ class Created(EventHandler):
             "token": self._args.get("_token"),
             "liquidation_ratio": str(self._args.get("_liquidationRatio")),
             "balance_ratio": str(self._args.get("_balanceRatio")),
-            "burn_fee": str(self._args.get("_burnFee")),
-            "reward_fee": str(self._args.get("_rewardFee")),
 
             "amount": str(self._args.get("_amount")),
             "status": str(CollateralState.CREATED.value)

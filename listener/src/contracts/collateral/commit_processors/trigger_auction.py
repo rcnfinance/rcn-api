@@ -1,9 +1,10 @@
 from contracts.commit_processor import CommitProcessor
 
 
-class SetMaxSpreadRatio(CommitProcessor):
+class TriggerAuction(CommitProcessor):
     def __init__(self):
-        self.opcode = "set_max_spread_ratio_collateral"
+        self.opcode = "trigger_auction"
 
     def process(self, commit, *args, **kwargs):
+        # TODO implement
         pass

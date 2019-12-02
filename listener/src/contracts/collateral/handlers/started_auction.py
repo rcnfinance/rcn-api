@@ -3,25 +3,25 @@ from contracts.event import EventHandler
 from models import Commit
 
 
-class TakeFee(EventHandler):
-    signature = "TakeFee(uint256,uint256,address,uint256)"
+class StartedAuction(EventHandler):
+    signature = "StartedAuction(uint256,uint256,uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def handle(self):
         commit = Commit()
 
-        commit.opcode = "take_fee_collateral"
+        commit.opcode = "started_auction"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
         data = {
             "id": str(self._args.get("_entryId")),
-            "burned": str(self._args.get("_burned")),
-            "rewarTo": self._args.get("_rewardTo"),
-            "rewarded": str(self._args.get("_rewarded")),
+            "required": str(self._args.get("_required")),
+            "startOffer": str(self._args.get("_startOffer")),
+            "limit": str(self._args.get("_limit")),
         }
 
         commit.data = data
 
-        return []
+        return [commit]

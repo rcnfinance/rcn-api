@@ -2,9 +2,9 @@ from models import Collateral
 from contracts.commit_processor import CommitProcessor
 
 
-class Withdrawed(CommitProcessor):
+class Withdraw(CommitProcessor):
     def __init__(self):
-        self.opcode = "withdrawed_collateral"
+        self.opcode = "withdraw_collateral"
 
     def process(self, commit, *args, **kwargs):
         data = commit.data

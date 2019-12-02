@@ -17,8 +17,6 @@ class Created(CommitProcessor):
         collateral.token = data.get("token")
         collateral.liquidation_ratio = data.get("liquidation_ratio")
         collateral.balance_ratio = data.get("balance_ratio")
-        collateral.burn_fee = data.get("burn_fee")
-        collateral.reward_fee = data.get("reward_fee")
         # Variable
         collateral.amount = data.get("amount")
         collateral.status = data.get("status")

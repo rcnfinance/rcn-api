@@ -3,22 +3,21 @@ from contracts.event import EventHandler
 from models import Commit
 
 
-class PayOffDebt(EventHandler):
-    signature = "PayOffDebt(uint256,uint256,uint256)"
+class TriggerAuction(EventHandler):
+    signature = "TriggerAuction(uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def handle(self):
         commit = Commit()
 
-        commit.opcode = "pay_off_debt_collateral"
+        commit.opcode = "trigger_auction"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
         data = {
             "id": str(self._args.get("_entryId")),
-            "closingObligationToken": str(self._args.get("_closingObligationToken")),
-            "payTokens": str(self._args.get("_payTokens")),
+            "reason": str(self._args.get("_reason")),
         }
 
         commit.data = data
