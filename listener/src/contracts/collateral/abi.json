@@ -1105,38 +1105,25 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_reason",
-        "type": "uint256"
-      }
-    ],
-    "name": "TriggerAuction",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_entryId",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_required",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
         "name": "_startOffer",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "_referenceOffer",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "_limit",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_required",
         "type": "uint256"
       }
     ],

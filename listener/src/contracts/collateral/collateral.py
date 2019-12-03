@@ -29,7 +29,6 @@ from .handlers.set_url import SetUrl
 from .handlers.started_auction import StartedAuction
 from .handlers.started import Started
 from .handlers.transfer import Transfer
-from .handlers.trigger_auction import TriggerAuction
 from .handlers.withdraw import Withdraw
 
 from .commit_processors.approval_for_all import ApprovalForAll as ApprovalForAllCommitProcessor
@@ -45,7 +44,6 @@ from .commit_processors.set_url import SetUrl as SetUrlCommitProcessor
 from .commit_processors.started_auction import StartedAuction as StartedAuctionCommitProcessor
 from .commit_processors.started import Started as StartedCommitProcessor
 from .commit_processors.transfer import Transfer as TransferCommitProcessor
-from .commit_processors.trigger_auction import TriggerAuction as TriggerAuctionCommitProcessor
 from .commit_processors.withdraw import Withdraw as WithdrawCommitProcessor
 
 commit_processors = [
@@ -62,7 +60,6 @@ commit_processors = [
     StartedAuctionCommitProcessor(),
     StartedCommitProcessor(),
     TransferCommitProcessor(),
-    TriggerAuctionCommitProcessor(),
     WithdrawCommitProcessor()
 ]
 
@@ -82,7 +79,6 @@ event_handlers = [
     StartedAuction,
     Started,
     Transfer,
-    TriggerAuction,
     Withdraw
 ]
 

@@ -10,7 +10,7 @@ class Withdraw(CommitProcessor):
         data = commit.data
 
         collateral = Collateral.objects.get(id=data["id"])
-        new_amount = collateral.amount - int(data.get("fromAmount"))
+        new_amount = int(collateral.amount) - int(data.get("amount"))
         collateral.amount = str(new_amount)
 
         commit.save()

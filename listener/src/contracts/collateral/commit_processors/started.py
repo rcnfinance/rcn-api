@@ -11,7 +11,7 @@ class Started(CommitProcessor):
         data = commit.data
 
         collateral = Collateral.objects.get(id=data["id"])
-        collateral.status = CollateralState.STARTED.value
+        collateral.status = data.get("status")
 
         collateral.save()
         commit.save()

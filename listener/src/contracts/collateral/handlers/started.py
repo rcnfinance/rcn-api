@@ -1,5 +1,6 @@
 import web3
 from contracts.event import EventHandler
+from models import CollateralState
 from models import Commit
 
 
@@ -16,7 +17,8 @@ class Started(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
-            "id": str(self._args.get("_entryId"))
+            "id": str(self._args.get("_entryId")),
+            "status": str(CollateralState.STARTED.value)
         }
 
         commit.data = data

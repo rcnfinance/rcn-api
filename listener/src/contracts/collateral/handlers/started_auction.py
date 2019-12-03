@@ -4,7 +4,7 @@ from models import Commit
 
 
 class StartedAuction(EventHandler):
-    signature = "StartedAuction(uint256,uint256,uint256,uint256)"
+    signature = "StartedAuction(uint256,uint256,uint256,uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def handle(self):
@@ -17,9 +17,10 @@ class StartedAuction(EventHandler):
 
         data = {
             "id": str(self._args.get("_entryId")),
-            "required": str(self._args.get("_required")),
             "startOffer": str(self._args.get("_startOffer")),
+            "referenceOffer": str(self._args.get("_referenceOffer")),
             "limit": str(self._args.get("_limit")),
+            "required": str(self._args.get("_required")),
         }
 
         commit.data = data
