@@ -20,6 +20,7 @@ class ClaimedExpired(EventHandler):
             "auctionId": str(self._args.get("_auctionId")),
             "obligation": str(self._args.get("_obligation")),
             "obligationToken": str(self._args.get("_obligationToken")),
+            "status": str(CollateralState.IN_AUCTION.value)
         }
 
         commit.data = data

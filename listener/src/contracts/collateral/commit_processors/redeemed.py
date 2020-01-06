@@ -11,7 +11,8 @@ class Redeemed(CommitProcessor):
         data = commit.data
 
         collateral = Collateral.objects.get(id=data["id"])
-        collateral.status = CollateralState.CANCELED.value
+        
+        collateral.status = data.get("status")
 
         commit.save()
         collateral.save()

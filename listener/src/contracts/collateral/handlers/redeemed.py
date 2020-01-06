@@ -16,7 +16,8 @@ class Redeemed(EventHandler):
         commit.address = self._tx.get("from")
 
         data = {
-            "id": str(self._args.get("_entryId"))
+            "id": str(self._args.get("_entryId")),
+            "status": str(CollateralState.TO_WITHDRAW.value)
         }
 
         commit.data = data

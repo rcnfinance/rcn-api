@@ -21,6 +21,7 @@ class ClaimedLiquidation(EventHandler):
             "debt": str(self._args.get("_debt")),
             "required": str(self._args.get("_required")),
             "marketValue": str(self._args.get("_marketValue")),
+            "status": str(CollateralState.IN_AUCTION.value)
         }
 
         commit.data = data

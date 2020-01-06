@@ -15,10 +15,14 @@ class Withdraw(EventHandler):
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
+        if str(self._args.get("_amount")) != '0':
+            status = str(CollateralState.TO_WITHDRAW.value)
+
         data = {
             "id": str(self._args.get("_entryId")),
             "to": self._args.get("_to"),
-            "amount": str(self._args.get("_amount"))
+            "amount": str(self._args.get("_amount")),
+            "status": status
         }
 
         commit.data = data

@@ -6,5 +6,11 @@ class ClaimedLiquidation(CommitProcessor):
         self.opcode = "claimed_liquidation_collateral"
 
     def process(self, commit, *args, **kwargs):
-        # TODO implement
-        pass
+        data = commit.data
+
+        collateral = Collateral.objects.get(id=data["id"])
+
+        collateral.status = data.get("status")
+
+        collateral.save()
+        commit.save()
