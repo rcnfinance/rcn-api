@@ -1,9 +1,9 @@
 from contracts.commit_processor import CommitProcessor
 
 
-class StartedAuction(CommitProcessor):
+class ClaimedExpired(CommitProcessor):
     def __init__(self):
-        self.opcode = "started_auction"
+        self.opcode = "claimed_expired_collateral"
 
     def process(self, commit, *args, **kwargs):
         # TODO implement
