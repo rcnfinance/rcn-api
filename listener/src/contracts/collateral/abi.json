@@ -70,6 +70,12 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_entryId",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "contract CollateralHandler",
         "name": "_handler",
@@ -151,25 +157,6 @@
       }
     ],
     "name": "ClaimedLiquidation",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_entryId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "_auctionId",
-        "type": "uint256"
-      }
-    ],
-    "name": "ClaimedUndue",
     "type": "event"
   },
   {

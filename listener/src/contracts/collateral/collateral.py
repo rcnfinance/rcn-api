@@ -18,12 +18,12 @@ contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)
 
 from .handlers.approval_for_all import ApprovalForAll
 from .handlers.approval import Approval
+from .handlers.borrow_collateral import BorrowCollateral
 from .handlers.claimed_expired import ClaimedExpired
 from .handlers.claimed_liquidation import ClaimedLiquidation
 from .handlers.closed_auction import ClosedAuction
 from .handlers.created import Created
 from .handlers.deposited import Deposited
-from .handlers.emergency_redeemed import EmergencyRedeemed
 from .handlers.ownership_transferred import OwnershipTransferred
 from .handlers.redeemed import Redeemed
 from .handlers.set_URI_provider import SetURIProvider
@@ -34,12 +34,12 @@ from .handlers.withdraw import Withdraw
 
 from .commit_processors.approval_for_all import ApprovalForAll as ApprovalForAllCommitProcessor
 from .commit_processors.approval import Approval as ApprovalCommitProcessor
+from .commit_processors.borrow_collateral import BorrowCollateral as BorrowCollateralCommitProcessor
 from .commit_processors.claimed_expired import ClaimedExpired as ClaimedExpiredCommitProcessor
 from .commit_processors.claimed_liquidation import ClaimedLiquidation as ClaimedLiquidationCommitProcessor
 from .commit_processors.closed_auction import ClosedAuction as ClosedAuctionCommitProcessor
 from .commit_processors.created import Created as CreatedCommitProcessor
 from .commit_processors.deposited import Deposited as DepositedCommitProcessor
-from .commit_processors.emergency_redeemed import EmergencyRedeemed as EmergencyRedeemedCommitProcessor
 from .commit_processors.ownership_transferred import OwnershipTransferred as OwnershipTransferredCommitProcessor
 from .commit_processors.redeemed import Redeemed as RedeemedCommitProcessor
 from .commit_processors.set_URI_provider import SetURIProvider as SetURIProviderCommitProcessor
@@ -51,12 +51,12 @@ from .commit_processors.withdraw import Withdraw as WithdrawCommitProcessor
 commit_processors = [
     ApprovalForAllCommitProcessor(),
     ApprovalCommitProcessor(),
+    BorrowCollateralCommitProcessor(),
     ClaimedExpiredCommitProcessor(),
     ClaimedLiquidationCommitProcessor(),
     ClosedAuctionCommitProcessor(),
     CreatedCommitProcessor(),
     DepositedCommitProcessor(),
-    EmergencyRedeemedCommitProcessor(),
     OwnershipTransferredCommitProcessor(),
     RedeemedCommitProcessor(),
     SetURIProviderCommitProcessor(),
@@ -71,12 +71,12 @@ schedule_processors = []
 event_handlers = [
     ApprovalForAll,
     Approval,
+    BorrowCollateral,
     ClaimedExpired,
     ClaimedLiquidation,
     ClosedAuction,
     Created,
     Deposited,
-    EmergencyRedeemed,
     OwnershipTransferred,
     Redeemed,
     SetURIProvider,

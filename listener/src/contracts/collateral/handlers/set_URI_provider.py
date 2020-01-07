@@ -20,4 +20,4 @@ class SetURIProvider(EventHandler):
 
         commit.data = data
 
-        return []
+        return [commit]

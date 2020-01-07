@@ -13,5 +13,8 @@ class Withdraw(CommitProcessor):
         new_amount = int(collateral.amount) - int(data.get("amount"))
         collateral.amount = str(new_amount)
 
+        if new_amount == '0':
+            collateral.status = str(CollateralState.FINISH.value)
+
         commit.save()
         collateral.save()

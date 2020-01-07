@@ -20,4 +20,4 @@ class SetUrl(EventHandler):
 
         commit.data = data
 
-        return []
+        return [commit]

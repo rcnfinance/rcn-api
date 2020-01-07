@@ -21,4 +21,4 @@ class OwnershipTransferred(EventHandler):
 
         commit.data = data
 
-        return []
+        return [commit]
