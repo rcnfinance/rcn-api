@@ -16,3 +16,4 @@ class Transfer(CommitProcessor):
 
         commit.save()
         collateral.save()
+        print(collateral.id)
