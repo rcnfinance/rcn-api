@@ -230,12 +230,21 @@ class StateItem(RetrieveAPI):
                 description='State with id={} does not exists'.format(id_state)
             )
 
+
 class CollateralList(PaginatedListAPI):
     serializer = CollateralSerializer()
 
     id = StringParam("Id filter")
     debt_id = StringParam("debt_id filter")
     token = StringParam("token filter")
+    ##
+    oracle = StringParam("oracle filter")
+    liquidation_ratio = StringParam("liquidation_ratio filter")
+    balance_ration = StringParam("balance_ration filter")
+    burn_fee = StringParam("burn_fee filter")
+    reward_fee = StringParam("reward_fee filter")
+    amount = StringParam("amount filter")
+    status = StringParam("status filter")
 
     def list(self, params, meta, **kwargs):
         filter_params = params.copy()
@@ -251,6 +260,7 @@ class CollateralList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
+
 
 class CollateralListCount(RetrieveAPI):
     serializer = CollateralCountSerializer()
@@ -271,20 +281,19 @@ class CollateralItem(RetrieveAPI):
     def retrieve(self, params, meta, id_collateral, **kwargs):
         try:
             collateral = Collateral.objects.get(id=id_collateral)
-            print('Collateral before update:', collateral)
-            print('Debt ID:', collateral.debt_id)
-            print('Collateral ratio before', collateral.collateral_ratio)
-            print('Collateral Id', id_collateral)
-            print('Collateral Started', collateral.started)
-            if collateral.started:
-                collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
-                print('New Collateral:', collateral.collateral_ratio)
-                liquidationDeltaRatio = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral))
-                print('liquidation_delta_ratio:', liquidationDeltaRatio)
-                collateral.can_claim = liquidationDeltaRatio < 0
-                print('Can claim collateral:', collateral.can_claim)
-                collateral.save()
-            print(collateral)    
+            # print('Collateral before update:', collateral)
+            # print('Debt ID:', collateral.debt_id)
+            # print('Collateral ratio before', collateral.collateral_ratio)
+            # print('Collateral Id', id_collateral)
+            # print('Collateral Started', collateral.started)
+            # if collateral.started:
+            #     collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
+            #     print('New Collateral:', collateral.collateral_ratio)
+            #     liquidationDeltaRatio = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral))
+            #     print('liquidation_delta_ratio:', liquidationDeltaRatio)
+            #     collateral.can_claim = liquidationDeltaRatio < 0
+            #     print('Can claim collateral:', collateral.can_claim)
+            #     collateral.save()
             return collateral
         except Collateral.DoesNotExist:
             raise falcon.HTTPNotFound(

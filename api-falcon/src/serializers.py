@@ -45,10 +45,13 @@ class CollateralSerializer(BaseSerializer):
     balance_ratio = RawField("balance_ratio")
     burn_fee = RawField("burn_fee")
     reward_fee = RawField("reward_fee")
-    started = RawField("started")
-    invalid = RawField("invalid")
-    collateral_ratio = RawField("collateral_ratio")
-    can_claim = RawField("can_claim")
+    # started = RawField("started")
+    # invalid = RawField("invalid")
+    # collateral_ratio = RawField("collateral_ratio")
+    # can_claim = RawField("can_claim")
+    owner = RawField("owner")
+    amount = RawField("amount")
+    status = RawField("status")
 
 class ConfigSerializer(BaseSerializer):
     id = RawField("id")
