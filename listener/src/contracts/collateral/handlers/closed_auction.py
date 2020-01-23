@@ -2,6 +2,10 @@ import web3
 from contracts.event import EventHandler
 from models import Commit
 
+from models import Loan
+from models import Collateral
+from models import CollateralState
+
 
 class ClosedAuction(EventHandler):
     signature = "ClosedAuction(uint256,uint256,uint256)"
@@ -15,7 +19,9 @@ class ClosedAuction(EventHandler):
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
-        collateral = Collateral.objects.get(id=data["id"])
+        collateral_id = str(self._args.get("_entryId"))
+        collateral = Collateral.objects.get(id=collateral_id)
+        print(collateral.debt_id)
         loan = Loan.objects.get(id=collateral.debt_id)
         if loan.status == "2":
             status = str(CollateralState.TO_WITHDRAW.value)
@@ -23,7 +29,7 @@ class ClosedAuction(EventHandler):
             status = str(CollateralState.STARTED.value)
 
         data = {
-            "id": str(self._args.get("_entryId")),
+            "id": collateral_id,
             "received": self._args.get("_received"),
             "leftover": self._args.get("_leftover"),
             "status": status
