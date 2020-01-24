@@ -1,4 +1,5 @@
 from contracts.commit_processor import CommitProcessor
+from models import Collateral
 
 
 class ClaimedLiquidation(CommitProcessor):

@@ -1,5 +1,7 @@
 from contracts.commit_processor import CommitProcessor
 
+from models import Collateral
+
 
 class ClosedAuction(CommitProcessor):
     def __init__(self):
@@ -11,7 +13,7 @@ class ClosedAuction(CommitProcessor):
         collateral = Collateral.objects.get(id=data["id"])
 
         collateral.status = data.get("status")
-        collateral.amount = data.get("leftover")
+        collateral.amount = str(data.get("leftover"))
 
         collateral.save()
         commit.save()
