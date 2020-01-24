@@ -1,9 +1,9 @@
 from contracts.commit_processor import CommitProcessor
 
-class CancelDebt(CommitProcessor):
+
+class Approval(CommitProcessor):
     def __init__(self):
-        self.opcode = "cancel_debt_collateral"
+        self.opcode = "approval_collateral"
 
     def process(self, commit, *args, **kwargs):
-        commit.save()
-
+        pass

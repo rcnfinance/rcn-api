@@ -1,8 +1,9 @@
 from contracts.commit_processor import CommitProcessor
 
-class PayOffDebt(CommitProcessor):
+
+class OwnershipTransferred(CommitProcessor):
     def __init__(self):
-        self.opcode = "pay_off_debt_collateral"
+        self.opcode = "ownership_transferred_collateral"
 
     def process(self, commit, *args, **kwargs):
-        commit.save()
+        pass

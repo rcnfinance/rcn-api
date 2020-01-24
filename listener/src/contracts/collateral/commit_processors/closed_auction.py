@@ -1,19 +1,19 @@
-from models import Collateral
 from contracts.commit_processor import CommitProcessor
 
+from models import Collateral
 
-class Deposited(CommitProcessor):
+
+class ClosedAuction(CommitProcessor):
     def __init__(self):
-        self.opcode = "deposited_collateral"
+        self.opcode = "closed_auction"
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
         collateral = Collateral.objects.get(id=data["id"])
-        new_amount = int(collateral.amount) + int(data.get("amount"))
-        collateral.amount = str(new_amount)
 
         collateral.status = data.get("status")
+        collateral.amount = str(data.get("leftover"))
 
-        commit.save()
         collateral.save()
+        commit.save()

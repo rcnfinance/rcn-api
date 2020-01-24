@@ -1,3 +1,5 @@
+import enum
+
 from mongoengine import StringField
 from mongoengine import LongField
 from mongoengine import DictField
@@ -9,6 +11,14 @@ from mongoengine import QuerySet
 from mongoengine import EmbeddedDocument
 from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
+
+
+class CollateralState(enum.Enum):
+    CREATED = "1"
+    STARTED = "2"
+    IN_AUCTION = "3"
+    TO_WITHDRAW = "4"
+    FINISH = "5"
 
 
 class Commit(Document):
@@ -77,27 +87,28 @@ class State(Document):
         ]
     }
 
+
 class Collateral(Document):
+    # Constants
     id = StringField(required=True, max_length=150, primary_key=True)
-    debt_id = StringField(required=True, max_length=150)
-    oracle = StringField(required=True, max_length=150)
-    token = StringField(required=True, max_length=150)
-    amount = StringField(required=True, max_length=150)
-    liquidation_ratio = StringField(required=True, max_length=150)
-    balance_ratio = StringField(required=True, max_length=150)
-    burn_fee = StringField(required=True, max_length=150)
-    reward_fee = StringField(required=True, max_length=150)  
-    started = BooleanField(required=True)
-    invalid = BooleanField(required=True)
-    collateral_ratio = StringField(required=True, max_length=150)
-    can_claim = BooleanField(required=True) 
+    debt_id = StringField(max_length=150)
+    oracle = StringField(max_length=150)
+    token = StringField(max_length=150)
+    liquidation_ratio = StringField(max_length=150)
+    balance_ratio = StringField(max_length=150)
+    burn_fee = StringField(max_length=150)
+    reward_fee = StringField(max_length=150)
+    owner = StringField(max_length=150)
+    # Variables
+    amount = StringField(max_length=150)
+    status = StringField(max_length=150)
 
     meta = {
         "indexes": [
             "debt_id",
             "token"
         ]
-    }  
+    }
 
 class Debt(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
@@ -186,10 +197,9 @@ class Pool(Document):
 class Claim(EmbeddedDocument):
     lender = StringField(required=True, max_length=150, primary_key=True)
     claimed_amount = StringField(required=True, max_length=150)
-    
+
 class ERC20D(Document):
     id = StringField(required=True, max_length=150, primary_key=True)
     token = StringField(required=True, max_length=150)
     paid = StringField(required=True, max_length=150)
     claimers = EmbeddedDocumentListField(Claim)
-

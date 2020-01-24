@@ -1,9 +1,9 @@
 from contracts.commit_processor import CommitProcessor
 
 
-class CollateralBalance(CommitProcessor):
+class ApprovalForAll(CommitProcessor):
     def __init__(self):
-        self.opcode = "collateral_balance_collateral"
+        self.opcode = "approval_for_all_collateral"
 
     def process(self, commit, *args, **kwargs):
-        commit.save()
+        pass

@@ -16,68 +16,77 @@ eth_conn = EthereumConnection(URL_NODE)
 contract_connection = ContractConnection(eth_conn, ADDRESS, ABI_PATH)
 
 
-from .handlers.cancel_debt import CancelDebt
-from .handlers.collateral_balance import CollateralBalance
-from .handlers.convert_pay import ConvertPay
+from .handlers.approval_for_all import ApprovalForAll
+from .handlers.approval import Approval
+from .handlers.borrow_collateral import BorrowCollateral
+from .handlers.claimed_expired import ClaimedExpired
+from .handlers.claimed_liquidation import ClaimedLiquidation
+from .handlers.closed_auction import ClosedAuction
 from .handlers.created import Created
 from .handlers.deposited import Deposited
-from .handlers.emergency_redeemed import EmergencyRedeemed
-from .handlers.pay_off_debt import PayOffDebt
-from .handlers.rebuy import Rebuy
+from .handlers.ownership_transferred import OwnershipTransferred
 from .handlers.redeemed import Redeemed
-from .handlers.set_converter import SetConverter
+from .handlers.set_URI_provider import SetURIProvider
 from .handlers.set_url import SetUrl
 from .handlers.started import Started
-from .handlers.take_fee import TakeFee
-from .handlers.withdrawed import Withdrawed
+from .handlers.transfer import Transfer
+from .handlers.withdraw import Withdraw
 
+from .commit_processors.approval_for_all import ApprovalForAll as ApprovalForAllCommitProcessor
+from .commit_processors.approval import Approval as ApprovalCommitProcessor
+from .commit_processors.borrow_collateral import BorrowCollateral as BorrowCollateralCommitProcessor
+from .commit_processors.claimed_expired import ClaimedExpired as ClaimedExpiredCommitProcessor
+from .commit_processors.claimed_liquidation import ClaimedLiquidation as ClaimedLiquidationCommitProcessor
+from .commit_processors.closed_auction import ClosedAuction as ClosedAuctionCommitProcessor
 from .commit_processors.created import Created as CreatedCommitProcessor
 from .commit_processors.deposited import Deposited as DepositedCommitProcessor
-from .commit_processors.withdrawed import Withdrawed as WithdrawedCommitProcessor
-from .commit_processors.started import Started as StartedCommitProcessor
+from .commit_processors.ownership_transferred import OwnershipTransferred as OwnershipTransferredCommitProcessor
 from .commit_processors.redeemed import Redeemed as RedeemedCommitProcessor
-from .commit_processors.emergency_redeemed import EmergencyRedeemed as EmergencyRedeemedCommitProcessor
-from .commit_processors.pay_off_debt import PayOffDebt as PayOffDebtCommitProcessor
-from .commit_processors.convert_pay import ConvertPay as ConvertPayCommitProcessor
-from .commit_processors.rebuy import Rebuy as ReBuyCommitProcessor
-from .commit_processors.cancel_debt import CancelDebt as CancelDebtCommitProcessor
-from .commit_processors.take_fee import TakeFee as TakeFeeCommitProcessor
-from .commit_processors.collateral_balance import CollateralBalance as CollateralBalanceCommitProcessor
+from .commit_processors.set_URI_provider import SetURIProvider as SetURIProviderCommitProcessor
+from .commit_processors.set_url import SetUrl as SetUrlCommitProcessor
+from .commit_processors.started import Started as StartedCommitProcessor
+from .commit_processors.transfer import Transfer as TransferCommitProcessor
+from .commit_processors.withdraw import Withdraw as WithdrawCommitProcessor
 
 commit_processors = [
+    ApprovalForAllCommitProcessor(),
+    ApprovalCommitProcessor(),
+    BorrowCollateralCommitProcessor(),
+    ClaimedExpiredCommitProcessor(),
+    ClaimedLiquidationCommitProcessor(),
+    ClosedAuctionCommitProcessor(),
     CreatedCommitProcessor(),
     DepositedCommitProcessor(),
-    WithdrawedCommitProcessor(),
-    StartedCommitProcessor(),
+    OwnershipTransferredCommitProcessor(),
     RedeemedCommitProcessor(),
-    EmergencyRedeemedCommitProcessor(),
-    PayOffDebtCommitProcessor(),
-    ConvertPayCommitProcessor(),
-    ReBuyCommitProcessor(),
-    CancelDebtCommitProcessor(),
-    TakeFeeCommitProcessor(),
-    CollateralBalanceCommitProcessor()
+    SetURIProviderCommitProcessor(),
+    SetUrlCommitProcessor(),
+    StartedCommitProcessor(),
+    TransferCommitProcessor(),
+    WithdrawCommitProcessor()
 ]
 
 schedule_processors = []
 
 event_handlers = [
-    CancelDebt,
-    CollateralBalance,
-    ConvertPay,
+    ApprovalForAll,
+    Approval,
+    BorrowCollateral,
+    ClaimedExpired,
+    ClaimedLiquidation,
+    ClosedAuction,
     Created,
     Deposited,
-    EmergencyRedeemed,
-    PayOffDebt,
-    Rebuy,
+    OwnershipTransferred,
     Redeemed,
+    SetURIProvider,
     SetUrl,
     Started,
-    TakeFee,
-    Withdrawed    
+    Transfer,
+    Withdraw
 ]
 
-Collateral = Contract(
+collateral = Contract(
     "Collateral",
     event_handlers,
     commit_processors,

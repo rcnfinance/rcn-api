@@ -1,4 +1,6 @@
 from models import Loan
+from models import CollateralState
+from models import Collateral
 from contracts.commit_processor import CommitProcessor
 
 
@@ -14,6 +16,11 @@ class Lent(CommitProcessor):
         loan.open = data.get("open")
         loan.lender = data.get("lender")
         loan.status = data.get("status")
-        # loan.commits.append(commit)
+
         commit.save()
         loan.save()
+
+        # To Collateral Cosigner Contract
+        # for collateral in Collateral.objects(debt_id=data.get("id")):
+        #     collateral.status = CollateralState.TO_REDEEM.value
+        #     collateral.save()

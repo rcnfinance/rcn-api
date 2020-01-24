@@ -1,15 +1,14 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
-# import utils
+
+from models import Collateral
+from models import CollateralState
 
 
 class Deposited(EventHandler):
     signature = "Deposited(uint256,uint256)"
     signature_hash = web3.Web3.sha3(text=signature).hex()
-
-    # def _normalize(self):
-    #     self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
     def handle(self):
         commit = Commit()
@@ -19,9 +18,18 @@ class Deposited(EventHandler):
         commit.proof = self._transaction
         commit.address = self._tx.get("from")
 
+        id = str(self._args.get("_entryId"))
+        amount = str(self._args.get("_amount"))
+        collateral = Collateral.objects.get(id=id)
+        if collateral.status == CollateralState.FINISH.value and amount != '0':
+            status = str(CollateralState.TO_WITHDRAW.value)
+        else:
+            status = str(collateral.status)
+
         data = {
-            "id": str(self._args.get("_id")),
-            "amount": str(self._args.get("_amount")),
+            "id": id,
+            "amount": amount,
+            "status": status
         }
 
         commit.data = data
