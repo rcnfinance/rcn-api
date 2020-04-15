@@ -93,6 +93,31 @@ class LoanSerializer(BaseSerializer):
     canceled = RawField("canceled")
     # commits = ListField("list of commits", serializer=CommitSerializer())
 
+class CoronaSerializer(BaseSerializer):
+    id = RawField("id", source="_id")
+    open = RawField("open")
+    approved = RawField("approved")
+    position = RawField("position")
+    expiration = RawField("expiration")
+    amount = RawField("amount")
+    cosigner = RawField("cosigner")
+    model = RawField("model")
+    creator = RawField("creator")
+    oracle = RawField("oracle")
+    borrower = RawField("borrower")
+    callback = RawField("callback")
+    salt = RawField("salt")
+    loanData = RawField("loanData")
+    created = RawField("created")
+    descriptor = ObjectField("descriptor", serializer=DescriptorSerializer())
+    currency = RawField("currency")
+    lender = RawField("Lender")
+    status = RawField("status")
+    canceled = RawField("canceled")
+    debt = RawField("debt")
+    config = RawField("config")
+    collaterals = RawField("collaterals")
+
 
 class LoanCountSerializer(BaseSerializer):
     count = IntField("Loan count")

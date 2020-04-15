@@ -22,6 +22,7 @@ from serializers import CommitSerializer
 from serializers import CommitCountSerializer
 from serializers import CollateralSerializer
 from serializers import CollateralCountSerializer
+from serializers import CoronaSerializer
 from models import Debt
 from models import Config
 from models import Loan
@@ -516,3 +517,81 @@ class ModelAndDebtDataResource(object):
                 title="Error",
                 description="An error ocurred :(".format(id_loan)
             )
+
+
+class Coronavirus(object):
+    def on_get(self, req, resp):
+        covid = Loan.objects.aggregate(
+            [
+                {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
+                {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}}
+            ]
+        )
+        resp.body = json.dumps(list(covid))
+        resp.status = falcon.HTTP_200
+
+
+class CoronavirusList(PaginatedListAPI):
+    serializer = CoronaSerializer()
+
+    open = BoolParam("Open filter")
+    approved = BoolParam("Approved filter")
+    cosigner = StringParam("Cosigner filter")
+    cosigner__ne = StringParam("Cosigner not filter")
+    model = StringParam("Model filter")
+    model__ne = StringParam("Model not filter")
+    creator = StringParam("Creator filter")
+    creator__ne = StringParam("Creator not filter")
+    oracle = StringParam("Oracle filter")
+    oracle__ne = StringParam("Oracle not filter")
+    borrower = StringParam("Borrower filter")
+    borrower__ne = StringParam("Borrower not filter")
+    callback = StringParam("Callback filter")
+    canceled = BoolParam("Canceled filter")
+    status = StringParam("Status Filter")
+    lender = StringParam("Lender filter")
+    lender__ne = StringParam("Lender not filter")
+    currency = StringParam("Currency filter")
+    currency__ne = StringParam("Currency not filter")
+
+    expiration__lt = StringParam("Expiration lt")
+    expiration__lte = StringParam("Expiration lte")
+    expiration__gt = StringParam("Expiration gt")
+    expiration__gte = StringParam("Expiration gte")
+
+    amount__lt = StringParam("Amount lt")
+    amount__lte = StringParam("Amount lte")
+    amount__gt = StringParam("Amount gt")
+    amount__gte = StringParam("Amount gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lte")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
+
+    def list(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        all_objects = Loan.objects.filter(**filter_params)
+        count_objects = all_objects.count()
+        meta["resource_count"] = count_objects
+
+        sarlanga = all_objects.skip(offset).limit(page_size)
+
+        asd = sarlanga.aggregate(
+            [
+                {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
+                {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
+                {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}}
+            ]
+        )
+
+        return list(asd)
+        

@@ -20,6 +20,8 @@ from resources import CommitListCount
 from resources import CollateralList
 from resources import CollateralListCount
 from resources import CollateralItem
+from resources import Coronavirus
+from resources import CoronavirusList
 
 from resources import ModelAndDebtDataResource
 from falcon_cors import CORS
@@ -58,3 +60,6 @@ api.add_route("/v4/count/commits/", CommitListCount())
 api.add_route("/v4/collaterals/", CollateralList())
 api.add_route("/v4/count/collaterals/", CollateralListCount())
 api.add_route("/v4/collaterals/{id_collateral}/", CollateralItem())
+
+api.add_route("/v5/covid/", Coronavirus())
+api.add_route("/v5/covid2", CoronavirusList())
