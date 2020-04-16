@@ -30,8 +30,8 @@ class ClosedAuction(EventHandler):
 
         data = {
             "id": collateral_id,
-            "received": self._args.get("_received"),
-            "leftover": self._args.get("_leftover"),
+            "received": str(self._args.get("_received")),
+            "leftover": str(self._args.get("_leftover")),
             "status": status
         }
 
