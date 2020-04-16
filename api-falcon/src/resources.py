@@ -12,21 +12,13 @@ import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
 from serializers import LoanSerializer
-from serializers import OracleHistorySerializer
 from serializers import StateSerializer
-from serializers import LoanCountSerializer
-from serializers import DebtCountSerializer
-from serializers import ConfigCountSerializer
-from serializers import StateCountSerializer
 from serializers import CommitSerializer
-from serializers import CommitCountSerializer
 from serializers import CollateralSerializer
-from serializers import CollateralCountSerializer
-from serializers import CoronaSerializer
+from serializers import CompleteLoanSerializer
 from models import Debt
 from models import Config
 from models import Loan
-from models import OracleHistory
 from models import State
 from models import Commit
 from models import Collateral
@@ -37,12 +29,11 @@ from collateral_interface import CollateralInterface
 
 COLLATERAL_ADDRESS = os.environ.get("COLLATERAL_ADDRESS")
 
+# Mejorar esto
 ABI_PATH = os.path.join(
     "/project/abi",
     "collateral.json"
 )
-
-print(ABI_PATH)
 
 URL_NODE = os.environ.get("URL_NODE")
 eth_conn = EthereumConnection(URL_NODE)
@@ -92,39 +83,6 @@ class DebtList(PaginatedListAPI):
         return all_objects.skip(offset).limit(page_size)
 
 
-class DebtListCount(RetrieveAPI):
-    serializer = DebtCountSerializer()
-
-    error = BoolParam("Error filter")
-    model = StringParam("Model filter")
-    model__ne = StringParam("Model not filter")
-    creator = StringParam("Creator filter")
-    creator__ne = StringParam("Creator not filter")
-    oracle = StringParam("Oracle filter")
-    oracle__ne = StringParam("Oracle not filter")
-
-    balance__lt = StringParam("Balance lt")
-    balance__lte = StringParam("Balance lte")
-    balance__gt = StringParam("Balance gt")
-    balance__gte = StringParam("Balance gte")
-
-    created__lt = StringParam("Created lt")
-    created__lte = StringParam("Created lt")
-    created__gt = StringParam("Created gt")
-    created__gte = StringParam("Created gte")
-
-    def retrieve(self, params, meta, **kwargs):
-        # Filtering -> Ordering -> Limiting
-
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = Debt.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
-
-
 class DebtItem(RetrieveAPI):
     serializer = DebtSerializer()
 
@@ -155,19 +113,6 @@ class ConfigList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
-
-
-class ConfigListCount(RetrieveAPI):
-    serializer = ConfigCountSerializer()
-
-    def retrieve(self, params, meta, **kwargs):
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = Config.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
 
 
 class ConfigItem(RetrieveAPI):
@@ -202,21 +147,6 @@ class StateList(PaginatedListAPI):
         meta["resource_count"] = count_objects
 
         return all_objects.skip(offset).limit(page_size)
-
-
-class StateListCount(RetrieveAPI):
-    serializer = StateCountSerializer()
-
-    status = StringParam("Status filter")
-
-    def retrieve(self, params, meta, **kwargs):
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = State.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
 
 
 class StateItem(RetrieveAPI):
@@ -263,38 +193,13 @@ class CollateralList(PaginatedListAPI):
         return all_objects.skip(offset).limit(page_size)
 
 
-class CollateralListCount(RetrieveAPI):
-    serializer = CollateralCountSerializer()
-
-    def retrieve(self, params, meta, **kwargs):
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = Collateral.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
-
-
 class CollateralItem(RetrieveAPI):
     serializer = CollateralSerializer()
 
     def retrieve(self, params, meta, id_collateral, **kwargs):
         try:
             collateral = Collateral.objects.get(id=id_collateral)
-            # print('Collateral before update:', collateral)
-            # print('Debt ID:', collateral.debt_id)
-            # print('Collateral ratio before', collateral.collateral_ratio)
-            # print('Collateral Id', id_collateral)
-            # print('Collateral Started', collateral.started)
-            # if collateral.started:
-            #     collateral.collateral_ratio = collateral_interface.get_collateral_ratio(id=id_collateral)
-            #     print('New Collateral:', collateral.collateral_ratio)
-            #     liquidationDeltaRatio = int(collateral_interface.get_liquidation_delta_ratio(id=id_collateral))
-            #     print('liquidation_delta_ratio:', liquidationDeltaRatio)
-            #     collateral.can_claim = liquidationDeltaRatio < 0
-            #     print('Can claim collateral:', collateral.can_claim)
-            #     collateral.save()
+
             return collateral
         except Collateral.DoesNotExist:
             raise falcon.HTTPNotFound(
@@ -359,54 +264,6 @@ class LoanList(PaginatedListAPI):
         return all_objects.skip(offset).limit(page_size)
 
 
-class LoanListCount(RetrieveAPI):
-    serializer = LoanCountSerializer()
-
-    open = BoolParam("Open filter")
-    approved = BoolParam("Approved filter")
-    cosigner = StringParam("Cosigner filter")
-    cosigner__ne = StringParam("Cosigner not filter")
-    model = StringParam("Model filter")
-    model__ne = StringParam("Model not filter")
-    creator = StringParam("Creator filter")
-    creator__ne = StringParam("Creator not filter")
-    oracle = StringParam("Oracle filter")
-    oracle__ne = StringParam("Oracle not filter")
-    borrower = StringParam("Borrower filter")
-    borrower__ne = StringParam("Borrower not filter")
-    callback = StringParam("Callback filter")
-    canceled = BoolParam("Canceled filter")
-    status = StringParam("Status Filter")
-    lender = StringParam("Lender filter")
-    lender__ne = StringParam("Lender not filter")
-
-    expiration__lt = StringParam("Expiration lt")
-    expiration__lte = StringParam("Expiration lte")
-    expiration__gt = StringParam("Expiration gt")
-    expiration__gte = StringParam("Expiration gte")
-
-    amount__lt = StringParam("Amount lt")
-    amount__lte = StringParam("Amount lte")
-    amount__gt = StringParam("Amount gt")
-    amount__gte = StringParam("Amount gte")
-
-    created__lt = StringParam("Created lt")
-    created__lte = StringParam("Created lte")
-    created__gt = StringParam("Created gt")
-    created__gte = StringParam("Created gte")
-
-
-    def retrieve(self, params, meta, **kwargs):
-        # Filtering -> Ordering -> Limiting
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = Loan.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
-
-
 class LoanItem(RetrieveAPI):
     serializer = LoanSerializer()
 
@@ -444,52 +301,6 @@ class CommitList(PaginatedListAPI):
         return all_objects.skip(offset).limit(page_size)
 
 
-class CommitListCount(RetrieveAPI):
-    serializer = CommitCountSerializer()
-
-    def retrieve(self, params, meta, **kwargs):
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        all_objects = Commit.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-
-        return {"count": count_objects}
-
-
-class OracleHistoryList(PaginatedListAPI):
-    serializer = OracleHistorySerializer()
-
-    def list(self, params, meta, **kwargs):
-        # Filtering -> Ordering -> Limiting
-        filter_params = params.copy()
-        filter_params.pop("indent")
-
-        page_size = filter_params.pop("page_size")
-        page = filter_params.pop("page")
-
-        offset = page * page_size
-
-        all_objects = OracleHistory.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-        meta["resource_count"] = count_objects
-
-        return all_objects.skip(offset).limit(page_size)
-
-
-class OracleHistoryItem(RetrieveAPI):
-    serializer = OracleHistorySerializer()
-
-    def retrieve(self, params, meta, id_loan, **kwargs):
-        try:
-            return OracleHistory.objects.get(id=id_loan)
-        except OracleHistory.DoesNotExist:
-            raise falcon.HTTPNotFound(
-                title="History does not exists",
-                description="History with id={} does not exists".format(id_loan)
-            )
-
-
 class HealthStatusResource(object):
     def on_get(self, req, resp):
         clock = Clock()
@@ -519,20 +330,8 @@ class ModelAndDebtDataResource(object):
             )
 
 
-class Coronavirus(object):
-    def on_get(self, req, resp):
-        covid = Loan.objects.aggregate(
-            [
-                {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
-                {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}}
-            ]
-        )
-        resp.body = json.dumps(list(covid))
-        resp.status = falcon.HTTP_200
-
-
-class CoronavirusList(PaginatedListAPI):
-    serializer = CoronaSerializer()
+class CompleteLoanList(PaginatedListAPI):
+    serializer = CompleteLoanSerializer()
 
     open = BoolParam("Open filter")
     approved = BoolParam("Approved filter")
@@ -583,15 +382,46 @@ class CoronavirusList(PaginatedListAPI):
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
 
-        sarlanga = all_objects.skip(offset).limit(page_size)
+        loan_filtered = all_objects.skip(offset).limit(page_size)
 
-        asd = sarlanga.aggregate(
+        complete_loans = loan_filtered.aggregate(
             [
                 {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
                 {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
-                {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}}
+                {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
+                {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}},
+                { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
+                { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
+                { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                { "$project": {
+                    "id": 1,
+                    "open": 1,
+                    "approved": 1,
+                    "position": 1,
+                    "expiration": 1,
+                    "amount": 1,
+                    "cosigner": 1,
+                    "model": 1,
+                    "creator": 1,
+                    "oracle": 1,
+                    "borrower": 1,
+                    "callback": 1,
+                    "salt": 1,
+                    "loanData": 1,
+                    "created": 1,
+                    "descriptor": 1,
+                    "currency": 1,
+                    "lender": 1,
+                    "status": 1,
+                    "canceled": 1,
+                    "debt": 1,
+                    "state": 1,
+                    "collaterals": 1,
+                    "config": "$config.data", "id": 1, "open": 1
+                    }
+                }
             ]
         )
 
-        return list(asd)
+        return list(complete_loans)
         
