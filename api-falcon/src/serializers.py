@@ -33,7 +33,7 @@ class DebtSerializer(BaseSerializer):
     creator = RawField("creator")
     created = RawField("created")
     oracle = RawField("oracle")
-    # commits = ListField("list of commits", serializer=CommitSerializer())
+
 
 class CollateralSerializer(BaseSerializer):
     id = RawField("id")
@@ -45,10 +45,6 @@ class CollateralSerializer(BaseSerializer):
     balance_ratio = RawField("balance_ratio")
     burn_fee = RawField("burn_fee")
     reward_fee = RawField("reward_fee")
-    # started = RawField("started")
-    # invalid = RawField("invalid")
-    # collateral_ratio = RawField("collateral_ratio")
-    # can_claim = RawField("can_claim")
     owner = RawField("owner")
     amount = RawField("amount")
     status = RawField("status")
@@ -56,7 +52,6 @@ class CollateralSerializer(BaseSerializer):
 class ConfigSerializer(BaseSerializer):
     id = RawField("id")
     data = RawField("data")
-    # commits = ListField("list of commits", serializer=CommitSerializer())
 
 
 class StateSerializer(BaseSerializer):
@@ -67,7 +62,6 @@ class StateSerializer(BaseSerializer):
     paid = RawField("paid")
     paid_base = RawField("paid base")
     interest = RawField("interest")
-    # commits = ListField("List of commits", serializer=CommitSerializer())
 
 
 class LoanSerializer(BaseSerializer):
@@ -91,7 +85,65 @@ class LoanSerializer(BaseSerializer):
     lender = RawField("Lender")
     status = RawField("status")
     canceled = RawField("canceled")
-    # commits = ListField("list of commits", serializer=CommitSerializer())
+
+
+class StateWithoutIDSerializer(BaseSerializer):
+    status = RawField("status")
+    clock = RawField("clock")
+    last_payment = RawField("last payment")
+    paid = RawField("paid")
+    paid_base = RawField("paid base")
+    interest = RawField("interest")
+
+
+class DebtWithoutIDSerializer(BaseSerializer):
+    error = RawField("error")
+    balance = RawField("balance")
+    model = RawField("model")
+    creator = RawField("creator")
+    created = RawField("created")
+    oracle = RawField("oracle")
+
+
+class CollateralWithoutIDSerializer(BaseSerializer):
+    id = RawField("id", source="_id")
+    oracle = RawField("oracle")
+    token = RawField("token")
+    amount = RawField("amount")
+    liquidation_ratio = RawField("liquidation_ratio")
+    balance_ratio = RawField("balance_ratio")
+    burn_fee = RawField("burn_fee")
+    reward_fee = RawField("reward_fee")
+    owner = RawField("owner")
+    amount = RawField("amount")
+    status = RawField("status")
+
+
+class CompleteLoanSerializer(BaseSerializer):
+    id = RawField("id", source="_id")
+    open = RawField("open")
+    approved = RawField("approved")
+    position = RawField("position")
+    expiration = RawField("expiration")
+    amount = RawField("amount")
+    cosigner = RawField("cosigner")
+    model = RawField("model")
+    creator = RawField("creator")
+    oracle = RawField("oracle")
+    borrower = RawField("borrower")
+    callback = RawField("callback")
+    salt = RawField("salt")
+    loanData = RawField("loanData")
+    created = RawField("created")
+    descriptor = ObjectField("descriptor", serializer=DescriptorSerializer())
+    currency = RawField("currency")
+    lender = RawField("Lender")
+    status = RawField("status")
+    canceled = RawField("canceled")
+    debt = ObjectField("debt", serializer=DebtWithoutIDSerializer())
+    config = RawField("config")
+    state = ObjectField("state", serializer=StateWithoutIDSerializer())
+    collaterals = ListField("collaterals", serializer=CollateralWithoutIDSerializer())
 
 
 class LoanCountSerializer(BaseSerializer):
@@ -113,8 +165,10 @@ class StateCountSerializer(BaseSerializer):
 class CommitCountSerializer(BaseSerializer):
     count = IntField("State count")
 
+
 class CollateralCountSerializer(BaseSerializer):
     count = IntField("State count")
+
 
 class OracleHistorySerializer(BaseSerializer):
     id = RawField("id")
