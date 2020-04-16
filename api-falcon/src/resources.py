@@ -330,6 +330,62 @@ class ModelAndDebtDataResource(object):
             )
 
 
+class CompleteLoanItem(RetrieveAPI):
+    serializer = CompleteLoanSerializer()
+
+    def retrieve(self, params, meta, id_loan, **kwargs):
+        try:
+            # loan = Loan.objects.get(id=id_loan)
+
+            complete_loan = Loan.objects.aggregate(
+                [
+                    { "$match": { "_id": id_loan}},
+                    {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
+                    {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
+                    {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
+                    {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}},
+                    { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                    { "$project": {
+                        "id": 1,
+                        "open": 1,
+                        "approved": 1,
+                        "position": 1,
+                        "expiration": 1,
+                        "amount": 1,
+                        "cosigner": 1,
+                        "model": 1,
+                        "creator": 1,
+                        "oracle": 1,
+                        "borrower": 1,
+                        "callback": 1,
+                        "salt": 1,
+                        "loanData": 1,
+                        "created": 1,
+                        "descriptor": 1,
+                        "currency": 1,
+                        "lender": 1,
+                        "status": 1,
+                        "canceled": 1,
+                        "debt": 1,
+                        "state": 1,
+                        "collaterals": 1,
+                        "config": "$config.data", "id": 1, "open": 1
+                        }
+                    }
+                ]
+            )
+
+            return list(complete_loan)[0]
+            
+        except Loan.DoesNotExist:
+            raise falcon.HTTPNotFound(
+                title="Loan does not exists",
+                description="Loan with id={} does not exists".format(id_loan)
+            )
+
+
 class CompleteLoanList(PaginatedListAPI):
     serializer = CompleteLoanSerializer()
 
