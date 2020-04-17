@@ -3,7 +3,7 @@ graceful
 gunicorn
 mongoengine
 falcon-cors
-raven
 web3==4.9.2
 mimeparse
 requests
+sentry-sdk[falcon]==0.14.3

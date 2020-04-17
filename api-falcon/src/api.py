@@ -1,3 +1,10 @@
+import os
+
+import sentry_sdk
+from sentry_sdk.integrations.falcon import FalconIntegration
+
+sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[FalconIntegration()])
+
 import falcon
 
 from resources import DebtItem
