@@ -21,6 +21,6 @@ class Lent(CommitProcessor):
         loan.save()
 
         # To Collateral Cosigner Contract
-        # for collateral in Collateral.objects(debt_id=data.get("id")):
-        #     collateral.status = CollateralState.TO_REDEEM.value
-        #     collateral.save()
+        for collateral in Collateral.objects(debt_id=data.get("id")):
+            collateral.status = CollateralState.TO_WITHDRAW.value
+            collateral.save()
