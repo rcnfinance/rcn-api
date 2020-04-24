@@ -35,8 +35,6 @@ class Requested(EventHandler):
         except BadFunctionCallOutput:
             currency = "0x"
 
-        print("currency: {}".format(currency))
-
         data = {
             "id": self._args.get("_id"),
             "open": True,
