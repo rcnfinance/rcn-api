@@ -1,6 +1,7 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
+from models import CollateralState
 
 
 class ClaimedLiquidation(EventHandler):
