@@ -60,7 +60,7 @@ class Listener:
             self.buffer.feed(dest_number, dest_timestamp, new_entries)
 
             self.current_block = dest_number
-            self.safe_block = int((self.safe_block + dest_number) / 2)
+            self.safe_block = dest_number
 
             if dest_number == last_block.number:
                 time.sleep(sec)

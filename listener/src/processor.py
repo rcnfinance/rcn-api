@@ -7,42 +7,43 @@ from clock import Clock
 logger = logging.getLogger(__name__)
 
 
-class Processor:
-    last_seen = 0
+class NonceSequencer:
+    def __init__(self, initial=0):
+        self._nonce = 0
 
+    def pull(self):
+        nonce = self._nonce
+        self._nonce += 1
+
+        return nonce
+
+    @property
+    def nonce(self):
+        return self._nonce
+    
+
+class Processor:
     def __init__(self, buffer, contract_manager):
         self.buffer = buffer
         self._contract_manager = contract_manager
-        self.nonce = 0
+        self.nonce_sequencer = NonceSequencer()
+
         self.clock = Clock()
         self.clock.reset()
-        self.buffer.subscribe_changes(self.new_entries)
-        self.buffer.subscribe_integrity(self.integrity_error)
 
-    def new_entries(self, timestamp):
-        for event in self.buffer.registry:
-            if event.position > self.last_seen:
-                handler = self._contract_manager.handle_event(event.data)
-                self.last_seen = event.position
-                if handler:
-                    commits = handler.handle()
-                    self.execute(commits)
+        self.buffer.subscribe_changes(self.new_entries)
+
+    def new_entries(self, events, timestamp):
+        for event in events:
+            handler = self._contract_manager.handle_event(event)
+            if handler:
+                commits = handler.handle()
+                self.execute(commits)
 
         self._advance_time(timestamp)
 
-    def integrity_error(self):
-        connection.drop_database(os.environ.get("MONGO_DB"))
-        self.clock.reset()
-        self.nonce = 0
-        self.last_seen = 0
-
-    def _pull_nonce(self):
-        t = self.nonce
-        self.nonce += 1
-        return t
-
     def log(self, msg):
-        logger.info('PTime: {} - PNonce: {} - {}'.format(self.clock.time, self.nonce, msg))
+        logger.info('PTime: {} - PNonce: {} - {}'.format(self.clock.time, self.nonce_sequencer.nonce, msg))
 
     def _advance_time(self, target):
         # For every second between the origin and the target
@@ -70,19 +71,28 @@ class Processor:
 
     def execute(self, commits):
         for commit in commits:
-            if commit.timestamp < self.clock.time:
-                message = 'Old commit loaded {} {} {} {}'.format(
-                    commit.timestamp, self.clock.time, commit.timestamp - self.clock.time, commit.opcode
-                )
-                logger.info(message)
-                self.buffer.integrity_broken()
-                return
-            else:
-                self._advance_time(commit.timestamp)
-                commit.order = self._pull_nonce()
+            self._advance_time(commit.timestamp)
+            commit.order = self.nonce_sequencer.pull()
 
-                additional_data = {
-                    "clock": self.clock
-                }
+            additional_data = {
+                "clock": self.clock
+            }
 
-                self._contract_manager.handle_commit(commit, additional_data)
+            self._contract_manager.handle_commit(commit, additional_data)
+
+            # if commit.timestamp < self.clock.time:
+            #     message = 'Old commit loaded {} {} {} {}'.format(
+            #         commit.timestamp, self.clock.time, commit.timestamp - self.clock.time, commit.opcode
+            #     )
+            #     logger.info(message)
+            #     self.buffer.integrity_broken()
+            #     return
+            # else:
+            #     self._advance_time(commit.timestamp)
+            #     commit.order = self.nonce_sequencer.pull()
+
+            #     additional_data = {
+            #         "clock": self.clock
+            #     }
+
+            #     self._contract_manager.handle_commit(commit, additional_data)
