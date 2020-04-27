@@ -1,5 +1,6 @@
 from contracts.commit_processor import CommitProcessor
 from models import State
+from models import Collateral
 
 
 class InstallmentsChangedStatus(CommitProcessor):
@@ -19,8 +20,3 @@ class InstallmentsChangedStatus(CommitProcessor):
         # state.commits.append(commit)
         commit.save()
         state.save()
-
-        # To Collateral Cosigner Contract
-        collateral = Collateral.objects.get(debt_id=data.get("id"))
-        collateral.status = CollateralState.TO_WITHDRAW.value
-        collateral.save()
