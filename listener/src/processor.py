@@ -3,6 +3,7 @@ import logging
 from db import connection
 from models import Schedule
 from clock import Clock
+import utils
 
 logger = logging.getLogger(__name__)
 
@@ -34,8 +35,18 @@ class Processor:
         self.buffer.subscribe_changes(self.new_entries)
 
     def new_entries(self, events, timestamp):
+        # pull block y lo toma como argumento el handle_event
+        block = None
+        tx = None
         for event in events:
-            handler = self._contract_manager.handle_event(event)
+            if block is None or event.get("blockNumber") > block.get("number"):
+                # print("pull block", event.get("blockNumber"))
+                # block = self._contract_manager._ethereum_connection.w3.eth.getBlock(event.get("blockNumber"))
+                block = utils.getBlock(self._contract_manager._ethereum_connection.w3, event.get("blockNumber"))
+            if tx is None or event.get("transactionHash").hex() != tx.get("hash").hex():
+                # print("pull tx", event.get("transactionHash").hex())
+                tx = self._contract_manager._ethereum_connection.w3.eth.getTransaction(event.get("transactionHash").hex())
+            handler = self._contract_manager.handle_event(event, block, tx)
             if handler:
                 commits = handler.handle()
                 self.execute(commits)

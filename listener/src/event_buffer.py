@@ -42,8 +42,8 @@ class Registry:
 
             return True
 
-    def clean_events(self):
-        self.registry = []
+    def clean_events(self, keep_last_n_events=1):
+        self.registry = self.registry[-keep_last_n_events:]
 
 
 class EventBuffer:
@@ -56,9 +56,6 @@ class EventBuffer:
         self.integrity_callbacks = []
         self.entries_callbacks = []
 
-    # It should receive events, ignore duplicated ones and
-    # register new ones. If an event between to already registered events
-    # is dettected we should raise the alarm to the listeners.
     def feed(self, lastblock, timestamp, events):
         new_events = []
 
@@ -75,39 +72,18 @@ class EventBuffer:
                 pass
                 #sys.exit(1)
 
-        if self.synced_block < lastblock:
-            self.synced_block = lastblock
-
-        if timestamp > self.last_timestamp:
-            self.last_timestamp = timestamp
-
-        if new_events:
-            self.new_entries(new_events, self.last_timestamp)
-
-        self.registry.clean_events()
-
-        #     event = Event(event)
-
-        #     if event not in self.registry:
-        #         self.registry.append(event)
-        #         state_changed = True
-
-        #         # Check if we have events already ahead
-        #         if event.position < self.last_event:
-        #             logger.info('Rogue event dettected {}'.format(event.position))
-        #             self.integrity_broken()
-        #         else:
-        #             self.last_event = event.position
-
         # if self.synced_block < lastblock:
         #     self.synced_block = lastblock
-        #     state_changed = True
+        self.synced_block = lastblock
+        # save block on db
 
         # if timestamp > self.last_timestamp:
         #     self.last_timestamp = timestamp
+        self.last_timestamp = timestamp
 
-        # if state_changed:
-        #     self.new_entries()
+        if new_events:
+            self.new_entries(new_events, self.last_timestamp)
+            self.registry.clean_events(1)  # Fix
 
     def subscribe_integrity(self, callback):
         if callback not in self.integrity_callbacks:

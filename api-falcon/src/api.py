@@ -16,6 +16,8 @@ from resources import CompleteLoanList
 from resources import CompleteLoanItem
 
 from resources import ModelAndDebtDataResource
+from resources import LivenessProbe
+from resources import ReadinessProbe
 from falcon_cors import CORS
 import db
 
@@ -24,6 +26,8 @@ cors = CORS(allow_all_origins=True)
 api = application = falcon.API(middleware=[cors.middleware])
 
 api.add_route("/health_status/", HealthStatusResource())
+api.add_route("/liveness/", LivenessProbe())
+api.add_route("/readiness/", ReadinessProbe())
 
 api.add_route("/v4/debts/", DebtList())
 api.add_route("/v4/debts/{id_debt}/", DebtItem())

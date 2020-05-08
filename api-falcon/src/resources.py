@@ -22,8 +22,10 @@ from models import Loan
 from models import State
 from models import Commit
 from models import Collateral
+from models import Block
 from clock import Clock
 from utils import get_data
+from utils import getBlock
 from collateral_interface import CollateralInterface
 
 
@@ -309,6 +311,38 @@ class HealthStatusResource(object):
         resp.status = falcon.HTTP_503
         is_sync = now - clock.time < lower_limit
         if is_sync:
+            resp.status = falcon.HTTP_200
+
+
+class LivenessProbe(object):
+    def on_get(self, req, resp):
+        last_block_pulled = int(Block.objects.first().number)
+        # last_block = eth_conn.w3.eth.getBlock("latest").get("number")
+        last_block = getBlock(eth_conn.w3, "latest").get("number")
+        body = {
+            "last_block_pulled": str(last_block_pulled),
+            "last_block": str(last_block)
+        }
+
+        resp.body = json.dumps(body)
+        resp.status = falcon.HTTP_200
+
+        if last_block_pulled + 5 <= last_block:
+            resp.status = falcon.HTTP_503
+
+
+class ReadinessProbe(object):
+    def on_get(self, req, resp):
+        body = {
+            "last_block_pulled": Block.objects.first().number,
+            "last_block": str(getBlock(eth_conn.w3, "latest").get("number"))
+        }
+        print(body.get("last_block_pulled"))
+        print(body.get("last_block"))
+        resp.body = json.dumps(body)
+        resp.status = falcon.HTTP_503
+
+        if body.get("last_block_pulled") == body.get("last_block"):
             resp.status = falcon.HTTP_200
 
 
