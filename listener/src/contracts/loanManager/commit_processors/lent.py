@@ -14,6 +14,7 @@ class Lent(CommitProcessor):
         loan = Loan.objects.get(id=data.get("id"))
 
         loan.open = data.get("open")
+        loan.lender = data.get("lender")
         loan.status = data.get("status")
 
         commit.save()
