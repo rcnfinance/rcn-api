@@ -10,11 +10,12 @@ class Transfer(CommitProcessor):
     def process(self, commit, *args, **kwargs):
         data = commit.data
 
-        try:
-            loan = Loan.objects.get(id=data.get("id"))
-            loan.lender = data.get("to")
-            # loan.commits.append(commit)
-            commit.save()
-            loan.save()
-        except Loan.DoesNotExist:
-            self.logger.warning("Loan with id {} does not exist".format(data["id"]))
+        if data.from === "0x0":
+            debt = Debt()
+        else:
+            debt = Debt.objects.get(id=data["id"])
+
+        debt.owner = data.get("to")
+
+        commit.save()
+        debt.save()
