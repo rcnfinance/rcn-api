@@ -9,7 +9,7 @@ class CreatedDebt(CommitProcessor):
 
     def process(self, commit, *args, **kwargs):
         data = commit.data
-        debt = Debt()
+        debt = Debt.objects.get(id=data["id"])
         debt.id = data.get("id")
         debt.error = data.get("error")
         debt.balance = data.get("balance")
