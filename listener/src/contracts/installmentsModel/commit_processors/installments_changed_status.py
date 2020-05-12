@@ -1,5 +1,6 @@
 from contracts.commit_processor import CommitProcessor
 from models import State
+from models import Collateral
 
 
 class InstallmentsChangedStatus(CommitProcessor):

@@ -12,35 +12,4 @@ class Created3(EventHandler):
         self._args["_id"] = utils.add_0x_prefix(self._args["_id"].hex())
 
     def handle(self):
-        commit = Commit()
-
-        commit.opcode = "created_debt_engine"
-        commit.timestamp = self._block_timestamp()
-        commit.proof = self._transaction
-        commit.address = self._tx.get("from")
-
-        debt = debt_engine_interface.get_debt_by_id(self._id)
-
-        error = False
-        balance = 0
-
-        model = debt.get("model")
-        creator = debt.get("creator")
-        oracle = debt.get("oracle")
-
-        created = str(self._block_timestamp())
-
-        data = {
-            "error": error,
-            "balance": str(balance),
-            "model": model,
-            "creator": creator,
-            "oracle": oracle,
-            "created": created,
-            "id": self._args.get("_id")
-        }
-
-        commit.id_loan = self._args.get("_id")
-        commit.data = data
-
-        return [commit]
+        return []

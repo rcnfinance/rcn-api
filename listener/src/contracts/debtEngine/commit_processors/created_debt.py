@@ -17,6 +17,7 @@ class CreatedDebt(CommitProcessor):
         debt.creator = data.get("creator")
         debt.oracle = data.get("oracle")
         debt.created = data.get("created")
-        # debt.commits.append(commit)
+        debt.owner = data.get("to")
+
         commit.save()
         debt.save()

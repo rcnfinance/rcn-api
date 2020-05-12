@@ -1,4 +1,4 @@
-from models import Loan
+from models import Debt
 from contracts.commit_processor import CommitProcessor
 
 
@@ -11,10 +11,10 @@ class Transfer(CommitProcessor):
         data = commit.data
 
         try:
-            loan = Loan.objects.get(id=data.get("id"))
-            loan.lender = data.get("to")
-            # loan.commits.append(commit)
+            debt = Debt.objects.get(id=data.get("id"))
+            debt.owner = data.get("to")
+
             commit.save()
-            loan.save()
-        except Loan.DoesNotExist:
-            self.logger.warning("Loan with id {} does not exist".format(data["id"]))
+            debt.save()
+        except Debt.DoesNotExist:
+            self.logger.warning("Debt with id {} does not exist".format(data["id"]))
