@@ -118,7 +118,7 @@ class Debt(Document):
     creator = StringField(required=True, max_length=150)
     oracle = StringField(required=True, max_length=150)
     created = StringField(required=True, max_length=100)
-    # commits = EmbeddedDocumentListField(Commit)
+    owner = StringField(required=True, max_length=100)
 
     meta = {
         "indexes": [
@@ -152,8 +152,6 @@ class Loan(Document):
     currency = StringField(required=False, max_length=150, null=True)
     status = StringField(required=True, max_length=150)
     canceled = BooleanField(default=False)
-    lender = StringField(required=False, max_length=150)
-    # commits = EmbeddedDocumentListField(Commit)
 
     meta = {
         "indexes": [
@@ -164,8 +162,7 @@ class Loan(Document):
             "creator",
             "oracle",
             "borrower",
-            "expiration",
-            "amount"
+            "expiration"
         ]
     }
 

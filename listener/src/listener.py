@@ -45,7 +45,7 @@ class Listener:
         while True:
             # Tick to current block time
             last_block = self._contract_manager._ethereum_connection.w3.eth.getBlock('latest')
-            dest_number = min(last_block.number, self.safe_block + 5000)
+            dest_number = min(last_block.number, self.safe_block + 100000)
 
             if dest_number == last_block.number:
                 dest_timestamp = last_block.timestamp
