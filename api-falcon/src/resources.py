@@ -49,6 +49,8 @@ class DebtList(PaginatedListAPI):
 
     error = BoolParam("Error filter")
     model = StringParam("Model filter")
+    owner = StringParam("Owner filter")
+    owner__ne = StringParam("owner not filter")
     model__ne = StringParam("Model not filter")
     creator = StringParam("Creator filter")
     creator__ne = StringParam("Creator not filter")
@@ -226,8 +228,6 @@ class LoanList(PaginatedListAPI):
     callback = StringParam("Callback filter")
     canceled = BoolParam("Canceled filter")
     status = StringParam("Status Filter")
-    lender = StringParam("Lender filter")
-    lender__ne = StringParam("Lender not filter")
     currency = StringParam("Currency filter")
     currency__ne = StringParam("Currency not filter")
 
@@ -365,7 +365,6 @@ class CompleteLoanItem(RetrieveAPI):
                         "created": 1,
                         "descriptor": 1,
                         "currency": 1,
-                        "lender": 1,
                         "status": 1,
                         "canceled": 1,
                         "debt": 1,
@@ -404,8 +403,6 @@ class CompleteLoanList(PaginatedListAPI):
     callback = StringParam("Callback filter")
     canceled = BoolParam("Canceled filter")
     status = StringParam("Status Filter")
-    lender = StringParam("Lender filter")
-    lender__ne = StringParam("Lender not filter")
     currency = StringParam("Currency filter")
     currency__ne = StringParam("Currency not filter")
 
@@ -467,7 +464,6 @@ class CompleteLoanList(PaginatedListAPI):
                     "created": 1,
                     "descriptor": 1,
                     "currency": 1,
-                    "lender": 1,
                     "status": 1,
                     "canceled": 1,
                     "debt": 1,
