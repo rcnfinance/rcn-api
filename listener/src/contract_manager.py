@@ -21,10 +21,10 @@ class ContractManager():
         for contract in self._contracts:
             self._schedule_processors.update(contract._schedule_processors)
 
-    def handle_event(self, event):
+    def handle_event(self, event, block, tx):
         for contract in self._contracts:
             if contract.is_my_event(event):
-                return contract.handle_event(event)
+                return contract.handle_event(event, block, tx)
         return None
 
     def _get_commit_processor_by_opcode(self, opcode):

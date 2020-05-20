@@ -2,11 +2,24 @@ import os
 import time
 import logging
 import logging.handlers
-from raven.handlers.logging import SentryHandler
-from raven.conf import setup_logging
 from db import connection
+from models import Block
+import utils
 
 logger = logging.getLogger(__name__)
+
+
+def update_block_number_db(block_number):
+    block = Block.objects.first()
+    if not block:
+        block = Block()
+    block.number = str(block_number)
+    msg = "saving block number {}".format(block_number)
+    logger.info(msg)
+    try:
+        print(block.save())
+    except Exception as e:
+        print(e)
 
 
 class Listener:
@@ -42,10 +55,12 @@ class Listener:
 
     def listen(self, sec=1):
         logger.info('Started listening')
+        update_block_number_db(self.current_block)
         while True:
             # Tick to current block time
-            last_block = self._contract_manager._ethereum_connection.w3.eth.getBlock('latest')
-            dest_number = min(last_block.number, self.safe_block + 100000)
+            # last_block = self._contract_manager._ethereum_connection.w3.eth.getBlock('latest')
+            last_block = utils.getBlock(self._contract_manager._ethereum_connection.w3, "latest")
+            dest_number = min(last_block.number, self.safe_block + 50000)
 
             if dest_number == last_block.number:
                 dest_timestamp = last_block.timestamp
@@ -62,16 +77,18 @@ class Listener:
             self.buffer.feed(dest_number, dest_timestamp, new_entries)
 
             self.current_block = dest_number
-            self.safe_block = int((self.safe_block + dest_number) / 2)
+            self.safe_block = dest_number
+            
+            update_block_number_db(dest_number)
 
             if dest_number == last_block.number:
                 time.sleep(sec)
 
     def setup_logging(self, level=logging.INFO):
-        handler = SentryHandler(os.environ.get("SENTRY_DSN"))
-        handler.setLevel(logging.ERROR)
+        # handler = SentryHandler(os.environ.get("SENTRY_DSN"))
+        # handler.setLevel(logging.ERROR)
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=level)
-        setup_logging(handler)
+        # setup_logging(handler)
 
     def clean_db_data(self):
         # clean all data en db
@@ -82,6 +99,5 @@ class Listener:
         self.current_block = self.start_sync
         self.safe_block = self.start_sync
 
-        # self.w3 = SafeWeb3(w3)
         self.clean_db_data()
         self.listen(sleep_in_sync)

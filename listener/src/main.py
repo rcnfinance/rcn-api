@@ -1,4 +1,9 @@
 import os
+
+import sentry_sdk
+sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""))
+from sentry_sdk import capture_exception
+
 from event_buffer import EventBuffer
 from listener import Listener
 from processor import Processor
@@ -23,4 +28,8 @@ def run():
 
 
 if __name__ == '__main__':
-    run()
+    try:
+        run()
+    except Exception as e:
+        print(e)
+        capture_exception(e)

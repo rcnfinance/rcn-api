@@ -3,7 +3,7 @@ import web3
 
 
 class EventHandler():
-    def __init__(self, contract_conn, event):
+    def __init__(self, contract_conn, event, block, tx):
         self._event = event
         self._event_name = self.signature.split("(")[0]
         self._contract_conn = contract_conn
@@ -11,7 +11,8 @@ class EventHandler():
         self._contract_abi = self._contract_conn.abi
         self._parse()
         self._normalize()
-        self._tx = self._get_transaction()
+        self._block = block
+        self._tx = tx
 
     def _parse(self):
         self._logger.debug("event: {}".format(self._event))
@@ -25,11 +26,14 @@ class EventHandler():
     def _normalize(self):
         pass
 
-    def handle(self):
+    def handle(self, block):
         raise NotImplementedError()
 
     def _block_timestamp(self):
-        return self._contract_conn.w3.eth.getBlock(self._block_number).timestamp
+        return self._block.timestamp
+
+    def _block(self):
+        return self._block
 
     def _get_transaction(self):
-        return self._contract_conn.w3.eth.getTransaction(self._transaction)
+        return self._tx

@@ -30,9 +30,9 @@ class Contract():
         else:
             return False
 
-    def handle_event(self, event):
+    def handle_event(self, event, block, tx):
         event_hash = event.get("topics")[0].hex()
         handler = self._handlers.get(event_hash)
         self._logger.info("Handler name: {}".format(handler.__name__))
-        h = handler(self._contract_connection, event)
+        h = handler(self._contract_connection, event, block, tx)
         return h

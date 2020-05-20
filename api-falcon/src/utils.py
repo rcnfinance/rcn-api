@@ -39,8 +39,8 @@ def get_data(id_loan):
 
 
 def get_owner(id_loan):
-    loan = Loan.objects.get(id=id_loan)
-    owner = loan.lender
+    debt = Debt.objects.get(id=id_loan)
+    owner = debt.owner
 
     return owner
 
@@ -329,3 +329,19 @@ def get_oracle_data(id):
         return (_tokens,_equivalent)
     except Collateral.DoesNotExist:
         logger.warning("Collateral with id {} does not exist".format(str(id)))
+
+def getBlock(w3, number):
+    i = 0
+    block = w3.eth.getBlock(number)
+
+    if block is not None:
+        return block
+    else:
+        while i < 3:
+            block = w3.eth.getBlock(number)
+
+            if block is not None:
+                return block
+
+            i += 1
+        raise Exception("fucking nodo")

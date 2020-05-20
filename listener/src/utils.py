@@ -1,5 +1,21 @@
 import web3
 
+def getBlock(w3, number):
+    i = 0
+    block = w3.eth.getBlock(number)
+
+    if block is not None:
+        return block
+    else:
+        while i < 3:
+            block = w3.eth.getBlock(number)
+
+            if block is not None:
+                return block
+
+            i += 1
+        raise Exception("fucking nodo")
+
 
 def split_every(n, string):
     return [string[i:i + n] for i in range(0, len(string), n)]

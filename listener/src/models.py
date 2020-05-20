@@ -13,6 +13,10 @@ from mongoengine import EmbeddedDocumentField
 from mongoengine import EmbeddedDocumentListField
 
 
+class Block(Document):
+    number = StringField(required=True, max_length=20)
+
+
 class CollateralState(enum.Enum):
     CREATED = "1"
     STARTED = "2"
