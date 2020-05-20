@@ -1,6 +1,7 @@
 import web3
 from contracts.event import EventHandler
 from models import Commit
+from contracts.debtEngine.debt_engine import debt_engine_interface
 import utils
 
 class Transfer(EventHandler):
@@ -10,10 +11,8 @@ class Transfer(EventHandler):
     def _normalize(self):
         self._args["_tokenId"] = hex(self._args["_tokenId"])
      
-
     def handle(self):
         if self._args.get("_from") != "0x0000000000000000000000000000000000000000":
-
             commit = Commit()
 
             commit.opcode = "transfer_debt_engine"
@@ -32,4 +31,39 @@ class Transfer(EventHandler):
 
             return [commit]
         else:
-            return []
+            commit = Commit()
+
+            commit.opcode = "created_debt_engine"
+            commit.timestamp = self._block_timestamp()
+            commit.proof = self._transaction
+            commit.address = self._tx.get("from")
+
+            self._id = self._args.get("_tokenId")
+
+            debt = debt_engine_interface.get_debt_by_id(web3.eth.HexBytes(self._id))
+
+            error = False
+            balance = 0
+
+            model = debt.get("model")
+            creator = debt.get("creator")
+            oracle = debt.get("oracle")
+
+            created = str(self._block_timestamp())
+
+            data = {
+                "error": error,
+                "balance": str(balance),
+                "model": model,
+                "creator": creator,
+                "oracle": oracle,
+                "created": created,
+                "id": self._id,
+                "from": self._args.get("_from"),
+                "to": self._args.get("_to")
+            }
+
+            commit.id_loan = self._id
+            commit.data = data
+
+            return [commit]

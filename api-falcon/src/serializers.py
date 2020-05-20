@@ -33,6 +33,7 @@ class DebtSerializer(BaseSerializer):
     creator = RawField("creator")
     created = RawField("created")
     oracle = RawField("oracle")
+    owner = RawField("owner")
 
 
 class CollateralSerializer(BaseSerializer):
@@ -82,7 +83,6 @@ class LoanSerializer(BaseSerializer):
     created = RawField("created")
     descriptor = ObjectField("descriptor", serializer=DescriptorSerializer())
     currency = RawField("currency")
-    lender = RawField("Lender")
     status = RawField("status")
     canceled = RawField("canceled")
 
@@ -103,6 +103,7 @@ class DebtWithoutIDSerializer(BaseSerializer):
     creator = RawField("creator")
     created = RawField("created")
     oracle = RawField("oracle")
+    owner = RawField("Owner")
 
 
 class CollateralWithoutIDSerializer(BaseSerializer):
@@ -137,7 +138,6 @@ class CompleteLoanSerializer(BaseSerializer):
     created = RawField("created")
     descriptor = ObjectField("descriptor", serializer=DescriptorSerializer())
     currency = RawField("currency")
-    lender = RawField("Lender")
     status = RawField("status")
     canceled = RawField("canceled")
     debt = ObjectField("debt", serializer=DebtWithoutIDSerializer())
