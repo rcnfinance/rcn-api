@@ -17,5 +17,5 @@ class Started(CommitProcessor):
         commit.save()
 
         for collateral in Collateral.objects(debt_id=data.get("id"), id__ne=collateral.id):
-            collateral.status = CollateralState.TO_WITHDRAW.value
+            collateral.status = str(CollateralState.TO_WITHDRAW.value)
             collateral.save()

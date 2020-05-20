@@ -21,7 +21,7 @@ class ClosedAuction(EventHandler):
 
         collateral_id = str(self._args.get("_entryId"))
         collateral = Collateral.objects.get(id=collateral_id)
-        print(collateral.debt_id)
+
         loan = Loan.objects.get(id=collateral.debt_id)
         if loan.status == "2":
             status = str(CollateralState.TO_WITHDRAW.value)
