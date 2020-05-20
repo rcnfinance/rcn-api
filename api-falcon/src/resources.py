@@ -83,6 +83,7 @@ class DebtList(PaginatedListAPI):
         all_objects = Debt.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -91,6 +92,7 @@ class DebtItem(RetrieveAPI):
     serializer = DebtSerializer()
 
     def retrieve(self, params, meta, id_debt, **kwargs):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             return Debt.objects.get(id=id_debt)
         except Debt.DoesNotExist:
@@ -115,6 +117,7 @@ class ConfigList(PaginatedListAPI):
         all_objects = Config.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -123,6 +126,7 @@ class ConfigItem(RetrieveAPI):
     serializer = ConfigSerializer()
 
     def retrieve(self, params, meta, id_config, **kwargs):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             return Config.objects.get(id=id_config)
         except Config.DoesNotExist:
@@ -149,6 +153,7 @@ class StateList(PaginatedListAPI):
         all_objects = State.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -157,6 +162,7 @@ class StateItem(RetrieveAPI):
     serializer = StateSerializer()
 
     def retrieve(self, params, meta, id_state, **kwargs):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             return State.objects.get(id=id_state)
         except State.DoesNotExist:
@@ -193,6 +199,7 @@ class CollateralList(PaginatedListAPI):
         all_objects = Collateral.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -201,6 +208,7 @@ class CollateralItem(RetrieveAPI):
     serializer = CollateralSerializer()
 
     def retrieve(self, params, meta, id_collateral, **kwargs):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             collateral = Collateral.objects.get(id=id_collateral)
 
@@ -262,6 +270,7 @@ class LoanList(PaginatedListAPI):
         all_objects = Loan.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -270,6 +279,7 @@ class LoanItem(RetrieveAPI):
     serializer = LoanSerializer()
 
     def retrieve(self, params, meta, id_loan, **kwargs):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             return Loan.objects.get(id=id_loan)
         except Loan.DoesNotExist:
@@ -299,6 +309,7 @@ class CommitList(PaginatedListAPI):
         all_objects = Commit.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         return all_objects.skip(offset).limit(page_size)
 
@@ -348,6 +359,7 @@ class ReadinessProbe(object):
 
 class ModelAndDebtDataResource(object):
     def on_get(self, req, resp, id_loan):
+        meta["lastBlockPulled"] = Block.objects.first().number
         try:
             data = get_data(id_loan)
             resp.body = json.dumps(data)
@@ -369,7 +381,7 @@ class CompleteLoanItem(RetrieveAPI):
 
     def retrieve(self, params, meta, id_loan, **kwargs):
         try:
-            # loan = Loan.objects.get(id=id_loan)
+            meta["lastBlockPulled"] = Block.objects.first().number
 
             complete_loan = Loan.objects.aggregate(
                 [
@@ -468,6 +480,7 @@ class CompleteLoanList(PaginatedListAPI):
         all_objects = Loan.objects.filter(**filter_params)
         count_objects = all_objects.count()
         meta["resource_count"] = count_objects
+        meta["lastBlockPulled"] = Block.objects.first().number
 
         loan_filtered = all_objects.skip(offset).limit(page_size)
 
