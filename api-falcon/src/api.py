@@ -18,7 +18,7 @@ from resources import CompleteLoanItem
 from resources import ModelAndDebtDataResource
 from resources import LivenessProbe
 from resources import ReadinessProbe
-from resources import Config
+from resources import ConfigInfo
 from falcon_cors import CORS
 import db
 
@@ -52,4 +52,4 @@ api.add_route("/v4/collaterals/{id_collateral}/", CollateralItem())
 api.add_route("/v5/loans", CompleteLoanList())
 api.add_route("/v5/loans/{id_loan}", CompleteLoanItem())
 
-api.add_route("/config", Config())
+api.add_route("/config", ConfigInfo())

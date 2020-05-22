@@ -380,7 +380,7 @@ class ModelAndDebtDataResource(RetrieveAPI):
             )
 
 
-class Config(object):
+class ConfigInfo(object):
     def on_get(self, req, resp):
         data = {
             "addresses": {
