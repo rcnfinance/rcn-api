@@ -145,6 +145,13 @@ class CompleteLoanSerializer(BaseSerializer):
     state = ObjectField("state", serializer=StateWithoutIDSerializer())
     collaterals = ListField("collaterals", serializer=CollateralWithoutIDSerializer())
 
+class ModelAndDebtSerializer(BaseSerializer):
+    due_time = RawField("Due time")
+    estimated_obligation = RawField("Estimated Obligation")
+    next_obligation = RawField("Next Obligation")
+    current_obligation = RawField("Current Obligation")
+    debt_balance = RawField("Debt Balance")
+    owner = RawField("Owner")
 
 class LoanCountSerializer(BaseSerializer):
     count = IntField("Loan count")

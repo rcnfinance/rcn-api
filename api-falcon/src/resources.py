@@ -16,6 +16,7 @@ from serializers import StateSerializer
 from serializers import CommitSerializer
 from serializers import CollateralSerializer
 from serializers import CompleteLoanSerializer
+from serializers import ModelAndDebtSerializer
 from models import Debt
 from models import Config
 from models import Loan
@@ -357,13 +358,16 @@ class ReadinessProbe(object):
             resp.status = falcon.HTTP_200
 
 
-class ModelAndDebtDataResource(object):
-    def on_get(self, req, resp, id_loan):
+class ModelAndDebtDataResource(RetrieveAPI):
+
+    serializer = ModelAndDebtSerializer()
+
+    def retrieve(self, params, meta, id_loan, **kwargs):
+
         meta["lastBlockPulled"] = Block.objects.first().number
         try:
             data = get_data(id_loan)
-            resp.body = json.dumps(data)
-            resp.status = falcon.HTTP_200
+            return data
         except Debt.DoesNotExist:
             raise falcon.HTTPNotFound(
                 title="Debt does not exist",
