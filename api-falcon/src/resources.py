@@ -376,6 +376,21 @@ class ModelAndDebtDataResource(object):
             )
 
 
+class Config(object):
+    def on_get(self, req, resp):
+        data = {
+            "addresses": {
+                "loan_manager": os.environ.get("LOAN_MANAGER_ADDRESS"),
+                "debt_engine": os.environ.get("DEBT_ENGINE_ADDRESS"),
+                "installments": os.environ.get("INSTALLMENTS_ADDRESS"),
+                "collateral": os.environ.get("COLLATERAL_ADDRESS")
+            }
+        }
+
+        resp.body = json.dumps(data)
+        resp.status = falcon.HTTP_200
+
+
 class CompleteLoanItem(RetrieveAPI):
     serializer = CompleteLoanSerializer()
 

@@ -7,7 +7,8 @@ def getBlock(w3, number):
     if block is not None:
         return block
     else:
-        while i < 3:
+        while i < 10:
+            time.sleep(0.5)
             block = w3.eth.getBlock(number)
 
             if block is not None:
