@@ -9,7 +9,7 @@ class Transfer(EventHandler):
     signature_hash = web3.Web3.sha3(text=signature).hex()
 
     def _normalize(self):
-        self._args["_tokenId"] = hex(self._args["_tokenId"])
+        self._args["_tokenId"] = self._event.get("topics")[3].hex()
      
     def handle(self):
         if self._args.get("_from") != "0x0000000000000000000000000000000000000000":
@@ -40,7 +40,7 @@ class Transfer(EventHandler):
 
             self._id = self._args.get("_tokenId")
 
-            debt = debt_engine_interface.get_debt_by_id(web3.eth.HexBytes(self._id))
+            debt = debt_engine_interface.get_debt_by_id(self._id)
 
             error = False
             balance = 0

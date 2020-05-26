@@ -50,8 +50,7 @@ commit_processors = [
     PaidCommitProcessor(),
     ReadedOracleCommitProcessor(),
     TransferCommitProcessor(),
-    WithdrawnCommitProcessor(),
-    TransferCommitProcessor()
+    WithdrawnCommitProcessor()
 ]
 schedule_processors = []
 
