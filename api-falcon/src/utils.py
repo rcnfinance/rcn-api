@@ -1,4 +1,5 @@
 import logging
+import time
 import requests
 from oracle_interface import OracleInterface
 from datetime import datetime as dt
@@ -338,6 +339,7 @@ def getBlock(w3, number):
         return block
     else:
         while i < 10:
+            time.sleep(0.5)
             block = w3.eth.getBlock(number)
 
             if block is not None:

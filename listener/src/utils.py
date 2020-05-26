@@ -1,4 +1,5 @@
 import web3
+import time
 
 def getBlock(w3, number):
     i = 0
