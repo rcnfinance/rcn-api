@@ -1,5 +1,6 @@
 import os
 import web3
+from utils import new_web3
 
 
 class OracleInterface():
@@ -12,8 +13,7 @@ class OracleInterface():
             'type': 'function'}]
 
     def __init__(self, contract_address):
-        self._provider = web3.HTTPProvider(os.environ.get("URL_NODE"))
-        self._w3 = web3.Web3(self._provider)
+        self._w3 = new_web3(os.environ.get("URL_NODE"))
         self._contract = self._w3.eth.contract(
             address=contract_address,
             abi=self.ABI

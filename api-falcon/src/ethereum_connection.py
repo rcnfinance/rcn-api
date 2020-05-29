@@ -1,12 +1,12 @@
 import json
 import web3
+from utils import new_web3
 
 
 class EthereumConnection():
     def __init__(self, url_node):
         self._url_node = url_node
-        self._node_provider = web3.HTTPProvider(self._url_node)
-        self._w3 = web3.Web3(self._node_provider)
+        self._w3 = new_web3(url_node)
 
     @property
     def w3(self):

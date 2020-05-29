@@ -1,5 +1,6 @@
 import logging
 import time
+from urllib3.util import parse_url
 import requests
 from oracle_interface import OracleInterface
 from datetime import datetime as dt
@@ -347,3 +348,16 @@ def getBlock(w3, number):
 
             i += 1
         raise Exception("fucking nodo")
+
+
+def new_web3(url_node):
+    parsed_url = parse_url(url_node)
+
+    if parsed_url.scheme == "wss":
+        provider = web3.WebsocketProvider(url_node)
+    else:
+        provider = web3.HTTPProvider(url_node)
+    
+    w3_instance = web3.Web3(provider)
+
+    return w3_instance

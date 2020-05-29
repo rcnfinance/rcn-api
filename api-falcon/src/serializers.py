@@ -152,6 +152,7 @@ class ModelAndDebtSerializer(BaseSerializer):
     current_obligation = RawField("Current Obligation")
     debt_balance = RawField("Debt Balance")
     owner = RawField("Owner")
+    paid = RawField("Paid")
 
 class LoanCountSerializer(BaseSerializer):
     count = IntField("Loan count")
