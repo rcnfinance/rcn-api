@@ -16,10 +16,7 @@ def update_block_number_db(block_number):
     block.number = str(block_number)
     msg = "saving block number {}".format(block_number)
     logger.info(msg)
-    try:
-        print(block.save())
-    except Exception as e:
-        print(e)
+    block.save()
 
 
 class Listener:

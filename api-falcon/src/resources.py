@@ -27,22 +27,10 @@ from models import Block
 from clock import Clock
 from utils import get_data
 from utils import getBlock
-from collateral_interface import CollateralInterface
 
-
-COLLATERAL_ADDRESS = os.environ.get("COLLATERAL_ADDRESS")
-
-# Mejorar esto
-ABI_PATH = os.path.join(
-    "/project/abi",
-    "collateral.json"
-)
 
 URL_NODE = os.environ.get("URL_NODE")
 eth_conn = EthereumConnection(URL_NODE)
-contract_connection = ContractConnection(eth_conn, COLLATERAL_ADDRESS, ABI_PATH)
-
-collateral_interface = CollateralInterface(contract_connection)
 
 logger = logging.getLogger(__name__)
 

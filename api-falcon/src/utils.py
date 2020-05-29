@@ -2,7 +2,7 @@ import logging
 import time
 from urllib3.util import parse_url
 import requests
-from oracle_interface import OracleInterface
+import web3
 from datetime import datetime as dt
 
 from models import Debt
@@ -304,33 +304,33 @@ def get_obligation(_id, timestamp):
     logger.info("Output value: {},{}".format(obligation, defined))
     return obligation, defined
 
-def get_oracle_data(id):
-    try:
-        collateral = Collateral.objects.get(id=str(id))
+# def get_oracle_data(id):
+#     try:
+#         collateral = Collateral.objects.get(id=str(id))
         
-        debtId = collateral.debt_id
-        loan = Loan.objects.get(id=debtId)
+#         debtId = collateral.debt_id
+#         loan = Loan.objects.get(id=debtId)
 
-        oracle = loan.oracle
+#         oracle = loan.oracle
 
-        response = requests.get(url = ORACLE_URL)
-        oracleData = response.json() 
+#         response = requests.get(url = ORACLE_URL)
+#         oracleData = response.json() 
 
-        for currencyObject in oracleData:
-            if currencyObject["currency"] == loan.currency:
-                currencyData = currencyObject["data"]
-            else:
-                currencyData = None    
+#         for currencyObject in oracleData:
+#             if currencyObject["currency"] == loan.currency:
+#                 currencyData = currencyObject["data"]
+#             else:
+#                 currencyData = None    
 
-        if currencyData is None:
-            _tokens = 0
-            _equivalent = 0
-        else: 
-            (_tokens,_equivalent) = OracleInterface.readSample(currencyData, oracle)    
+#         if currencyData is None:
+#             _tokens = 0
+#             _equivalent = 0
+#         else: 
+#             (_tokens,_equivalent) = OracleInterface.readSample(currencyData, oracle)    
 
-        return (_tokens,_equivalent)
-    except Collateral.DoesNotExist:
-        logger.warning("Collateral with id {} does not exist".format(str(id)))
+#         return (_tokens,_equivalent)
+#     except Collateral.DoesNotExist:
+#         logger.warning("Collateral with id {} does not exist".format(str(id)))
 
 def getBlock(w3, number):
     i = 0
