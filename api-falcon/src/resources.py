@@ -337,8 +337,6 @@ class ReadinessProbe(object):
             "last_block_pulled": Block.objects.first().number,
             "last_block": str(getBlock(eth_conn.w3, "latest").get("number"))
         }
-        print(body.get("last_block_pulled"))
-        print(body.get("last_block"))
         resp.body = json.dumps(body)
         resp.status = falcon.HTTP_503
 
@@ -458,6 +456,7 @@ class CompleteLoanList(PaginatedListAPI):
     status = StringParam("Status Filter")
     currency = StringParam("Currency filter")
     currency__ne = StringParam("Currency not filter")
+    owner = StringParam("Owner filter")
 
     expiration__lt = StringParam("Expiration lt")
     expiration__lte = StringParam("Expiration lte")
@@ -484,50 +483,106 @@ class CompleteLoanList(PaginatedListAPI):
 
         offset = page * page_size
 
-        all_objects = Loan.objects.filter(**filter_params)
-        count_objects = all_objects.count()
-        meta["resource_count"] = count_objects
-        meta["lastBlockPulled"] = Block.objects.first().number
+        if "owner" in filter_params:
+            meta["lastBlockPulled"] = Block.objects.first().number
+            
+            owner_filter = filter_params.pop("owner")
+            all_objects = Loan.objects.filter(**filter_params)
 
-        loan_filtered = all_objects.skip(offset).limit(page_size)
+            ##loan_filtered = all_objects.skip(offset).limit(page_size)
+            
 
-        complete_loans = loan_filtered.aggregate(
-            [
-                {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
-                {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
-                {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
-                {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}},
-                { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
-                { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
-                { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
-                { "$project": {
-                    "id": 1,
-                    "open": 1,
-                    "approved": 1,
-                    "position": 1,
-                    "expiration": 1,
-                    "amount": 1,
-                    "cosigner": 1,
-                    "model": 1,
-                    "creator": 1,
-                    "oracle": 1,
-                    "borrower": 1,
-                    "callback": 1,
-                    "salt": 1,
-                    "loanData": 1,
-                    "created": 1,
-                    "descriptor": 1,
-                    "currency": 1,
-                    "status": 1,
-                    "canceled": 1,
-                    "debt": 1,
-                    "state": 1,
-                    "collaterals": 1,
-                    "config": "$config.data", "id": 1, "open": 1
+
+            complete_loans = all_objects.aggregate(
+                [
+                    {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
+                    { "$match": {"debt.owner": owner_filter}},
+                    {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
+                    {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
+                    {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}},
+                    { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                    { "$limit": page_size},
+                    { "$skip": offset },
+                    { "$project": {
+                        "id": 1,
+                        "open": 1,
+                        "approved": 1,
+                        "position": 1,
+                        "expiration": 1,
+                        "amount": 1,
+                        "cosigner": 1,
+                        "model": 1,
+                        "creator": 1,
+                        "oracle": 1,
+                        "borrower": 1,
+                        "callback": 1,
+                        "salt": 1,
+                        "loanData": 1,
+                        "created": 1,
+                        "descriptor": 1,
+                        "currency": 1,
+                        "status": 1,
+                        "canceled": 1,
+                        "debt": 1,
+                        "state": 1,
+                        "collaterals": 1,
+                        "config": "$config.data", "id": 1, "open": 1
+                        }
                     }
-                }
-            ]
-        )
+                ]
+            )
+            list_complete_loans = list(complete_loans)
+            meta["resource_count"] = len(list_complete_loans)
 
-        return list(complete_loans)
-        
+            return list_complete_loans
+
+
+        else:
+            all_objects = Loan.objects.filter(**filter_params)
+            count_objects = all_objects.count()
+            meta["resource_count"] = count_objects
+            meta["lastBlockPulled"] = Block.objects.first().number
+
+            loan_filtered = all_objects.skip(offset).limit(page_size)
+
+            complete_loans = loan_filtered.aggregate(
+                [
+                    {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
+                    {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
+                    {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
+                    {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}},
+                    { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
+                    { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                    { "$project": {
+                        "id": 1,
+                        "open": 1,
+                        "approved": 1,
+                        "position": 1,
+                        "expiration": 1,
+                        "amount": 1,
+                        "cosigner": 1,
+                        "model": 1,
+                        "creator": 1,
+                        "oracle": 1,
+                        "borrower": 1,
+                        "callback": 1,
+                        "salt": 1,
+                        "loanData": 1,
+                        "created": 1,
+                        "descriptor": 1,
+                        "currency": 1,
+                        "status": 1,
+                        "canceled": 1,
+                        "debt": 1,
+                        "state": 1,
+                        "collaterals": 1,
+                        "config": "$config.data", "id": 1, "open": 1
+                        }
+                    }
+                ]
+            )
+
+            return list(complete_loans)
