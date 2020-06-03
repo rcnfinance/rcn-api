@@ -503,40 +503,47 @@ class CompleteLoanList(PaginatedListAPI):
                     { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
-                    { "$limit": page_size},
-                    { "$skip": offset },
-                    { "$project": {
-                        "id": 1,
-                        "open": 1,
-                        "approved": 1,
-                        "position": 1,
-                        "expiration": 1,
-                        "amount": 1,
-                        "cosigner": 1,
-                        "model": 1,
-                        "creator": 1,
-                        "oracle": 1,
-                        "borrower": 1,
-                        "callback": 1,
-                        "salt": 1,
-                        "loanData": 1,
-                        "created": 1,
-                        "descriptor": 1,
-                        "currency": 1,
-                        "status": 1,
-                        "canceled": 1,
-                        "debt": 1,
-                        "state": 1,
-                        "collaterals": 1,
-                        "config": "$config.data", "id": 1, "open": 1
-                        }
+                    { "$facet": {
+                        "resources": [
+                            { "$skip": offset },
+                            { "$limit": page_size},
+                            { "$project": {
+                                "id": 1,
+                                "open": 1,
+                                "approved": 1,
+                                "position": 1,
+                                "expiration": 1,
+                                "amount": 1,
+                                "cosigner": 1,
+                                "model": 1,
+                                "creator": 1,
+                                "oracle": 1,
+                                "borrower": 1,
+                                "callback": 1,
+                                "salt": 1,
+                                "loanData": 1,
+                                "created": 1,
+                                "descriptor": 1,
+                                "currency": 1,
+                                "status": 1,
+                                "canceled": 1,
+                                "debt": 1,
+                                "state": 1,
+                                "collaterals": 1,
+                                "config": "$config.data", "id": 1, "open": 1
+                                }
+                            }
+                        ],
+                        "resource_count": [{"$count": "debt"}]
+                    }
                     }
                 ]
             )
             list_complete_loans = list(complete_loans)
-            meta["resource_count"] = len(list_complete_loans)
-
-            return list_complete_loans
+            if list_complete_loans:
+                complete_loans = list_complete_loans[0]
+                meta["resource_count"] = complete_loans.get("resource_count")[0].get("debt")
+                return complete_loans.get("resources")
 
 
         else:
