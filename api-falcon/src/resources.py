@@ -489,11 +489,8 @@ class CompleteLoanList(PaginatedListAPI):
             owner_filter = filter_params.pop("owner")
             all_objects = Loan.objects.filter(**filter_params)
 
-            ##loan_filtered = all_objects.skip(offset).limit(page_size)
-            
 
-
-            complete_loans = all_objects.aggregate(
+            query_result = all_objects.aggregate(
                 [
                     {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
                     { "$match": {"debt.owner": owner_filter}},
@@ -539,12 +536,16 @@ class CompleteLoanList(PaginatedListAPI):
                     }
                 ]
             )
-            list_complete_loans = list(complete_loans)
-            if list_complete_loans:
-                complete_loans = list_complete_loans[0]
-                meta["resource_count"] = complete_loans.get("resource_count")[0].get("debt")
-                return complete_loans.get("resources")
+            list_complete_loans = list(query_result)[0]
 
+            resources = list_complete_loans.get("resources")
+            resource_count = list_complete_loans.get("resource_count")
+
+            if resource_count:
+                meta["resource_count"] = resource_count[0].get("debt")
+            else:
+                meta["resource_count"] = 0
+            return resources
 
         else:
             all_objects = Loan.objects.filter(**filter_params)

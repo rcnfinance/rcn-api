@@ -14,6 +14,7 @@ from resources import CollateralList
 from resources import CollateralItem
 from resources import CompleteLoanList
 from resources import CompleteLoanItem
+from resources import CompleteLoanList2
 
 from resources import ModelAndDebtDataResource
 from resources import LivenessProbe
