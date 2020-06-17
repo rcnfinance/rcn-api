@@ -33,6 +33,7 @@ class Commit(Document):
     proof = StringField(max_length=150)
     data = DictField(required=True)
     address = StringField(max_length=150)
+    block_number = StringField(max_length=20)
 
     meta = {
         "indexes": [

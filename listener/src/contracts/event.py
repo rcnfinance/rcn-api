@@ -19,7 +19,7 @@ class EventHandler():
 
         self._event_abi = web3.utils.abi.filter_by_name(self._event_name, self._contract_abi)[0]
         self._args = dict(web3.utils.events.get_event_data(self._event_abi, self._event).args)
-        self._block_number = self._event.get('blockNumber')
+        self._block_number = str(self._event.get('blockNumber'))
         self._transaction = self._event.get('transactionHash').hex()
         self._address = self._event.get('address')
 
