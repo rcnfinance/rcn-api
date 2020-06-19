@@ -500,6 +500,7 @@ class CompleteLoanList(PaginatedListAPI):
                     { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                    { "$sort": {"created": -1} },
                     { "$facet": {
                         "resources": [
                             { "$skip": offset },
@@ -564,6 +565,7 @@ class CompleteLoanList(PaginatedListAPI):
                     { "$unwind": { "path": "$debt", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
+                    { "$sort": {"created": -1} },
                     { "$project": {
                         "id": 1,
                         "open": 1,
