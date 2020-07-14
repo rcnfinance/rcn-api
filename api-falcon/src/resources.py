@@ -426,9 +426,9 @@ class CompleteLoanItem(RetrieveAPI):
                     }
                 ]
             )
-            list_complete_loan = list(complete_loan)
-            if list_complete_loan:
-                return complete_loan[0]
+            list_query = list(complete_loan)
+            if list_query:
+                return list_query[0]
             else:
                 raise falcon.HTTPNotFound(
                     title="Loan does not exists",
