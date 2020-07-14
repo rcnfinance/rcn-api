@@ -426,8 +426,15 @@ class CompleteLoanItem(RetrieveAPI):
                     }
                 ]
             )
+            list_complete_loan = list(complete_loan)
+            if list_complete_loan:
+                return complete_loan[0]
+            else:
+                raise falcon.HTTPNotFound(
+                    title="Loan does not exists",
+                    description="Loan with id={} does not exists".format(id_loan)
+                )
 
-            return list(complete_loan)[0]
             
         except Loan.DoesNotExist:
             raise falcon.HTTPNotFound(
@@ -537,7 +544,14 @@ class CompleteLoanList(PaginatedListAPI):
                     }
                 ]
             )
-            list_complete_loans = list(query_result)[0]
+            list_query_result = list(query_result)
+            if list_query_result:
+                list_complete_loans = list_query_result[0]
+            else:
+                raise falcon.HTTPNotFound(
+                    title="Loan does not exists",
+                    description="Loan with id={} does not exists".format(id_loan)
+                )
 
             resources = list_complete_loans.get("resources")
             resource_count = list_complete_loans.get("resource_count")
@@ -554,9 +568,9 @@ class CompleteLoanList(PaginatedListAPI):
             meta["resource_count"] = count_objects
             meta["lastBlockPulled"] = Block.objects.first().number
 
-            loan_filtered = all_objects.skip(offset).limit(page_size)
+            # loan_filtered = all_objects.skip(offset).limit(page_size)
 
-            complete_loans = loan_filtered.aggregate(
+            complete_loans = all_objects.aggregate(
                 [
                     {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
                     {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
@@ -566,6 +580,8 @@ class CompleteLoanList(PaginatedListAPI):
                     { "$unwind": { "path": "$state", "preserveNullAndEmptyArrays": True }},
                     { "$unwind": { "path": "$config", "preserveNullAndEmptyArrays": True }},
                     { "$sort": {"created": -1} },
+                    { "$skip": offset },
+                    { "$limit": page_size},
                     { "$project": {
                         "id": 1,
                         "open": 1,
