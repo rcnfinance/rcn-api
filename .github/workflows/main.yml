@@ -1,0 +1,41 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+  
+on:
+  push:
+    # Sequence of patterns matched against refs/heads
+    branches:    
+      # Push events on master branch
+      - '*'
+    # Sequence of patterns matched against refs/tags
+    tags:        
+      - v*    
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      - name: Login to DockerHub Registry
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+      - name: Build the tagged Docker image listener
+        run: docker build listener --file listener/Dockerfile --tag rcndev/rcnapi-diaspore-listener:${{steps.get_version.outputs.VERSION}}
+      - name: Push the tagged Docker image listener
+        run: docker push rcndev/rcnapi-diaspore-listener:${{steps.get_version.outputs.VERSION}}
+      - name: Build the latest Docker image api
+        run: docker build api-falcon --file api-falcon/Dockerfile --tag rcndev/rcnapi-diaspore-api-falcon:${{steps.get_version.outputs.VERSION}}
+      - name: Push the latest Docker image api
+        run: docker push rcndev/rcnapi-diaspore-api-falcon:${{steps.get_version.outputs.VERSION}}
