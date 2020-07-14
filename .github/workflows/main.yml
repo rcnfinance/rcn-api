@@ -32,10 +32,10 @@ jobs:
       - name: Login to DockerHub Registry
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
       - name: Build the tagged Docker image listener
-        run: docker build listener --file Dockerfile --tag rcndev/rcnapi-diaspore-listener:${{steps.get_version.outputs.VERSION}}
+        run: docker build listener --file listener/Dockerfile --tag rcndev/rcnapi-diaspore-listener:${{steps.get_version.outputs.VERSION}}
       - name: Push the tagged Docker image listener
         run: docker push rcndev/rcnapi-diaspore-listener:${{steps.get_version.outputs.VERSION}}
       - name: Build the latest Docker image api
-        run: docker build api-falcon --file Dockerfile --tag rcndev/rcnapi-diaspore-api-falcon:${{steps.get_version.outputs.VERSION}}
+        run: docker build api-falcon --file api-falcon/Dockerfile --tag rcndev/rcnapi-diaspore-api-falcon:${{steps.get_version.outputs.VERSION}}
       - name: Push the latest Docker image api
         run: docker push rcndev/rcnapi-diaspore-api-falcon:${{steps.get_version.outputs.VERSION}}
