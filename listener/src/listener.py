@@ -53,6 +53,7 @@ class Listener:
     def listen(self, sec=1):
         logger.info('Started listening')
         update_block_number_db(self.current_block)
+        
         while True:
             # Tick to current block time
             # last_block = self._contract_manager._ethereum_connection.w3.eth.getBlock('latest')
