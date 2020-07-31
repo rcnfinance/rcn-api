@@ -8,6 +8,8 @@ from graceful.resources.generic import RetrieveAPI
 from graceful.resources.generic import PaginatedListAPI
 from graceful.parameters import StringParam
 from graceful.parameters import BoolParam
+from custom_parameters import SortingParam
+from custom_validators import is_valid_sorting
 import falcon
 from serializers import DebtSerializer
 from serializers import ConfigSerializer
@@ -569,9 +571,7 @@ class CompleteLoanList(PaginatedListAPI):
             meta["lastBlockPulled"] = Block.objects.first().number
 
             # loan_filtered = all_objects.skip(offset).limit(page_size)
-
-            complete_loans = all_objects.aggregate(
-                [
+            query = [
                     {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}},
                     {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}},
                     {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}},
@@ -609,6 +609,155 @@ class CompleteLoanList(PaginatedListAPI):
                         }
                     }
                 ]
-            )
+
+            print(query)
+            complete_loans = all_objects.aggregate(query)
 
             return list(complete_loans)
+
+
+class CompleteLoanList2(PaginatedListAPI):
+    serializer = CompleteLoanSerializer()
+
+    open = BoolParam("Open filter")
+    approved = BoolParam("Approved filter")
+    cosigner = StringParam("Cosigner filter")
+    cosigner__ne = StringParam("Cosigner not filter")
+    model = StringParam("Model filter")
+    model__ne = StringParam("Model not filter")
+    creator = StringParam("Creator filter")
+    creator__ne = StringParam("Creator not filter")
+    oracle = StringParam("Oracle filter")
+    oracle__ne = StringParam("Oracle not filter")
+    borrower = StringParam("Borrower filter")
+    borrower__ne = StringParam("Borrower not filter")
+    callback = StringParam("Callback filter")
+    canceled = BoolParam("Canceled filter")
+    status = StringParam("Status Filter")
+    currency = StringParam("Currency filter")
+    currency__ne = StringParam("Currency not filter")
+    owner = StringParam("Owner filter")
+
+    expiration__lt = StringParam("Expiration lt")
+    expiration__lte = StringParam("Expiration lte")
+    expiration__gt = StringParam("Expiration gt")
+    expiration__gte = StringParam("Expiration gte")
+
+    amount__lt = StringParam("Amount lt")
+    amount__lte = StringParam("Amount lte")
+    amount__gt = StringParam("Amount gt")
+    amount__gte = StringParam("Amount gte")
+
+    created__lt = StringParam("Created lt")
+    created__lte = StringParam("Created lte")
+    created__gt = StringParam("Created gt")
+    created__gte = StringParam("Created gte")
+
+    order_by = SortingParam("Order by", validators=[is_valid_sorting])
+
+    def list(self, params, meta, **kwargs):
+        # Filtering -> Ordering -> Limiting
+        filter_params = params.copy()
+        filter_params.pop("indent")
+
+        page_size = filter_params.pop("page_size")
+        page = filter_params.pop("page")
+
+        offset = page * page_size
+
+        meta["lastBlockPulled"] = Block.objects.first().number
+
+        owner_filter = filter_params.pop("owner", None)
+        order_by = filter_params.pop("order_by", {"field": "created", "type": "desc"})
+
+        order_by_field = order_by["field"]
+        if order_by["type"] == "asc":
+            order_by_type = 1
+        elif order_by["type"] == "desc":
+            order_by_type = -1
+
+
+        all_objects = Loan.objects.filter(**filter_params)
+
+        # Build the query
+        query = []
+
+        lookup_debt = {"$lookup": {"from": "debt", "localField": "_id", "foreignField": "_id", "as": "debt"}}
+        match_owner = {"$match": {"debt.owner": owner_filter}} if owner_filter is not None else None
+        lookup_config = {"$lookup": {"from": "config", "localField": "_id", "foreignField": "_id", "as": "config"}}
+        lookup_state = {"$lookup": {"from": "state", "localField": "_id", "foreignField": "_id", "as": "state"}}
+        lookup_collateral = {"$lookup": {"from": "collateral", "localField": "_id", "foreignField": "debt_id", "as": "collaterals"}}
+        unwind_debt = {"$unwind": {"path": "$debt", "preserveNullAndEmptyArrays": True}}
+        unwind_state = {"$unwind": {"path": "$state", "preserveNullAndEmptyArrays": True}}
+        unwind_config = {"$unwind": {"path": "$config", "preserveNullAndEmptyArrays": True}}
+        # sorting = {"$sort": {"created": -1}}
+        sorting = {"$sort": {order_by_field: order_by_type}}
+        facet = { "$facet": {
+                        "resources": [
+                            { "$skip": offset },
+                            { "$limit": page_size},
+                            { "$project": {
+                                "id": 1,
+                                "open": 1,
+                                "approved": 1,
+                                "position": 1,
+                                "expiration": 1,
+                                "amount": 1,
+                                "cosigner": 1,
+                                "model": 1,
+                                "creator": 1,
+                                "oracle": 1,
+                                "borrower": 1,
+                                "callback": 1,
+                                "salt": 1,
+                                "loanData": 1,
+                                "created": 1,
+                                "descriptor": 1,
+                                "currency": 1,
+                                "status": 1,
+                                "canceled": 1,
+                                "debt": 1,
+                                "state": 1,
+                                "collaterals": 1,
+                                "config": "$config.data", "id": 1, "open": 1
+                                }
+                            }
+                        ],
+                        "resource_count": [{"$count": "debt"}]
+                    }
+                }
+
+        
+        query.append(lookup_debt)
+        if match_owner:
+            query.append(match_owner)
+        query.append(lookup_config)
+        query.append(lookup_state)
+        query.append(lookup_collateral)
+        query.append(unwind_debt)
+        query.append(unwind_state)
+        query.append(unwind_config)
+        query.append(sorting)
+        query.append(facet)
+
+        print(query)
+
+        query_result = all_objects.aggregate(query)
+
+        list_query_result = list(query_result)
+        if list_query_result:
+            list_complete_loans = list_query_result[0]
+        else:
+            raise falcon.HTTPNotFound(
+                title="Loan does not exists",
+                description="Loan with id={} does not exists".format(id_loan)
+            )
+
+        resources = list_complete_loans.get("resources")
+        resource_count = list_complete_loans.get("resource_count")
+
+        if resource_count:
+            meta["resource_count"] = resource_count[0].get("debt")
+        else:
+            meta["resource_count"] = 0
+        return resources

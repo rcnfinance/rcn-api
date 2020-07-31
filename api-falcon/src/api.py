@@ -13,6 +13,7 @@ from resources import CommitList
 from resources import CollateralList
 from resources import CollateralItem
 from resources import CompleteLoanList
+from resources import CompleteLoanList2
 from resources import CompleteLoanItem
 
 from resources import ModelAndDebtDataResource
@@ -50,6 +51,7 @@ api.add_route("/v4/collaterals/", CollateralList())
 api.add_route("/v4/collaterals/{id_collateral}/", CollateralItem())
 
 api.add_route("/v5/loans", CompleteLoanList())
+api.add_route("/v5/loans2", CompleteLoanList2())
 api.add_route("/v5/loans/{id_loan}", CompleteLoanItem())
 
 api.add_route("/config", ConfigInfo())
