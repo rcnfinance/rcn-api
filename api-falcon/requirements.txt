@@ -1,6 +1,7 @@
 falcon
 graceful
-gunicorn
+eventlet
+gunicorn[eventlet]
 mongoengine
 falcon-cors
 raven

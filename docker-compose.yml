@@ -1,27 +1,28 @@
 version: '2'
 services:
-  api-graphql:
-    restart: always
-    build: api-graphql
-    volumes:
-      - ./api-graphql/src/:/project/
-    command: uvicorn app:app --port 8001 --workers 4 --host 0.0.0.0
-    ports:
-      - 8001:8001
-    links:
-      - mongo:mongo
-    env_file:
-      - config.env
-    environment:
-     - GRAPHIQL_MODE=True
-    depends_on:
-      - mongo
+  # api-graphql:
+  #   restart: always
+  #   build: api-graphql
+  #   volumes:
+  #     - ./api-graphql/src/:/project/
+  #   command: uvicorn app:app --port 8001 --workers 4 --host 0.0.0.0
+  #   ports:
+  #     - 8001:8001
+  #   links:
+  #     - mongo:mongo
+  #   env_file:
+  #     - config.env
+  #   environment:
+  #    - GRAPHIQL_MODE=True
+  #   depends_on:
+  #     - mongo
   api-falcon:
     restart: always
     build: api-falcon
+    image: api-falcon
     volumes:
       - ./api-falcon/src/:/project/
-    command: gunicorn -b 0.0.0.0:8000 --access-logfile - --error-logfile - api
+    command: gunicorn -b 0.0.0.0:8000 -w 4 -k eventlet --access-logfile - --error-logfile - api
     ports:
       - 8000:8000
     links:
@@ -44,6 +45,7 @@ services:
       - mongo
   listener:
     build: listener
+    image: listener
     restart: always
     command: python3 main.py
     volumes:

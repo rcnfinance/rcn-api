@@ -610,7 +610,7 @@ class CompleteLoanList(PaginatedListAPI):
                     }
                 ]
 
-            print(query)
+            #print(query)
             complete_loans = all_objects.aggregate(query)
 
             return list(complete_loans)
