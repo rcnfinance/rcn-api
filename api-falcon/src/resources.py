@@ -690,7 +690,6 @@ class CompleteLoanList2(PaginatedListAPI):
         unwind_debt = {"$unwind": {"path": "$debt", "preserveNullAndEmptyArrays": True}}
         unwind_state = {"$unwind": {"path": "$state", "preserveNullAndEmptyArrays": True}}
         unwind_config = {"$unwind": {"path": "$config", "preserveNullAndEmptyArrays": True}}
-        # sorting = {"$sort": {"created": -1}}
         sorting = {"$sort": {order_by_field: order_by_type}}
         facet = { "$facet": {
                         "resources": [
@@ -740,9 +739,7 @@ class CompleteLoanList2(PaginatedListAPI):
         query.append(sorting)
         query.append(facet)
 
-        print(query)
-
-        query_result = all_objects.aggregate(query)
+        query_result = all_objects.aggregate(query, collation={"locale": "en_US", "numericOrdering": True})
 
         list_query_result = list(query_result)
         if list_query_result:
