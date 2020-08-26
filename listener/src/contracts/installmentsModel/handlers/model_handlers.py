@@ -95,7 +95,7 @@ class InstallmentsChangedStatus(ChangedStatus):
         commit_full_payment.opcode = "full_payment_loan_manager"
         commit_full_payment.timestamp = commit.timestamp
         commit_full_payment.proof = self._transaction
-        commit_full_payment.proof = self._tx.get("from")
+        commit_full_payment.address = self._tx.get("from")
 
         data = {
             "id": self._args.get("_id"),
