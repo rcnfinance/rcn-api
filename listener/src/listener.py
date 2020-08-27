@@ -25,6 +25,7 @@ class Listener:
         self.buffer.subscribe_integrity(self.integrity_fault)
         self._contract_manager = contract_manager
         self.setup_logging(logging.INFO)
+        self.step = int(os.environ.get("STEP_BLOCKS"), 5000)
 
     def get_range_events(self, start, end):
         logger.info("Getting events in range {} to {}".format(start, end))
@@ -58,7 +59,7 @@ class Listener:
             # Tick to current block time
             # last_block = self._contract_manager._ethereum_connection.w3.eth.getBlock('latest')
             last_block = utils.getBlock(self._contract_manager._ethereum_connection.w3, "latest")
-            dest_number = min(last_block.number, self.safe_block + 50000)
+            dest_number = min(last_block.number, self.safe_block + self.step)
 
             if dest_number == last_block.number:
                 dest_timestamp = last_block.timestamp
