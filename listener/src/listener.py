@@ -25,7 +25,7 @@ class Listener:
         self.buffer.subscribe_integrity(self.integrity_fault)
         self._contract_manager = contract_manager
         self.setup_logging(logging.INFO)
-        self.step = int(os.environ.get("STEP_BLOCKS"), 5000)
+        self.step = int(os.environ.get("STEP_BLOCKS", 500))
 
     def get_range_events(self, start, end):
         logger.info("Getting events in range {} to {}".format(start, end))
