@@ -16,7 +16,7 @@ class PayBatchError(EventHandler):
         commit.opcode = "pay_batch_error_debt_engine"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
-        commit.address = self._tx.get("from")
+        commit.address = self._tx.get("from") if not self._tx is None else None
 
         data = {
             "id": self._args.get("_id"),

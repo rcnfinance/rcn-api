@@ -17,7 +17,7 @@ class SetPaidBase(EventHandler):
         commit.opcode = "set_paid_base_installments"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
-        commit.address = self._tx.get("from")
+        commit.address = self._tx.get("from") if not self._tx is None else None
 
         data = {
             "id": self._args.get("_id"),

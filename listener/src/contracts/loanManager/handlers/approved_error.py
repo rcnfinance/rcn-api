@@ -17,7 +17,7 @@ class ApprovedError(EventHandler):
         commit.opcode = "approved_error_loan_manager"
         commit.timestamp = self._block_timestamp()
         commit.proof = self._transaction
-        commit.address = self._tx.get("from")
+        commit.address = self._tx.get("from") if not self._tx is None else None
 
         data = {
             "id": self._args.get("_id")
