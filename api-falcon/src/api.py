@@ -50,8 +50,8 @@ api.add_route("/v4/commits/", CommitList())
 api.add_route("/v4/collaterals/", CollateralList())
 api.add_route("/v4/collaterals/{id_collateral}/", CollateralItem())
 
-api.add_route("/v5/loans", CompleteLoanList())
-api.add_route("/v5/loans2", CompleteLoanList2())
+api.add_route("/v5/loans", CompleteLoanList2())
+# api.add_route("/v5/loans2", CompleteLoanList2())
 api.add_route("/v5/loans/{id_loan}", CompleteLoanItem())
 
 api.add_route("/config", ConfigInfo())

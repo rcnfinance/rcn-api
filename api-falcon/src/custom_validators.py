@@ -3,7 +3,6 @@ from graceful.errors import ValidationError
 
 
 def is_valid_sorting(value):
-    print(value)
     VALID_FIELDS = [
         "descriptor.first_obligation",
         "descriptor.total_obligation",
